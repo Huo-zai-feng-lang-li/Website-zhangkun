@@ -10,12 +10,12 @@
 
 5：能不能厚脸皮要个 star⭐️
 
-![游戏](./img\游戏.png)
+![游戏](./img/游戏.png)
 
-![Ai](./img\Ai.png)
+![Ai](./img/Ai.png)
 
-![Home](./img\Home.png)
+![Home](./img/Home.png)
 
-![loading](./img\loading.png)
+![loading](./img/loading.png)
 
-![恶搞](./img\恶搞.png)
+![恶搞](./img/恶搞.png)
