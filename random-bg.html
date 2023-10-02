@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机图片</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container,
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+
+        }
+
+        .container {
+            display: flex;
+            overflow: hidden;
+            background-image: linear-gradient(to bottom, #e05933, #9dde8b, #33c849, #d26a20);
+
+        }
+
+
+        .show-image {
+            flex-basis: calc(25% - 30px);
+
+        }
+
+        #reload-button {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 30px;
+            height: 100vh;
+            background-image: linear-gradient(to bottom, #e05933, #9dde8b, #33c849, #d26a20);
+            border: none;
+            outline: none;
+            font-size: 20px;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img class="show-image" src="#">
+        <img class="show-image" src="#">
+        <img class="show-image" src="#">
+        <img class="show-image" src="#">
+    </div>
+    <button id="reload-button">切换图片</button>
+
+    <script>
+
+        const showImage = document.querySelectorAll(".show-image");
+
+        const reloadButton = document.getElementById("reload-button");
+        // 遍历图片数组，赋值不同的图片
+        showImage.forEach((item) => {
+            item.src = `https://api.kgbots.com/api/yangyan/api.php?${new Date().getTime() * Math.random()}`;
+        });
+
+        // 点击重新加载按钮时重新加载图片
+        reloadButton.addEventListener("click", function () {
+            showImage.forEach((item) => {
+                item.src = `https://api.kgbots.com/api/yangyan/api.php?${new Date().getTime() * Math.random()}`;
+            });
+        });
+        // 页面加载时加载图片
+        window.addEventListener("load", function () {
+            showImage.src = `https://api.kgbots.com/api/yangyan/api.php?${new Date().getTime() * Math.random()}`;
+        });
+    </script>
+</body>
+
+</html>

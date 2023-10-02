@@ -1,0 +1,300 @@
+<html>
+
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+	<meta name="color-scheme" content="light dark" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	<title>引擎-彩色之外</title>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="homepage.css" />
+</head>
+
+<body>
+	<div id="content">
+		<!-- 搜索框 -->
+		<div class="search_part">
+			<img class="smaller"
+				src="https://img2.baidu.com/it/u=3184698640,144873903&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1686675600&t=6997b916c7e5143213a9262b017cb471" />
+			<form onsubmit="return search()" class="search_bar" title="搜索">
+				<button onclick="search()" id="search_submit" value="" aria-label="搜索">
+					<div class="search icon"></div>
+				</button>
+
+				<span>
+					<input class="search" onfocus="showButton()" onblur="hideButton()" type="text" value=""
+						autocomplete="off" id="search_input" title="搜索" placeholder="欢迎来到彩色之外……" autofocus />
+
+				</span>
+
+			</form>
+		</div>
+
+		<!-- 主题 -->
+		<div id="bookmark_part">
+			<div id="box_container" title="选择移动引擎">
+				<!-- 切换移动引擎 -->
+				<div class="🤚">
+					<div class="👉"></div>
+					<div class="👉"></div>
+					<div class="👉"></div>
+					<div class="👉"></div>
+					<div class="🌴"></div>
+					<div class="👍"></div>
+					<!-- 单选框 -->
+					<label class="container-leable">
+						<input type="checkbox" checked="checked">
+						<div class="checkmark"></div>
+					</label>
+				</div>
+				<!-- 主题 -->
+				<div class="wrapper">
+					<label class="switch">
+						<!-- 太阳 -->
+						<span class="sun"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<g fill="#ffd43b">
+									<circle r="5" cy="12" cx="12"></circle>
+									<path
+										d="m21 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm-17 0h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm13.66-5.66a1 1 0 0 1 -.66-.29 1 1 0 0 1 0-1.41l.71-.71a1 1 0 1 1 1.41 1.41l-.71.71a1 1 0 0 1 -.75.29zm-12.02 12.02a1 1 0 0 1 -.71-.29 1 1 0 0 1 0-1.41l.71-.66a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1 -.7.24zm6.36-14.36a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm0 17a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm-5.66-14.66a1 1 0 0 1 -.7-.29l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.29zm12.02 12.02a1 1 0 0 1 -.7-.29l-.66-.71a1 1 0 0 1 1.36-1.36l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.24z">
+									</path>
+								</g>
+							</svg></span>
+						<!-- 月亮 -->
+						<span class="moon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+								<path
+									d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z">
+								</path>
+							</svg>
+						</span>
+
+						<input type="checkbox" class="input" />
+						<span class="slider"></span>
+					</label>
+				</div>
+
+				<!-- AI -->
+				<div class="box">
+					<p class="title" aria-hidden="true"></p>
+					<div class="overlay" style="
+                background: url('https://img.51miz.com/preview/element/00/01/04/46/E-1044648-0962B463.jpg')
+                  no-repeat;
+                background-size: cover;
+                background-position: center center;
+              "></div>
+					<p class="url" aria-hidden="true">AI聊天</p>
+					<a href="./Ai/login.html" title="ChartGPT镜像集合" target="_blank"></a>
+				</div>
+
+				<!-- 关于我 -->
+				<div class="box">
+					<p class="title" aria-hidden="true" style="background: #ff0000"></p>
+					<div class="overlay" style="background: url('favicon.ico') no-repeat 0 0 / cover"></div>
+					<p class="url" aria-hidden="true">关于我</p>
+					<!-- 我希望随机展示下面俩个a标签的一个 -->
+					<a href="./dazi.html" title="打字特效" target="_blank"></a>
+				</div>
+
+				<!-- 游戏 -->
+				<div class="box">
+					<p class="title" aria-hidden="true" style="background: hsla(0, 0%, 0%, 0)"></p>
+					<div class="overlay" style="
+                background: url('https://img2.baidu.com/it/u=3184698640,144873903&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1686675600&t=6997b916c7e5143213a9262b017cb471')
+                  no-repeat 0 0 / cover;
+              "></div>
+					<p class="url" aria-hidden="true">
+						游戏
+						<a href="youxi/index.html" title="墓地逃亡" target="_blank"></a>
+					</p>
+				</div>
+
+				<!--CSDN  -->
+				<div class="box">
+					<p class="title" aria-hidden="true" style="background: hsla(0, 0%, 0%, 0)"></p>
+					<div class="overlay" style="
+                background: url('./img/author.jpg') no-repeat center center/
+                  cover;
+              "></div>
+					<p class="url" aria-hidden="true">CSDN</p>
+					<a href="https://blog.csdn.net/m0_57904695?spm=1000.2115.3001.5343" title="最新最全一手资讯--我的CSDN"
+						target="_blank"></a>
+				</div>
+
+				<!--項目一  -->
+				<div class="box">
+					<p class="title" aria-hidden="true" style="background: hsla(0, 0%, 0%, 0)"></p>
+					<div class="overlay" style="
+                background: url('https://img1.baidu.com/it/u=3159988720,479869659&fm=253&fmt=auto&app=120&f=JPEG?w=1129&h=800') no-repeat center center/
+                  cover;
+              "></div>
+					<p class="url" aria-hidden="true">項目一</p>
+					<a href="http://project.webcats.cn/bx/43924/7622" title="項目一" target="_blank"></a>
+				</div>
+
+				<!--項目二  -->
+				<div class="box">
+					<p class="title" aria-hidden="true" style="background: hsla(0, 0%, 0%, 0)"></p>
+					<div class="overlay" style="
+                background: url('https://img0.baidu.com/it/u=2594945548,864656721&fm=253&fmt=auto&app=120&f=JPEG?w=896&h=500') no-repeat center center/
+                  cover;
+              "></div>
+					<p class="url" aria-hidden="true">項目二</p>
+					<a href="http://project.webcats.cn/bx/43924/7619" title="項目二" target="_blank"></a>
+				</div>
+				<!-- 音乐 -->
+				<div class="box">
+					<p class="title" aria-hidden="true" style="background: #1a729b"></p>
+					<div class="overlay" style="
+                background: url('https://tse4-mm.cn.bing.net/th/id/OIP-C.DwpRopQ0mXFmzwabbrso5gHaHf?pid=ImgDet&rs=1')
+                  no-repeat 0 0 / cover;
+              "></div>
+					<p class="url" aria-hidden="true">音乐</p>
+					<a href="https://tools.liumingye.cn/music/#/" title="Burger工具站" target="_blank"></a>
+				</div>
+
+				<!-- 电影 -->
+				<div class="box">
+					<p class="title" aria-hidden="true" style="background: #1a729b"></p>
+					<div class="overlay" style="
+                background: url('https://img2.baidu.com/it/u=3630649733,2813818149&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=718')
+                  no-repeat 0 0 / cover;
+              "></div>
+					<p class="url" aria-hidden="true">电影</p>
+					<a href="https://www.549.tv/#term-28" title="Burger工具站" target="_blank"></a>
+				</div>
+
+				<!-- 快传 -->
+				<div class="box">
+					<p class="title" aria-hidden="true" style="background: #1a729b"></p>
+					<div class="overlay" style="
+                background: url('https://img2.baidu.com/it/u=3992958280,339531256&fm=253&fmt=auto&app=138&f=PNG?w=256&h=256')
+                  no-repeat center center/50px 35px;
+              "></div>
+					<p class="url" aria-hidden="true">快传</p>
+					<a href="https://airportal.cn/" title="Burger工具站" target="_blank"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+<!-- 智能搜索下拉 -->
+<script charset="gbk" src="./opensug.js"></script>
+<!-- 音乐播放器 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+<script src="https://myhkw.cn/player/js/player.js" id="myhk" key="demo" m="1"></script>
+
+<script>
+	// 智能搜索下拉 Start
+	function search() {
+		if (searchInput.value) {
+			try {
+				engineCheckbox.checked ? searchText("https://m.baidu.com/from=1022560e/s?word=", searchInput.value) : searchText("https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&rsv_idx=1&tn=baidu&wd=", searchInput.value);
+			} catch (error) {
+				alert(error);
+			}
+			searchInput.value = "";
+			document.activeElement.blur();
+		}
+		return false;
+	}
+
+	function searchText(url, text) {
+		window.open(url + encodeURIComponent(text));
+	}
+	function showButton() {
+		document.getElementById("search_submit").style.display = "block"
+	}
+
+	function hideButton() {
+		"" == document.getElementById("search_input").value && (document.getElementById("search_submit").style.display =
+			"none")
+	}
+	function show(str) {
+		var searchbox = document.getElementById("search_input");
+		searchbox.innerHTML = str;
+		searchbox.blur();
+		search();
+	}
+	let params = {
+		"fontColor": "#666666",
+		"fontColorHI": "#FFF",
+		"fontSize": "14px",
+		"borderColor": "#eee",
+		"bgcolorHI": "#eee",
+		"width": "500px",
+
+	};
+
+	BaiduSuggestion.bind("search_input", params, show);
+	// 智能搜索下拉 End
+
+	// 切换主题 Start
+	const toggleSwitch = document.querySelector(".input");
+	// 手动切换主题
+	function switchTheme(event) {
+		if (event.target.checked) {
+			document.documentElement.setAttribute("data-theme", "dark");
+			//  存入本地
+			localStorage.setItem("theme", "dark");
+		} else {
+			document.documentElement.setAttribute("data-theme", "light");
+			localStorage.setItem("theme", "light");
+		}
+	}
+	// 监听input元素
+	toggleSwitch.addEventListener("change", switchTheme, false);
+
+	// 默认展示light
+	window.onload = function () {
+		// 判断本地是否有存储，有则取出，没有则默认light,并且动画也需要在对应的白天后黑夜
+		const currentTheme = localStorage.getItem("theme")
+			? localStorage.getItem("theme")
+			: null;
+		if (currentTheme) {
+			document.documentElement.setAttribute("data-theme", currentTheme);
+			// 判断是否是dark，是则切换input元素
+			if (currentTheme === "dark") {
+				toggleSwitch.checked = true;
+			}
+		} else {
+			// 本地没存theme,就是用light，白色背景，黑色文字
+			document.documentElement.setAttribute("data-theme", "light");
+			// toggleSwitch.checked = true; //如果用黑夜模式需要将input赋值为true
+		}
+	};
+	// 切换主题 End
+
+	// 搜索框按钮
+	const searchInput = document.getElementById("search_input");
+	const engineCheckbox = document.querySelector(".container-leable input[type='checkbox']");
+	const engineChecked = localStorage.getItem("engineChecked");
+
+
+
+	// 监听 checkbox 的 change 事件
+	engineCheckbox.addEventListener("change", function () {
+		if (this.checked) {
+			localStorage.setItem("engineChecked", '移动');
+		} else {
+			localStorage.setItem("engineChecked", 'PC');
+		}
+	});
+
+	// 如果 localStorage 中存储了状态，则根据状态设置 checkbox 的勾选状态
+	if (engineChecked !== null) {
+		engineCheckbox.checked = engineChecked === '移动' ? true : false;
+	}
+	// 禁止右键和F12
+	document.oncontextmenu = function () {
+		return false;
+	}
+	document.onkeydown = function () {
+		if (window.event && window.event.keyCode == 123) {
+			event.keyCode = 0;
+			event.returnValue = false;
+			return false;
+		}
+	}
+</script>
+
+</html>

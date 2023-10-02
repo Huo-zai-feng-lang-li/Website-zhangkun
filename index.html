@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>彩色之外——铅笔loading</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <style>
+    .pencil {
+      display: block;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      margin: -5em 0 0 -5em;
+      width: 10em;
+      height: 10em;
+    }
+
+    .pencil__body1,
+    .pencil__body2,
+    .pencil__body3,
+    .pencil__eraser,
+    .pencil__eraser-skew,
+    .pencil__point,
+    .pencil__rotate,
+    .pencil__stroke {
+      -webkit-animation-duration: 3s;
+      animation-duration: 3s;
+      -webkit-animation-timing-function: linear;
+      animation-timing-function: linear;
+      -webkit-animation-iteration-count: infinite;
+      animation-iteration-count: infinite;
+    }
+
+    .pencil__body1,
+    .pencil__body2,
+    .pencil__body3 {
+      -webkit-transform: rotate(-90deg);
+      -ms-transform: rotate(-90deg);
+      transform: rotate(-90deg);
+    }
+
+    .pencil__body1 {
+      -webkit-animation-name: pencilBody1;
+      animation-name: pencilBody1;
+    }
+
+    .pencil__body2 {
+      -webkit-animation-name: pencilBody2;
+      animation-name: pencilBody2;
+    }
+
+    .pencil__body3 {
+      -webkit-animation-name: pencilBody3;
+      animation-name: pencilBody3;
+    }
+
+    .pencil__eraser {
+      -webkit-animation-name: pencilEraser;
+      animation-name: pencilEraser;
+      -webkit-transform: rotate(-90deg) translate(49px, 0);
+      -ms-transform: rotate(-90deg) translate(49px, 0);
+      transform: rotate(-90deg) translate(49px, 0);
+    }
+
+    .pencil__eraser-skew {
+      -webkit-animation-name: pencilEraserSkew;
+      animation-name: pencilEraserSkew;
+      -webkit-animation-timing-function: ease-in-out;
+      animation-timing-function: ease-in-out;
+    }
+
+    .pencil__point {
+      -webkit-animation-name: pencilPoint;
+      animation-name: pencilPoint;
+      -webkit-transform: rotate(-90deg) translate(49px, -30px);
+      -ms-transform: rotate(-90deg) translate(49px, -30px);
+      transform: rotate(-90deg) translate(49px, -30px);
+    }
+
+    .pencil__rotate {
+      -webkit-animation-name: pencilRotate;
+      animation-name: pencilRotate;
+    }
+
+    .pencil__stroke {
+      -webkit-animation-name: pencilStroke;
+      animation-name: pencilStroke;
+      -webkit-transform: translate(100px, 100px) rotate(-113deg);
+      -ms-transform: translate(100px, 100px) rotate(-113deg);
+      transform: translate(100px, 100px) rotate(-113deg);
+    }
+
+    /* Animations */
+    @-webkit-keyframes pencilBody1 {
+
+      from,
+      to {
+        stroke-dashoffset: 351.86;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+      }
+
+      50% {
+        stroke-dashoffset: 150.8;
+        /* 3/8 of diameter */
+        -webkit-transform: rotate(-225deg);
+        transform: rotate(-225deg);
+      }
+    }
+
+    @keyframes pencilBody1 {
+
+      from,
+      to {
+        stroke-dashoffset: 351.86;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+      }
+
+      50% {
+        stroke-dashoffset: 150.8;
+        /* 3/8 of diameter */
+        -webkit-transform: rotate(-225deg);
+        transform: rotate(-225deg);
+      }
+    }
+
+    @-webkit-keyframes pencilBody2 {
+
+      from,
+      to {
+        stroke-dashoffset: 406.84;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+      }
+
+      50% {
+        stroke-dashoffset: 174.36;
+        -webkit-transform: rotate(-225deg);
+        transform: rotate(-225deg);
+      }
+    }
+
+    @keyframes pencilBody2 {
+
+      from,
+      to {
+        stroke-dashoffset: 406.84;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+      }
+
+      50% {
+        stroke-dashoffset: 174.36;
+        -webkit-transform: rotate(-225deg);
+        transform: rotate(-225deg);
+      }
+    }
+
+    @-webkit-keyframes pencilBody3 {
+
+      from,
+      to {
+        stroke-dashoffset: 296.88;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+      }
+
+      50% {
+        stroke-dashoffset: 127.23;
+        -webkit-transform: rotate(-225deg);
+        transform: rotate(-225deg);
+      }
+    }
+
+    @keyframes pencilBody3 {
+
+      from,
+      to {
+        stroke-dashoffset: 296.88;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+      }
+
+      50% {
+        stroke-dashoffset: 127.23;
+        -webkit-transform: rotate(-225deg);
+        transform: rotate(-225deg);
+      }
+    }
+
+    @-webkit-keyframes pencilEraser {
+
+      from,
+      to {
+        -webkit-transform: rotate(-45deg) translate(49px, 0);
+        transform: rotate(-45deg) translate(49px, 0);
+      }
+
+      50% {
+        -webkit-transform: rotate(0deg) translate(49px, 0);
+        transform: rotate(0deg) translate(49px, 0);
+      }
+    }
+
+    @keyframes pencilEraser {
+
+      from,
+      to {
+        -webkit-transform: rotate(-45deg) translate(49px, 0);
+        transform: rotate(-45deg) translate(49px, 0);
+      }
+
+      50% {
+        -webkit-transform: rotate(0deg) translate(49px, 0);
+        transform: rotate(0deg) translate(49px, 0);
+      }
+    }
+
+    @-webkit-keyframes pencilEraserSkew {
+
+      from,
+      32.5%,
+      67.5%,
+      to {
+        -webkit-transform: skewX(0);
+        transform: skewX(0);
+      }
+
+      35%,
+      65% {
+        -webkit-transform: skewX(-4deg);
+        transform: skewX(-4deg);
+      }
+
+      37.5%,
+      62.5% {
+        -webkit-transform: skewX(8deg);
+        transform: skewX(8deg);
+      }
+
+      40%,
+      45%,
+      50%,
+      55%,
+      60% {
+        -webkit-transform: skewX(-15deg);
+        transform: skewX(-15deg);
+      }
+
+      42.5%,
+      47.5%,
+      52.5%,
+      57.5% {
+        -webkit-transform: skewX(15deg);
+        transform: skewX(15deg);
+      }
+    }
+
+    @keyframes pencilEraserSkew {
+
+      from,
+      32.5%,
+      67.5%,
+      to {
+        -webkit-transform: skewX(0);
+        transform: skewX(0);
+      }
+
+      35%,
+      65% {
+        -webkit-transform: skewX(-4deg);
+        transform: skewX(-4deg);
+      }
+
+      37.5%,
+      62.5% {
+        -webkit-transform: skewX(8deg);
+        transform: skewX(8deg);
+      }
+
+      40%,
+      45%,
+      50%,
+      55%,
+      60% {
+        -webkit-transform: skewX(-15deg);
+        transform: skewX(-15deg);
+      }
+
+      42.5%,
+      47.5%,
+      52.5%,
+      57.5% {
+        -webkit-transform: skewX(15deg);
+        transform: skewX(15deg);
+      }
+    }
+
+    @-webkit-keyframes pencilPoint {
+
+      from,
+      to {
+        -webkit-transform: rotate(-90deg) translate(49px, -30px);
+        transform: rotate(-90deg) translate(49px, -30px);
+      }
+
+      50% {
+        -webkit-transform: rotate(-225deg) translate(49px, -30px);
+        transform: rotate(-225deg) translate(49px, -30px);
+      }
+    }
+
+    @keyframes pencilPoint {
+
+      from,
+      to {
+        -webkit-transform: rotate(-90deg) translate(49px, -30px);
+        transform: rotate(-90deg) translate(49px, -30px);
+      }
+
+      50% {
+        -webkit-transform: rotate(-225deg) translate(49px, -30px);
+        transform: rotate(-225deg) translate(49px, -30px);
+      }
+    }
+
+    @-webkit-keyframes pencilRotate {
+      from {
+        -webkit-transform: translate(100px, 100px) rotate(0);
+        transform: translate(100px, 100px) rotate(0);
+      }
+
+      to {
+        -webkit-transform: translate(100px, 100px) rotate(720deg);
+        transform: translate(100px, 100px) rotate(720deg);
+      }
+    }
+
+    @keyframes pencilRotate {
+      from {
+        -webkit-transform: translate(100px, 100px) rotate(0);
+        transform: translate(100px, 100px) rotate(0);
+      }
+
+      to {
+        -webkit-transform: translate(100px, 100px) rotate(720deg);
+        transform: translate(100px, 100px) rotate(720deg);
+      }
+    }
+
+    @-webkit-keyframes pencilStroke {
+      from {
+        stroke-dashoffset: 439.82;
+        -webkit-transform: translate(100px, 100px) rotate(-113deg);
+        transform: translate(100px, 100px) rotate(-113deg);
+      }
+
+      50% {
+        stroke-dashoffset: 164.93;
+        -webkit-transform: translate(100px, 100px) rotate(-113deg);
+        transform: translate(100px, 100px) rotate(-113deg);
+      }
+
+      75%,
+      to {
+        stroke-dashoffset: 439.82;
+        -webkit-transform: translate(100px, 100px) rotate(112deg);
+        transform: translate(100px, 100px) rotate(112deg);
+      }
+    }
+
+    @keyframes pencilStroke {
+      from {
+        stroke-dashoffset: 439.82;
+        -webkit-transform: translate(100px, 100px) rotate(-113deg);
+        transform: translate(100px, 100px) rotate(-113deg);
+      }
+
+      50% {
+        stroke-dashoffset: 164.93;
+        -webkit-transform: translate(100px, 100px) rotate(-113deg);
+        transform: translate(100px, 100px) rotate(-113deg);
+      }
+
+      75%,
+      to {
+        stroke-dashoffset: 439.82;
+        -webkit-transform: translate(100px, 100px) rotate(112deg);
+        transform: translate(100px, 100px) rotate(112deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" height="200px" width="200px" viewBox="0 0 200 200" class="pencil">
+    <defs>
+      <clipPath id="pencil-eraser">
+        <rect height="30" width="30" ry="5" rx="5"></rect>
+      </clipPath>
+    </defs>
+    <circle transform="rotate(-113,100,100)" stroke-linecap="round" stroke-dashoffset="439.82"
+      stroke-dasharray="439.82 439.82" stroke-width="2" stroke="currentColor" fill="none" r="70" class="pencil__stroke">
+    </circle>
+    <g transform="translate(100,100)" class="pencil__rotate">
+      <g fill="none">
+        <circle transform="rotate(-90)" stroke-dashoffset="402" stroke-dasharray="402.12 402.12" stroke-width="30"
+          stroke="hsl(223,90%,50%)" r="64" class="pencil__body1"></circle>
+        <circle transform="rotate(-90)" stroke-dashoffset="465" stroke-dasharray="464.96 464.96" stroke-width="10"
+          stroke="hsl(223,90%,60%)" r="74" class="pencil__body2"></circle>
+        <circle transform="rotate(-90)" stroke-dashoffset="339" stroke-dasharray="339.29 339.29" stroke-width="10"
+          stroke="hsl(223,90%,40%)" r="54" class="pencil__body3"></circle>
+      </g>
+      <g transform="rotate(-90) translate(49,0)" class="pencil__eraser">
+        <g class="pencil__eraser-skew">
+          <rect height="30" width="30" ry="5" rx="5" fill="hsl(223,90%,70%)"></rect>
+          <rect clip-path="url(#pencil-eraser)" height="30" width="5" fill="hsl(223,90%,60%)"></rect>
+          <rect height="20" width="30" fill="hsl(223,10%,90%)"></rect>
+          <rect height="20" width="15" fill="hsl(223,10%,70%)"></rect>
+          <rect height="20" width="5" fill="hsl(223,10%,80%)"></rect>
+          <rect height="2" width="30" y="6" fill="hsla(223,10%,10%,0.2)"></rect>
+          <rect height="2" width="30" y="13" fill="hsla(223,10%,10%,0.2)"></rect>
+        </g>
+      </g>
+      <g transform="rotate(-90) translate(49,-30)" class="pencil__point">
+        <polygon points="15 0,30 30,0 30" fill="hsl(33,90%,70%)"></polygon>
+        <polygon points="15 0,6 30,0 30" fill="hsl(33,90%,50%)"></polygon>
+        <polygon points="15 0,20 10,10 10" fill="hsl(223,10%,10%)"></polygon>
+      </g>
+    </g>
+  </svg>
+
+  <!-- 1到3秒随机，然后跳转欢迎index -->
+  <script>
+    setTimeout(function () {
+      // 判断是否第一次进入
+      if (localStorage.getItem('first') == null) {
+        // 第一次进入
+        window.onload = function () {
+          localStorage.setItem("first", JSON.stringify({ time: new Date().getTime(), text: '第一次进入' }));
+        }
+        // 第一次进入跳转欢迎页面
+        window.location.href = './welcome.html';
+      } else {
+        // 不是第一次进入判断是否过期5分钟
+        var first = JSON.parse(localStorage.getItem('first'));
+        var now = new Date().getTime();
+        if (now - first.time > 24 * 60 * 60 * 1000) {
+          // 过期
+          window.onload = function () {
+            localStorage.setItem("first", JSON.stringify({ time: new Date().getTime(), text: '24时过期' }));
+          }
+          window.location.href = './welcome.html';
+        } else {
+          window.location.href = './home.html';
+        }
+      }
+    }, Math.random() * 1000 + 500);
+  </script>
+</body>
+
+</html>
