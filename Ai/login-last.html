@@ -85,8 +85,8 @@
           <a href="http://project.webcats.cn/bx/43924/11760" target="_blank" title="小爱同学"></a>
         </div>
 
-         <!-- ai 3.5 -->
-         <div class="box">
+        <!-- ai 3.5 -->
+        <div class="box">
           <p class="title" aria-hidden="true"></p>
           <div class="overlay" style="
                 background: url('https://img0.baidu.com/it/u=456574114,1227167038&fm=253&fmt=auto&app=120&f=JPEG?w=1419&h=800')
@@ -95,7 +95,8 @@
                 background-position: center center;
               "></div>
           <p class="url" aria-hidden="true">GPT-1</p>
-          <a href="http://project.webcats.cn/bx/43924/14961" target="_blank" title="GPT-1"></a>
+          <a href="https://zhang-kun8888.gitee.io/chat-gpt-web---project/#/chat/1698296640630" target="_blank"
+            title="GPT-1"></a>
         </div>
 
       </div>
@@ -113,7 +114,7 @@
     window.location.href = "login.html";
   } else {
     //本地有数据判断,看是否过期了 isLogin.time是本地的时间字段
-    if (Date.now() - isLogin.time >  24 * 60 * 60 * 1000) {
+    if (Date.now() - isLogin.time > 24 * 60 * 60 * 1000) {
       //当前时间 - 存的时间 > 5分钟 = 间隔时间 5分钟外
       localStorage.removeItem("isLogin"); //删除本地的数据
       window.location.href = "login.html";
