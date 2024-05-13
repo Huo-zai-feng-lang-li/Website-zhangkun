@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>打赏-彩色之外</title>
+	<link rel="shortcut icon" href="./favicon.ico" />
+
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+	<style>
+		#app,
+		body,
+		html {
+			position: relative;
+			overflow: hidden;
+			width: 100vw;
+			height: 100vh;
+			margin: 0;
+			padding: 0;
+		}
+
+		#my-iframe {
+			width: 100vw;
+			height: 100vh;
+			border: none;
+		}
+
+		.reward-btn {
+			position: fixed;
+			top: 5%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			animation: breath_light 2s infinite;
+		}
+
+		@keyframes breath_light {
+			0% {
+				filter: brightness(100%);
+			}
+
+			50% {
+				filter: brightness(80%);
+				transform: scale(1.1);
+			}
+
+			100% {
+				filter: brightness(120%);
+			}
+		}
+
+		.reward-support {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		.reward-support .reward-support__card {
+			position: absolute;
+			top: 10%;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 300px;
+			padding: 24px;
+			border-radius: 12px;
+			background-color: #f8f8f8;
+			z-index: 1;
+		}
+
+		.reward-support .reward-support__head {
+			display: flex;
+			justify-content: center;
+			margin-bottom: 14px;
+		}
+
+		.reward-support .reward-support__btn {
+			width: 65px;
+			height: 25px;
+			border: 0;
+			margin-right: 10px;
+			border-radius: 6px;
+			font-size: 14px;
+			background-color: #ebebeb;
+			cursor: pointer;
+			color: #8e8e94;
+		}
+
+		.reward-support .reward-support__QRCode {
+			width: 163px;
+			height: 163px;
+			margin: 0 auto;
+			background-color: #fff;
+		}
+
+		.reward-support .reward-support__QRCode img {
+			width: 100%;
+		}
+
+		.reward-support .reward-support__quit {
+			text-align: center;
+		}
+
+		.reward-support .reward-support__quit span {
+			width: 120px;
+			height: 36px;
+			line-height: 36px;
+			display: inline-block;
+			border-radius: 6px;
+			background-color: #ffffff;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		.reward-support .reward-support__quit span:hover {
+			background-color: #ebebeb;
+		}
+
+		.reward-support .reward-support__btn--active {
+			background-color: #1777ff;
+			color: #fff;
+		}
+
+		.reward-support .reward-support__shadow {
+			width: 100%;
+			height: 100%;
+			background-color: #7f7f7f;
+			opacity: 0.7;
+		}
+
+		button {
+			border: none;
+			outline: none;
+
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<span class="reward-btn" style="padding: 5px 12px; cursor: pointer" @click="rewardSupportCard = true">🎉</span>
+		<!-- 打赏支持 -->
+		<div class="reward-support" v-show="rewardSupportCard">
+			<div class="reward-support__card">
+				<div class="reward-support__head">
+					<button type="button" :class="{ 'reward-support__btn--active': QRCodeModel == 1 }"
+						class="reward-support__btn" @click="QRCodeModel = 1">
+						支付宝
+					</button>
+					<button type="button" :class="{ 'reward-support__btn--active': QRCodeModel == 2 }"
+						:style="{ 'backgroundColor': QRCodeModel == 2 ? '#21aa38' : '' }" class="reward-support__btn"
+						@click="QRCodeModel = 2">
+						微信
+					</button>
+				</div>
+				<div class="reward-support__QRCode" style="margin-bottom: 10px">
+					<img v-if="QRCodeModel == 1"
+						src="https://gitee.com/zhang-kun8888/reward---project/raw/main-pages/zhifubao.jpg" alt="支付宝" />
+					<img v-else src="https://gitee.com/zhang-kun8888/reward---project/raw/main-pages/weixin.jpg"
+						alt="微信" />
+				</div>
+				<div style="margin-bottom: 10px; text-align: center; color: #baccbe">
+					<span v-if="QRCodeModel == 1">支付宝扫一扫</span>
+					<span v-else>微信扫一扫</span>
+				</div>
+				<div class="reward-support__quit">
+					<span @click="rewardSupportCard = false">下次一定</span>
+				</div>
+			</div>
+			<div class="reward-support__shadow" @click.stop="rewardSupportCard = false"></div>
+		</div>
+		<iframe id="my-iframe" src="./reward-face.html" frameborder="0"></iframe>
+	</div>
+</body>
+
+<script>
+	const app = new Vue({
+		el: "#app",
+		data: {
+			// 打赏支持
+			rewardSupportCard: false,
+			//   1: 支付宝 2: 微信
+			QRCodeModel: 1,
+		},
+		mounted() {
+			const iframe = document.getElementById("my-iframe");
+			if (iframe) {
+				const randomIndex = Math.floor(Math.random() * 3) + 1; // 生成1到3的随机数
+				iframe.src = `./reward-face-loading${randomIndex}.html`;
+
+				setTimeout(() => {
+					iframe.src = "./reward-face.html";
+				}, Math.random() * 1000 + 1000);
+			}
+			// 禁止打开控制台
+			document.onkeydown = function (e) {
+				var currKey = 0, e = e || event || window.event;
+				currKey = e.keyCode || e.which || e.charCode;
+				if (currKey == 123) {
+					window.event.cancelBubble = true;
+					window.event.returnValue = false;
+				}
+			}
+			// 禁止右键菜单
+			document.oncontextmenu = function () {
+				return false;
+			}
+
+		},
+	});
+</script>
+
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../home/style.css" rel="stylesheet">
+    <title>彩色之外-真容</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .container {
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 1000px;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: #EAF3FF;
+            border-radius: 5px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            /* justify-content: space-around; */
+            align-items: center;
+            width: 700px;
+            /* height: 500px; */
+            transition: all 0.3s ease-in-out;
+        }
+
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        ol {
+            padding-left: 20px;
+        }
+
+        ol li {
+            margin-bottom: 5px;
+        }
+
+        #copyButton,
+        #jumpButton {
+            color: #84b9f1;
+        }
+
+        #copyButton:hover,
+        #jumpButton:hover {
+            color: #db7c10;
+            cursor: pointer;
+        }
+
+        .form-container input,
+        .form-container input {
+            padding: 15px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            width: 560px;
+            border-radius: 5px;
+        }
+
+        .form-container input[type="number"]:focus,
+        .form-container input[type="text"]:focus {
+            box-shadow: 0 0 8px #84b9f1;
+        }
+
+        .form-container button {
+            width: 40%;
+            padding: 10px;
+            margin-top: 10px;
+            /* 调整按钮的上边距 */
+            margin-bottom: 10px;
+            /* 调整按钮的下边距 */
+            border: none;
+            border-radius: 5px;
+            background-color: #4e4d4a;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #preview {
+            background-color: #84b9f1;
+        }
+
+        .form-container button:hover {
+            background-color: #dc9d14;
+        }
+
+        @media (max-width: 768px) {
+            .container-face {
+                display: none;
+            }
+        }
+
+        .face {
+            margin-right: 50px;
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: #4e4d4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .face::before {
+            content: '';
+            position: absolute;
+            top: 180px;
+            width: 150px;
+            height: 70px;
+            background: #b57700;
+            border-bottom-left-radius: 70px;
+            border-bottom-right-radius: 70px;
+            transition: 0.5s;
+        }
+
+        .face:hover:before {
+            top: 210px;
+            width: 150px;
+            height: 20px;
+            background: #b57700;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+
+        .eyes {
+            position: relative;
+            top: -40px;
+            display: flex;
+        }
+
+        .eyes .eye {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: block;
+            background-color: #fff;
+            margin: 0 15px;
+            border-radius: 50%;
+        }
+
+        .eyes .eye::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 25px;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        #result {
+            width: 100%;
+            overflow: auto;
+            line-height: 25px;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-10px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(10px);
+                color: red;
+            }
+        }
+
+        .shake {
+            animation: shake .7s cubic-bezier(.36, .07, .19, .97) both;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        /* PC设备提示样式 */
+        .feedback-message-pc {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 4px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* 手机设备提示样式 */
+        .feedback-message-mobile {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 4px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .feedback-visible {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="container-face">
+            <div class="face">
+                <div class="eyes">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                </div>
+            </div>
+        </div>
+        <form class="form-container" action="reward-face-main.html" method="post">
+            <label for="ID">
+                创建ID &nbsp; <input type="number" placeholder="请输入你的ID" id="ID" />
+            </label>
+            <label for="toJump">
+                跳转URL
+                <input type="text" placeholder="请输入你的跳转链接" id="toJump">
+            </label>
+            <button type="button" id="createUrl">生成链接</button>
+            <div id="result">♻️:暂无链接&nbsp;<a href="" id="resultUrl"></a> </div>
+            <button type="button" id="preview">查看图片</button>
+            <ul>
+                <h4 style="margin-bottom: 20px;">彩色之外《真容》功能简介</h4>
+                <li><strong>★必看说明★</strong>
+                    <p style="margin: 10px 0;">本网站完全免费、完全免费、完全免费，仅供娱乐！一切收费，皆为骗子！找寻此网站，可在 <a
+                            href="https://github.com/Huo-zai-feng-lang-li" target="_blank"> GitHub</a> 搜索。</p>
+                </li>
+                <li><strong>★使用说明★</strong>
+                    <ol>
+                        <li style="margin-top: 10px;">框内填写QQ号、微信号生成链接，方便记忆，勿输入中文。</li>
+                        <li>点击生成链接后复制生成的链接发送给自己或想要参与自拍测试的人。</li>
+                        <li>链接被点开后，回到本页面，填写前面输入的数字(序号1️⃣)，点击查看照片即可！</li>
+                        <li>由于系统安全机制，iOS系统必须使用自带的Safari浏览器（或者第三方APP调用的是Safari内核）才可使用。</li>
+                        <li>iOS手机较老、系统较老将无法使用，图片会显示一片空白。建议使用安卓手机。</li>
+                    </ol>
+                </li>
+                <li><strong>★免责声明★</strong>
+                    <ol style="margin-top: 10px;">
+                        <li>本程序完全免费，仅供学习交流使用，请勿用于非法用途，否则后果自负！</li>
+                        <li>本程序是一款浏览器自拍网站，是用户自愿点击允许的情况下自拍的程序！</li>
+                        <li>本站是一个完全免费的学习交流平台，一切内容均为网友自发行为，肖像权归属原作者所有，查看照片后可以自己清空所有图片！</li>
+                    </ol>
+                </li>
+                <li>请收藏本站书签，以防丢失！</li>
+            </ul>
+        </form>
+        <div id="feedbackMessage" class="feedback-message"></div>
+    </div>
+
+    <script>
+        // 显示错误消息的函数
+        function showError(message) {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = message;
+            document.body.appendChild(errorMessage);
+            setTimeout(() => {
+                errorMessage.classList.add('visible');
+            }, 10); // 稍微延迟显示，以便过渡效果能生效
+
+            // 3秒后隐藏并移除错误消息
+            setTimeout(() => {
+                errorMessage.classList.remove('visible');
+                setTimeout(() => {
+                    document.body.removeChild(errorMessage);
+                }, 300); // 等待淡出动画完成后移除元素
+            }, 3000);
+        }
+        //鼠标移动 Start
+        document.querySelector('body').addEventListener('mousemove', eyeball)
+        function eyeball() {
+            let eyes = document.querySelectorAll('.eye')
+            eyes.forEach(eye => {
+                let x = (eye.getBoundingClientRect().left) + (eye.
+                    clientWidth / 2)
+                let y = (eye.getBoundingClientRect().top) + (eye.
+                    clientHeight / 2)
+                //Math.atan2()函数返回点(x,y)和原点(g,8)之间直线的倾斜角
+                let radian = Math.atan2(event.pageX - x, event.pageY - y)
+                //转换成角度
+                let rot = (radian * (180 / Math.PI) * -1) + 270
+                eye.style.transform = `rotate(${rot}deg)`
+
+            })
+        }
+        //鼠标移动 End
+
+        // 防抖-用于错误提示延时
+        function debounce(func, wait) {
+            let timeout;
+            return function () {
+                const context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+        // 表单
+        document.addEventListener('DOMContentLoaded', function () {
+            const generateButton = document.querySelector('#createUrl');
+            const previewButton = document.querySelector('#preview');
+            const idInput = document.getElementById('ID');
+            const urlInput = document.getElementById('toJump');
+            const feedback = document.createElement('div');
+            const container = document.querySelector('.container');
+            document.querySelector('.form-container').appendChild(feedback);
+            feedback.style.color = 'red';
+            let firstInvalid = true;
+
+            function isValidHttpUrl(string) {
+                let url;
+                try {
+                    url = new URL(string);
+                } catch (_) {
+                    return false;
+                }
+                return url.protocol === "http:" || url.protocol === "https:";
+            }
+
+            function triggerShake() {
+                if (!firstInvalid) {
+                    container.classList.add('shake');
+                    container.addEventListener('animationend', () => {
+                        container.classList.remove('shake');
+                    });
+                }
+                firstInvalid = false;
+            }
+            function validateInputs() {
+                const id = idInput.value.trim();
+                const url = urlInput.value.trim();
+                if (!id || !url) {
+                    showError('ID或URL不能为空');
+                    return false;
+                }
+                if (/[^\x00-\x7F]+/.test(url)) {
+                    showError('URL不能包含中文或其他非ASCII字符');
+                    return false;
+                }
+                if (!isValidHttpUrl(url)) {
+                    showError('URL格式不正确，请输入有效的http或https URL');
+                    return false;
+                }
+                return true;
+            }
+            const checkInputs = debounce(function () {
+                const id = idInput.value.trim();
+                const url = urlInput.value.trim();
+                console.log('🤺🤺 id 🚀 ==>:', id);
+                console.log('🤺🤺 url 🚀 ==>:', url);
+                if (!id || !url) {
+                    feedback.textContent = 'ID或URL不能为空';
+                    showError('ID或URL不能为空');
+                    triggerShake();
+                    generateButton.disabled = true;
+                    return;
+                }
+                if (/[^\x00-\x7F]+/.test(url)) {
+                    feedback.textContent = 'URL不能包含中文或其他非ASCII字符';
+                    showError('URL不能包含中文或其他非ASCII字符')
+                    triggerShake();
+                    generateButton.disabled = true;
+                    return;
+                }
+                if (!isValidHttpUrl(url)) {
+                    feedback.textContent = 'URL格式不正确，请输入有效的http或https URL';
+                    showError('URL格式不正确，请输入有效的http或https URL')
+                    triggerShake();
+                    generateButton.disabled = true;
+                    return;
+                }
+                feedback.textContent = '';
+                generateButton.disabled = false;
+            }, 800);//注意和.shake animation 的时间一致
+
+            idInput.addEventListener('input', checkInputs);
+            urlInput.addEventListener('input', checkInputs);
+
+            generateButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                checkInputs(); // 先执行输入验证
+                const isValid = validateInputs();
+                // console.log('🤺🤺 generateButton.disabled 🚀 ==>:', generateButton.disabled);
+                // 检查按钮是否仍然被禁用，如果是，则不继续执行
+                if (!isValid) {
+                    container.classList.add('shake');
+                    return;
+                }
+
+                // 如果输入有效，继续执行链接生成逻辑
+                const id = idInput.value.trim();
+                const url = encodeURIComponent(urlInput.value.trim());
+                const resultUrl = `https://zhaoyaojing.wanxiangyuanma.com/capture.php?id=${id}&url=${url}`;
+                const resultLink = document.getElementById('resultUrl');
+                resultLink.href = resultUrl;
+                resultLink.textContent = resultUrl;
+                document.getElementById('result').innerHTML = `
+                🤖 <a href="${resultUrl}" id="resultUrl" 
+                    target="_blank">${resultUrl}</a>
+                    <span id="copyButton">✅复制</span>
+                    <span id="jumpButton">👁️跳转</span>
+                `;
+
+                function isMobileDevice() {
+                    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+                }
+
+                document.getElementById('copyButton').addEventListener('click', function () {
+                    navigator.clipboard.writeText(resultUrl).then(() => {
+                        const feedbackMessage = document.createElement('div');
+                        document.body.appendChild(feedbackMessage);
+                        feedbackMessage.textContent = '🤖链接已复制到剪贴板';
+                        // 检测是否为移动设备
+                        if (/Mobi|Android/i.test(navigator.userAgent)) {
+                            feedbackMessage.className = 'feedback-message-mobile feedback-visible';
+                        } else {
+                            feedbackMessage.className = 'feedback-message-pc feedback-visible';
+                        }
+                        setTimeout(() => {
+                            feedbackMessage.classList.remove('feedback-visible');
+                            document.body.removeChild(feedbackMessage); // 移除元素，避免DOM过多
+                        }, 1500); // 1.5秒后隐藏提示
+                    }).catch(err => {
+                        const feedbackMessage = document.createElement('div');
+                        document.body.appendChild(feedbackMessage);
+                        feedbackMessage.textContent = '😒复制链接到剪贴板失败，请手动复制';
+                        if (/Mobi|Android/i.test(navigator.userAgent)) {
+                            feedbackMessage.className = 'feedback-message-mobile feedback-visible';
+                        } else {
+                            feedbackMessage.className = 'feedback-message-pc feedback-visible';
+                        }
+                        setTimeout(() => {
+                            feedbackMessage.classList.remove('feedback-visible');
+                            document.body.removeChild(feedbackMessage); // 移除元素，避免DOM过多
+                        }, 1500); // 1.5秒后隐藏提示
+                    });
+                });
+                // 添加跳转按钮的事件监听器
+                document.getElementById('jumpButton').addEventListener('click', function () {
+                    window.open(resultUrl, '_blank');
+                });
+            });
+
+            previewButton.addEventListener('click', function () {
+                const id = idInput.value.trim();
+                if (!id) {
+                    alert('😎ID不能为空');
+                    return;
+                }
+                const galleryUrl = `https://zhaoyaojing.wanxiangyuanma.com/gallery.php?id=${id}`;
+                window.open(galleryUrl, '_blank');
+            });
+        });
+    </script>
+</body>
+
+
+
+</html>
