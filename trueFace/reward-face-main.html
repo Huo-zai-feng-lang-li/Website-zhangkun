@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <link href="../home/style.css" rel="stylesheet">
     <title>彩色之外-真容</title>
     <style>
@@ -445,46 +446,57 @@
                 resultLink.href = resultUrl;
                 resultLink.textContent = resultUrl;
                 document.getElementById('result').innerHTML = `
-                🤖 <a href="${resultUrl}" id="resultUrl" 
-                    target="_blank">${resultUrl}</a>
-                    <span id="copyButton">✅复制</span>
-                    <span id="jumpButton">👁️跳转</span>
-                `;
+                    🤖 <a href="${resultUrl}" id="resultUrl" 
+                        target="_blank">${resultUrl}</a>
+                        <span id="copyButton">✅复制</span>
+                        <span id="jumpButton">👁️跳转</span>
+                    `;
 
                 function isMobileDevice() {
                     return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
                 }
-
+                // 复制
                 document.getElementById('copyButton').addEventListener('click', function () {
-                    navigator.clipboard.writeText(resultUrl).then(() => {
-                        const feedbackMessage = document.createElement('div');
-                        document.body.appendChild(feedbackMessage);
-                        feedbackMessage.textContent = '🤖链接已复制到剪贴板';
-                        // 检测是否为移动设备
-                        if (/Mobi|Android/i.test(navigator.userAgent)) {
-                            feedbackMessage.className = 'feedback-message-mobile feedback-visible';
-                        } else {
-                            feedbackMessage.className = 'feedback-message-pc feedback-visible';
-                        }
-                        setTimeout(() => {
-                            feedbackMessage.classList.remove('feedback-visible');
-                            document.body.removeChild(feedbackMessage); // 移除元素，避免DOM过多
-                        }, 1500); // 1.5秒后隐藏提示
-                    }).catch(err => {
-                        const feedbackMessage = document.createElement('div');
-                        document.body.appendChild(feedbackMessage);
-                        feedbackMessage.textContent = '😒复制链接到剪贴板失败，请手动复制';
-                        if (/Mobi|Android/i.test(navigator.userAgent)) {
-                            feedbackMessage.className = 'feedback-message-mobile feedback-visible';
-                        } else {
-                            feedbackMessage.className = 'feedback-message-pc feedback-visible';
-                        }
-                        setTimeout(() => {
-                            feedbackMessage.classList.remove('feedback-visible');
-                            document.body.removeChild(feedbackMessage); // 移除元素，避免DOM过多
-                        }, 1500); // 1.5秒后隐藏提示
-                    });
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(resultUrl).then(() => {
+                            showFeedback('🤖链接已复制到剪贴板');
+                        }).catch(err => {
+                            fallbackCopyTextToClipboard(resultUrl);
+                        });
+                    } else {
+                        // 使用旧方法
+                        fallbackCopyTextToClipboard(resultUrl);
+                    }
                 });
+
+                function showFeedback(message) {
+                    const feedbackMessage = document.createElement('div');
+                    document.body.appendChild(feedbackMessage);
+                    feedbackMessage.textContent = message;
+                    const feedbackClass = /Mobi|Android/i.test(navigator.userAgent) ? 'feedback-message-mobile' : 'feedback-message-pc';
+                    feedbackMessage.className = `${feedbackClass} feedback-visible`;
+                    setTimeout(() => {
+                        feedbackMessage.classList.remove('feedback-visible');
+                        document.body.removeChild(feedbackMessage);
+                    }, 1500);
+                }
+
+                function fallbackCopyTextToClipboard(text) {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        const successful = document.execCommand('copy');
+                        const msg = successful ? '🤖链接已复制到剪贴板' : '😒复制链接到剪贴板失败，请手动复制';
+                        showFeedback(msg);
+                    } catch (err) {
+                        showFeedback('😒复制链接到剪贴板失败，请手动复制');
+                    }
+                    document.body.removeChild(textArea);
+                }
+
                 // 添加跳转按钮的事件监听器
                 document.getElementById('jumpButton').addEventListener('click', function () {
                     window.open(resultUrl, '_blank');

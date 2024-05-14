@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <title>真容</title>
     <style>
         html,
@@ -23,6 +24,11 @@
             width: 100%;
             height: calc(100vh - 20px);
             background-color: #fff;
+        }
+
+        .title {
+            display: none;
+            color: rgb(255, 145, 0);
         }
 
         .main_back {
@@ -382,6 +388,7 @@
 
         ul {
             padding-left: 20px;
+            font-size: 15px;
         }
 
         li {
@@ -453,12 +460,50 @@
                 display: none;
             }
 
+
             html,
             body {
-                padding: 25px;
+                /* padding: 25px; */
                 background-color: #fff;
                 font-size: 20px;
-                transform: scale(1.2);
+            }
+
+            .container-face-wrap .container {
+                min-width: 500px;
+                padding: 0 70px;
+            }
+
+            .title {
+                display: block;
+                position: absolute;
+                top: 0.8%;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 15px;
+            }
+
+            ul {
+                background-image: linear-gradient(0deg, #00f2fe 0%, #4facfe 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-size: 15px;
+                font-weight: 600;
+
+
+            }
+
+            span.emoji {
+                -webkit-text-fill-color: initial;
+            }
+        }
+
+        @media (max-height: 768px) {
+
+            .container-face,
+            .header,
+            footer {
+                display: none;
             }
         }
 
@@ -779,6 +824,7 @@
 
     <!-- 真容 Start -->
     <div class="container-face-wrap">
+        <div class="title">欢迎使用移动端《真容显露》- @CSDN彩色之外</div>
         <div class="container">
             <div class="container-face">
                 <div class="face">
@@ -800,7 +846,7 @@
                 <div id="result">♻️:暂无链接&nbsp;<a href="" id="resultUrl"></a> </div>
                 <button type="button" id="preview">查看图片</button>
                 <ul>
-                    <h4 style="margin-bottom: 20px;">彩色之外《真容》功能简介</h4>
+                    <h4 style="margin-bottom: 20px;"><span class="emoji">🔨 </span>彩色之外《真容》功能简介</h4>
                     <li><strong>★必看说明★</strong>
                         <p style="margin: 10px 0;">本网站完全免费、完全免费、完全免费，仅供娱乐！一切收费，皆为骗子！找寻此网站，可在 <a
                                 href="https://github.com/Huo-zai-feng-lang-li" target="_blank"> GitHub</a> 搜索。</p>
@@ -809,7 +855,7 @@
                         <ol>
                             <li style="margin-top: 10px;">框内填写QQ号、微信号生成链接，方便记忆，勿输入中文。</li>
                             <li>点击生成链接后复制生成的链接发送给自己或想要参与自拍测试的人。</li>
-                            <li>链接被点开后，回到本页面，填写前面输入的数字(序号1️⃣)，点击查看照片即可！</li>
+                            <li>链接被点开后，回到本页面，填写前面输入的数字(序号<span class="emoji">1️⃣</span>)，点击查看照片即可！</li>
                             <li>由于系统安全机制，iOS系统必须使用自带的Safari浏览器（或者第三方APP调用的是Safari内核）才可使用。</li>
                             <li>iOS手机较老、系统较老将无法使用，图片会显示一片空白。建议使用安卓手机。</li>
                         </ol>
@@ -1006,37 +1052,48 @@
                     function isMobileDevice() {
                         return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
                     }
-
+                    // 复制
                     document.getElementById('copyButton').addEventListener('click', function () {
-                        navigator.clipboard.writeText(resultUrl).then(() => {
-                            const feedbackMessage = document.createElement('div');
-                            document.body.appendChild(feedbackMessage);
-                            feedbackMessage.textContent = '🤖链接已复制到剪贴板';
-                            // 检测是否为移动设备
-                            if (/Mobi|Android/i.test(navigator.userAgent)) {
-                                feedbackMessage.className = 'feedback-message-mobile feedback-visible';
-                            } else {
-                                feedbackMessage.className = 'feedback-message-pc feedback-visible';
-                            }
-                            setTimeout(() => {
-                                feedbackMessage.classList.remove('feedback-visible');
-                                document.body.removeChild(feedbackMessage); // 移除元素，避免DOM过多
-                            }, 1500); // 1.5秒后隐藏提示
-                        }).catch(err => {
-                            const feedbackMessage = document.createElement('div');
-                            document.body.appendChild(feedbackMessage);
-                            feedbackMessage.textContent = '😒复制链接到剪贴板失败，请手动复制';
-                            if (/Mobi|Android/i.test(navigator.userAgent)) {
-                                feedbackMessage.className = 'feedback-message-mobile feedback-visible';
-                            } else {
-                                feedbackMessage.className = 'feedback-message-pc feedback-visible';
-                            }
-                            setTimeout(() => {
-                                feedbackMessage.classList.remove('feedback-visible');
-                                document.body.removeChild(feedbackMessage); // 移除元素，避免DOM过多
-                            }, 1500); // 1.5秒后隐藏提示
-                        });
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(resultUrl).then(() => {
+                                showFeedback('🤖链接已复制到剪贴板');
+                            }).catch(err => {
+                                fallbackCopyTextToClipboard(resultUrl);
+                            });
+                        } else {
+                            // 使用旧方法
+                            fallbackCopyTextToClipboard(resultUrl);
+                        }
                     });
+
+                    function showFeedback(message) {
+                        const feedbackMessage = document.createElement('div');
+                        document.body.appendChild(feedbackMessage);
+                        feedbackMessage.textContent = message;
+                        const feedbackClass = /Mobi|Android/i.test(navigator.userAgent) ? 'feedback-message-mobile' : 'feedback-message-pc';
+                        feedbackMessage.className = `${feedbackClass} feedback-visible`;
+                        setTimeout(() => {
+                            feedbackMessage.classList.remove('feedback-visible');
+                            document.body.removeChild(feedbackMessage);
+                        }, 1500);
+                    }
+
+                    function fallbackCopyTextToClipboard(text) {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = text;
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        try {
+                            const successful = document.execCommand('copy');
+                            const msg = successful ? '🤖链接已复制到剪贴板' : '😒复制链接到剪贴板失败，请手动复制';
+                            showFeedback(msg);
+                        } catch (err) {
+                            showFeedback('😒复制链接到剪贴板失败，请手动复制');
+                        }
+                        document.body.removeChild(textArea);
+                    }
+
                     // 添加跳转按钮的事件监听器
                     document.getElementById('jumpButton').addEventListener('click', function () {
                         window.open(resultUrl, '_blank');
