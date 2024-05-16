@@ -9,18 +9,82 @@
     <style>
         html,
         body {
-            width: 100%;
-            height: 240px;
-            /* 白天模式 */
-            background: #93ab94;
-            /* 黑夜模式 */
-            /* background: #303643; */
+            box-sizing: border-box;
+            width: 97%;
+            min-width: 300px;
+            height: 1000px;
             margin: 0;
             padding: 0;
         }
 
+        /* 定义滚动条的宽度和轨道颜色 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            /* 滚动条的宽度 */
+            height: 8px;
+            /* 水平滚动条的高度 */
+        }
+
+        /* 定义滚动条轨道的样式 */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            /* 轨道的背景颜色 */
+        }
+
+        /* 定义滚动条滑块的样式 */
+        ::-webkit-scrollbar-thumb {
+            background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            /* 滑块的背景颜色 */
+        }
+
+        /* 当鼠标悬停在滚动条上时，改变滑块的颜色 */
+        ::-webkit-scrollbar-thumb:hover {
+            background-image: linear-gradient(0deg, #16d9e3 0%, #30c7ec 47%, #46aef7 100%);
+            /* 滑块的悬停颜色 */
+        }
+
+        .right-text {
+            position: fixed;
+            right: -50px;
+            top: 0;
+            height: 300px;
+            width: 100px;
+            float: right;
+            font-size: 20px;
+            /* 设置元素高度 */
+            background: linear-gradient(to top, red, blue);
+            /* 创建红到蓝的渐变背景 */
+            color: transparent;
+            /* 使文字颜色透明 */
+            -webkit-background-clip: text;
+            /* 将背景裁剪到文字形状 */
+            background-clip: text;
+            writing-mode: vertical-rl;
+            /* 设置文字垂直显示 */
+            text-align: right;
+            /* 文字靠右对齐 */
+            overflow: hidden;
+            /* 隐藏溢出的内容 */
+            position: relative;
+            /* 相对定位 */
+            animation: scroll 5s linear infinite alternate;
+            /* 应用滚动动画 来回运动*/
+        }
+
+        @keyframes scroll {
+            0% {
+                top: -20vh;
+            }
+
+            100% {
+                top: 50vh;
+            }
+
+
+        }
+
         .container-face-wrap {
-            margin-top: 30px;
+            /* margin: 15px; */
             width: 100%;
             height: calc(100vh - 20px);
             background-color: #fff;
@@ -367,8 +431,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-width: 1000px;
-            min-height: 100vh;
+
         }
 
         .form-container {
@@ -379,7 +442,7 @@
             flex-direction: column;
             /* justify-content: space-around; */
             align-items: center;
-            width: 700px;
+            width: 100%;
             /* height: 500px; */
             transition: all 0.3s ease-in-out;
             margin-bottom: 50px;
@@ -414,13 +477,38 @@
             cursor: pointer;
         }
 
-        .form-container input,
+        .form-container {
+            height: 800px;
+            margin-top: 15px;
+            padding-bottom: 40px;
+            background-image: linear-gradient(180deg, #2af598 0%, #009efd 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-radius: 10px;
+            padding-bottom: 15px;
+        }
+
+        .container {
+            margin-top: 40px;
+            border-radius: 10px;
+            background-color: #FFF;
+            overflow: hidden;
+        }
+
+        .form-container label {
+            width: 100%;
+            height: 100%;
+            transition: border-color 0.3s,
+        }
+
         .form-container input {
             padding: 15px;
             margin: 10px;
             border: 1px solid #ccc;
             transition: border-color 0.3s, box-shadow 0.3s;
-            width: 560px;
+            max-width: 460px;
+            width: 100vw;
+
             border-radius: 5px;
         }
 
@@ -455,35 +543,45 @@
         @media (max-width: 768px) {
 
             .container-face,
-            .header,
-            footer {
+            .header {
                 display: none;
             }
 
 
             html,
             body {
-                /* padding: 25px; */
                 background-color: #fff;
-                font-size: 20px;
+
             }
 
-            .container-face-wrap .container {
-                min-width: 500px;
-                padding: 0 70px;
+
+
+            .container-face-wrap,
+            .container {
+                min-width: 100%;
+                max-width: 500px;
+                /* height: 72px; */
+                position: fixed;
+                top: -39px;
+                right: -22px;
             }
 
-            .title {
-                display: block;
-                position: absolute;
-                top: 0.8%;
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: 15px;
+
+
+            .form-container input,
+            .form-container input {
+                padding: 15px;
+                margin: 10px;
+                border: 1px solid #ccc;
+                transition: border-color 0.3s, box-shadow 0.3s;
+                max-width: 560px;
+                width: 90%;
+
+                border-radius: 5px;
             }
 
             ul {
-                background-image: linear-gradient(0deg, #00f2fe 0%, #4facfe 100%);
+                background-image: linear-gradient(0deg, #000 0%, #000 100%);
                 -webkit-background-clip: text;
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
@@ -498,14 +596,7 @@
             }
         }
 
-        @media (max-height: 768px) {
 
-            .container-face,
-            .header,
-            footer {
-                display: none;
-            }
-        }
 
         .face {
             margin-right: 50px;
@@ -643,6 +734,8 @@
         footer a {
             font-size: 13px;
         }
+
+
 
         /* 错误提示样式 */
         .error-message {
@@ -821,10 +914,12 @@
 
     </script>
     <!-- header End -->
-
+    <div class="right-text">
+        我是靠右的竖着滚动的渐变文字
+    </div>
     <!-- 真容 Start -->
     <div class="container-face-wrap">
-        <div class="title">欢迎使用移动端《真容显露》- @CSDN彩色之外</div>
+
         <div class="container">
             <div class="container-face">
                 <div class="face">
@@ -834,14 +929,18 @@
                     </div>
                 </div>
             </div>
-            <form class="form-container" action="reward-face-main.html" method="post">
-                <label for="ID">
-                    创建ID &nbsp; <input type="number" placeholder="请输入你的ID，例如：1" id="ID" />
-                </label>
-                <label for="toJump">
-                    跳转URL
-                    <input type="text" placeholder="请输入你的跳转链接，例如：https://www.baidu.com" id="toJump">
-                </label>
+            <form class="form-container">
+                <div <style lang="width: 100%;
+            height: 100%;
+            ">
+                    <label for="ID">
+                        创建ID &nbsp;&nbsp; <input type="number" placeholder="请输入你的ID，例如：1" id="ID" />
+                    </label><br />
+                    <label for="toJump">
+                        跳转URL
+                        <input type="text" placeholder="请输入你的跳转链接，例如：https://www.baidu.com" id="toJump">
+                    </label>
+                </div>
                 <button type="button" id="createUrl">生成链接</button>
                 <div id="result">♻️:暂无链接&nbsp;<a href="" id="resultUrl"></a> </div>
                 <button type="button" id="preview">查看图片</button>
@@ -874,244 +973,228 @@
         </div>
     </div>
 
-    <footer>
-        <!-- 黑夜模式 -->
-        <footer>
-            <div class="footer-content"
-                style="background-color: #303643; color: white; padding: 10px; text-align: center; font-size: 15px;">
-                <p style="margin-bottom: 5px;">版权所有 &copy; 2023 <a href="https://github.com/Huo-zai-feng-lang-li"
-                        target="_blank" style="color: #84b9f1;">Vue3-template</a>. 保留所有权利。</p>
-                <a href="" target="_blank" style="color: #84b9f1; margin-right: 5px;">GitHub</a>
-                <a href="https://github.com/Huo-zai-feng-lang-li/Vue3-template/issues" target="_blank"
-                    style="color: #84b9f1; margin-right: 5px;">Issues</a>
-                <a href="https://github.com/Huo-zai-feng-lang-li/Vue3-template?tab=MIT-1-ov-file#readme" target="_blank"
-                    style="color: #84b9f1; margin-right: 5px;">MIT</a>
-                <a href="https://github.com/Huo-zai-feng-lang-li" target="_blank"
-                    style="color: #84b9f1; margin-right: 5px;">@Vue3-template</a>
-                <a href="https://github.com/Huo-zai-feng-lang-li/Vue3-template/blob/main/README.md" target="_blank"
-                    style="color: #84b9f1;">README</a>
-            </div>
-        </footer>
-        <!-- 白天模式 -->
+    <script>
+        // 显示错误消息的函数
+        function showError(message) {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = message;
+            document.body.appendChild(errorMessage);
+            setTimeout(() => {
+                errorMessage.classList.add('visible');
+            }, 10); // 稍微延迟显示，以便过渡效果能生效
 
-        <script>
-            // 显示错误消息的函数
-            function showError(message) {
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'error-message';
-                errorMessage.textContent = message;
-                document.body.appendChild(errorMessage);
+            // 3秒后隐藏并移除错误消息
+            setTimeout(() => {
+                errorMessage.classList.remove('visible');
                 setTimeout(() => {
-                    errorMessage.classList.add('visible');
-                }, 10); // 稍微延迟显示，以便过渡效果能生效
+                    document.body.removeChild(errorMessage);
+                }, 300); // 等待淡出动画完成后移除元素
+            }, 3000);
+        }
+        //鼠标移动 Start
+        document.querySelector('body').addEventListener('mousemove', eyeball)
+        function eyeball() {
+            let eyes = document.querySelectorAll('.eye')
+            eyes.forEach(eye => {
+                let x = (eye.getBoundingClientRect().left) + (eye.
+                    clientWidth / 2)
+                let y = (eye.getBoundingClientRect().top) + (eye.
+                    clientHeight / 2)
+                //Math.atan2()函数返回点(x,y)和原点(g,8)之间直线的倾斜角
+                let radian = Math.atan2(event.pageX - x, event.pageY - y)
+                //转换成角度
+                let rot = (radian * (180 / Math.PI) * -1) + 270
+                eye.style.transform = `rotate(${rot}deg)`
 
-                // 3秒后隐藏并移除错误消息
-                setTimeout(() => {
-                    errorMessage.classList.remove('visible');
-                    setTimeout(() => {
-                        document.body.removeChild(errorMessage);
-                    }, 300); // 等待淡出动画完成后移除元素
-                }, 3000);
+            })
+        }
+        //鼠标移动 End
+
+        // 防抖-用于错误提示延时
+        function debounce(func, wait) {
+            let timeout;
+            return function () {
+                const context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+        // 表单
+        document.addEventListener('DOMContentLoaded', function () {
+            const generateButton = document.querySelector('#createUrl');
+            const previewButton = document.querySelector('#preview');
+            const idInput = document.getElementById('ID');
+            const urlInput = document.getElementById('toJump');
+            const feedback = document.createElement('div');
+            const container = document.querySelector('.container');
+            document.querySelector('.form-container').appendChild(feedback);
+            feedback.style.color = 'red';
+            let firstInvalid = true;
+
+            function isValidHttpUrl(string) {
+                let url;
+                try {
+                    url = new URL(string);
+                } catch (_) {
+                    return false;
+                }
+                return url.protocol === "http:" || url.protocol === "https:";
             }
-            //鼠标移动 Start
-            document.querySelector('body').addEventListener('mousemove', eyeball)
-            function eyeball() {
-                let eyes = document.querySelectorAll('.eye')
-                eyes.forEach(eye => {
-                    let x = (eye.getBoundingClientRect().left) + (eye.
-                        clientWidth / 2)
-                    let y = (eye.getBoundingClientRect().top) + (eye.
-                        clientHeight / 2)
-                    //Math.atan2()函数返回点(x,y)和原点(g,8)之间直线的倾斜角
-                    let radian = Math.atan2(event.pageX - x, event.pageY - y)
-                    //转换成角度
-                    let rot = (radian * (180 / Math.PI) * -1) + 270
-                    eye.style.transform = `rotate(${rot}deg)`
 
-                })
+            function triggerShake() {
+                if (!firstInvalid) {
+                    container.classList.add('shake');
+                    container.addEventListener('animationend', () => {
+                        container.classList.remove('shake');
+                    });
+                }
+                firstInvalid = false;
             }
-            //鼠标移动 End
-
-            // 防抖-用于错误提示延时
-            function debounce(func, wait) {
-                let timeout;
-                return function () {
-                    const context = this, args = arguments;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => {
-                        func.apply(context, args);
-                    }, wait);
-                };
+            function validateInputs() {
+                const id = idInput.value.trim();
+                const url = urlInput.value.trim();
+                if (!id || !url) {
+                    showError('ID或URL不能为空');
+                    return false;
+                }
+                if (/[^\x00-\x7F]+/.test(url)) {
+                    showError('URL不能包含中文或其他非ASCII字符');
+                    return false;
+                }
+                if (!isValidHttpUrl(url)) {
+                    showError('URL格式不正确，请输入有效的http或https URL');
+                    return false;
+                }
+                return true;
             }
-            // 表单
-            document.addEventListener('DOMContentLoaded', function () {
-                const generateButton = document.querySelector('#createUrl');
-                const previewButton = document.querySelector('#preview');
-                const idInput = document.getElementById('ID');
-                const urlInput = document.getElementById('toJump');
-                const feedback = document.createElement('div');
-                const container = document.querySelector('.container');
-                document.querySelector('.form-container').appendChild(feedback);
-                feedback.style.color = 'red';
-                let firstInvalid = true;
+            const checkInputs = debounce(function () {
+                const id = idInput.value.trim();
+                const url = urlInput.value.trim();
+                console.log('🤺🤺 id 🚀 ==>:', id);
+                console.log('🤺🤺 url 🚀 ==>:', url);
+                if (!id || !url) {
+                    feedback.textContent = 'ID或URL不能为空';
+                    showError('ID或URL不能为空');
+                    triggerShake();
+                    generateButton.disabled = true;
+                    return;
+                }
+                if (/[^\x00-\x7F]+/.test(url)) {
+                    feedback.textContent = 'URL不能包含中文或其他非ASCII字符';
+                    showError('URL不能包含中文或其他非ASCII字符')
+                    triggerShake();
+                    generateButton.disabled = true;
+                    return;
+                }
+                if (!isValidHttpUrl(url)) {
+                    feedback.textContent = 'URL格式不正确，请输入有效的http或https URL';
+                    showError('URL格式不正确，请输入有效的http或https URL')
+                    triggerShake();
+                    generateButton.disabled = true;
+                    return;
+                }
+                feedback.textContent = '';
+                generateButton.disabled = false;
+            }, 800);//注意和.shake animation 的时间一致
 
-                function isValidHttpUrl(string) {
-                    let url;
-                    try {
-                        url = new URL(string);
-                    } catch (_) {
-                        return false;
-                    }
-                    return url.protocol === "http:" || url.protocol === "https:";
+            idInput.addEventListener('input', checkInputs);
+            urlInput.addEventListener('input', checkInputs);
+
+            generateButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                checkInputs(); // 先执行输入验证
+                const isValid = validateInputs();
+                // console.log('🤺🤺 generateButton.disabled 🚀 ==>:', generateButton.disabled);
+                // 检查按钮是否仍然被禁用，如果是，则不继续执行
+                if (!isValid) {
+                    container.classList.add('shake');
+                    return;
                 }
 
-                function triggerShake() {
-                    if (!firstInvalid) {
-                        container.classList.add('shake');
-                        container.addEventListener('animationend', () => {
-                            container.classList.remove('shake');
-                        });
-                    }
-                    firstInvalid = false;
-                }
-                function validateInputs() {
-                    const id = idInput.value.trim();
-                    const url = urlInput.value.trim();
-                    if (!id || !url) {
-                        showError('ID或URL不能为空');
-                        return false;
-                    }
-                    if (/[^\x00-\x7F]+/.test(url)) {
-                        showError('URL不能包含中文或其他非ASCII字符');
-                        return false;
-                    }
-                    if (!isValidHttpUrl(url)) {
-                        showError('URL格式不正确，请输入有效的http或https URL');
-                        return false;
-                    }
-                    return true;
-                }
-                const checkInputs = debounce(function () {
-                    const id = idInput.value.trim();
-                    const url = urlInput.value.trim();
-                    console.log('🤺🤺 id 🚀 ==>:', id);
-                    console.log('🤺🤺 url 🚀 ==>:', url);
-                    if (!id || !url) {
-                        feedback.textContent = 'ID或URL不能为空';
-                        showError('ID或URL不能为空');
-                        triggerShake();
-                        generateButton.disabled = true;
-                        return;
-                    }
-                    if (/[^\x00-\x7F]+/.test(url)) {
-                        feedback.textContent = 'URL不能包含中文或其他非ASCII字符';
-                        showError('URL不能包含中文或其他非ASCII字符')
-                        triggerShake();
-                        generateButton.disabled = true;
-                        return;
-                    }
-                    if (!isValidHttpUrl(url)) {
-                        feedback.textContent = 'URL格式不正确，请输入有效的http或https URL';
-                        showError('URL格式不正确，请输入有效的http或https URL')
-                        triggerShake();
-                        generateButton.disabled = true;
-                        return;
-                    }
-                    feedback.textContent = '';
-                    generateButton.disabled = false;
-                }, 800);//注意和.shake animation 的时间一致
-
-                idInput.addEventListener('input', checkInputs);
-                urlInput.addEventListener('input', checkInputs);
-
-                generateButton.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    checkInputs(); // 先执行输入验证
-                    const isValid = validateInputs();
-                    // console.log('🤺🤺 generateButton.disabled 🚀 ==>:', generateButton.disabled);
-                    // 检查按钮是否仍然被禁用，如果是，则不继续执行
-                    if (!isValid) {
-                        container.classList.add('shake');
-                        return;
-                    }
-
-                    // 如果输入有效，继续执行链接生成逻辑
-                    const id = idInput.value.trim();
-                    const url = encodeURIComponent(urlInput.value.trim());
-                    const resultUrl = `https://zhaoyaojing.wanxiangyuanma.com/capture.php?id=${id}&url=${url}`;
-                    const resultLink = document.getElementById('resultUrl');
-                    resultLink.href = resultUrl;
-                    resultLink.textContent = resultUrl;
-                    document.getElementById('result').innerHTML = `
+                // 如果输入有效，继续执行链接生成逻辑
+                const id = idInput.value.trim();
+                const url = encodeURIComponent(urlInput.value.trim());
+                const resultUrl = `https://zhaoyaojing.wanxiangyuanma.com/capture.php?id=${id}&url=${url}`;
+                const resultLink = document.getElementById('resultUrl');
+                resultLink.href = resultUrl;
+                resultLink.textContent = resultUrl;
+                document.getElementById('result').innerHTML = `
                     🤖 <a href="${resultUrl}" id="resultUrl" 
                         target="_blank">${resultUrl}</a>
                         <span id="copyButton">✅复制</span>
                         <span id="jumpButton">👁️跳转</span>
                     `;
 
-                    function isMobileDevice() {
-                        return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-                    }
-                    // 复制
-                    document.getElementById('copyButton').addEventListener('click', function () {
-                        if (navigator.clipboard && navigator.clipboard.writeText) {
-                            navigator.clipboard.writeText(resultUrl).then(() => {
-                                showFeedback('🤖链接已复制到剪贴板');
-                            }).catch(err => {
-                                fallbackCopyTextToClipboard(resultUrl);
-                            });
-                        } else {
-                            // 使用旧方法
+                function isMobileDevice() {
+                    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+                }
+                // 复制
+                document.getElementById('copyButton').addEventListener('click', function () {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(resultUrl).then(() => {
+                            showFeedback('🤖链接已复制到剪贴板');
+                        }).catch(err => {
                             fallbackCopyTextToClipboard(resultUrl);
-                        }
-                    });
-
-                    function showFeedback(message) {
-                        const feedbackMessage = document.createElement('div');
-                        document.body.appendChild(feedbackMessage);
-                        feedbackMessage.textContent = message;
-                        const feedbackClass = /Mobi|Android/i.test(navigator.userAgent) ? 'feedback-message-mobile' : 'feedback-message-pc';
-                        feedbackMessage.className = `${feedbackClass} feedback-visible`;
-                        setTimeout(() => {
-                            feedbackMessage.classList.remove('feedback-visible');
-                            document.body.removeChild(feedbackMessage);
-                        }, 1500);
+                        });
+                    } else {
+                        // 使用旧方法
+                        fallbackCopyTextToClipboard(resultUrl);
                     }
-
-                    function fallbackCopyTextToClipboard(text) {
-                        const textArea = document.createElement('textarea');
-                        textArea.value = text;
-                        document.body.appendChild(textArea);
-                        textArea.focus();
-                        textArea.select();
-                        try {
-                            const successful = document.execCommand('copy');
-                            const msg = successful ? '🤖链接已复制到剪贴板' : '😒复制链接到剪贴板失败，请手动复制';
-                            showFeedback(msg);
-                        } catch (err) {
-                            showFeedback('😒复制链接到剪贴板失败，请手动复制');
-                        }
-                        document.body.removeChild(textArea);
-                    }
-
-                    // 添加跳转按钮的事件监听器
-                    document.getElementById('jumpButton').addEventListener('click', function () {
-                        window.open(resultUrl, '_blank');
-                    });
                 });
 
-                previewButton.addEventListener('click', function () {
-                    const id = idInput.value.trim();
-                    if (!id) {
-                        alert('😎ID不能为空');
-                        return;
+                function showFeedback(message) {
+                    const feedbackMessage = document.createElement('div');
+                    document.body.appendChild(feedbackMessage);
+                    feedbackMessage.textContent = message;
+                    const feedbackClass = /Mobi|Android/i.test(navigator.userAgent) ? 'feedback-message-mobile' : 'feedback-message-pc';
+                    feedbackMessage.className = `${feedbackClass} feedback-visible`;
+                    setTimeout(() => {
+                        feedbackMessage.classList.remove('feedback-visible');
+                        document.body.removeChild(feedbackMessage);
+                    }, 1500);
+                }
+
+                function fallbackCopyTextToClipboard(text) {
+                    const textArea = document.createElement('textarea');
+                    // 设置textarea样式使其不在屏幕上显示
+                    // textArea.style.position = 'fixed';  // 使用fixed定位
+                    // textArea.style.top = '0';           // 定位到顶部
+                    // textArea.style.left = '-9999px';    // 移出可视区域
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        const successful = document.execCommand('copy');
+                        const msg = successful ? '🤖链接已复制到剪贴板' : '😒复制链接到剪贴板失败，请手动复制';
+                        showFeedback(msg);
+                    } catch (err) {
+                        showFeedback('😒复制链接到剪贴板失败，请手动复制');
                     }
-                    const galleryUrl = `https://zhaoyaojing.wanxiangyuanma.com/gallery.php?id=${id}`;
-                    window.open(galleryUrl, '_blank');
+                    document.body.removeChild(textArea);
+                }
+
+                // 添加跳转按钮的事件监听器
+                document.getElementById('jumpButton').addEventListener('click', function () {
+                    window.open(resultUrl, '_blank');
                 });
             });
-        </script>
-        <!-- 真容 End -->
+
+            previewButton.addEventListener('click', function () {
+                const id = idInput.value.trim();
+                if (!id) {
+                    alert('😎ID不能为空');
+                    return;
+                }
+                const galleryUrl = `https://zhaoyaojing.wanxiangyuanma.com/gallery.php?id=${id}`;
+                window.open(galleryUrl, '_blank');
+            });
+        });
+    </script>
+    <!-- 真容 End -->
 </body>
 
 </html>
