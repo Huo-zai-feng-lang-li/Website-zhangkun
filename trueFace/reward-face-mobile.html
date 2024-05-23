@@ -144,20 +144,26 @@
             background: #4e4d4a;
             display: flex;
             align-items: center;
+            transition: all 0.6s;
             justify-content: center;
         }
 
         .face::before {
             content: '';
             position: absolute;
+            content: attr(data-text);
             top: 180px;
             width: 150px;
             height: 70px;
-            background: #b57700;
+            line-height: 40px;
+            content: var(--face-before-content, '');
+            background: var(--face-before-background, #b57700);
             border-bottom-left-radius: 70px;
             border-bottom-right-radius: 70px;
-            transition: 0.5s;
+            font-size: 20px;
+            transition: all 0.6s;
         }
+
 
         .face:hover:before {
             top: 210px;
@@ -379,21 +385,30 @@
 
     <script>
         const bodyoverflow = document.body
+        const face = document.querySelector('.face');
+        const documentStyle = document.documentElement.style;
         // 显示错误消息的函数
         function showError(message) {
             const errorMessage = document.createElement('div');
             bodyoverflow.style.overflow = 'hidden'
             errorMessage.className = 'error-message';
+            face.style.backgroundImage = 'linear-gradient(90deg,#ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)'
+
+            documentStyle.setProperty('--face-before-content', '"气得我基尔发紫"');
+            documentStyle.setProperty('--face-before-background', 'red');
+
             errorMessage.textContent = message;
             document.body.appendChild(errorMessage);
             setTimeout(() => {
                 errorMessage.classList.add('visible');
-
             }, 10); // 稍微延迟显示，以便过渡效果能生效
 
             // 3秒后隐藏并移除错误消息
             setTimeout(() => {
+                documentStyle.setProperty('--face-before-content', '');
+                documentStyle.setProperty('--face-before-background', '#b57700');
                 bodyoverflow.style.overflow = 'auto'
+                face.style.backgroundImage = 'initial'
                 errorMessage.classList.remove('visible');
                 setTimeout(() => {
                     document.body.removeChild(errorMessage);
@@ -481,8 +496,8 @@
             const checkInputs = debounce(function () {
                 const id = idInput.value.trim();
                 const url = urlInput.value.trim();
-                console.log('🤺🤺 id 🚀 ==>:', id);
-                console.log('🤺🤺 url 🚀 ==>:', url);
+                // console.log('🤺🤺 id 🚀 ==>:', id);
+                // console.log('🤺🤺 url 🚀 ==>:', url);
                 if (!id || !url) {
                     feedback.textContent = 'ID或URL不能为空';
                     showError('ID或URL不能为空');
@@ -511,6 +526,7 @@
             idInput.addEventListener('input', checkInputs);
             urlInput.addEventListener('input', checkInputs);
 
+
             generateButton.addEventListener('click', function (event) {
                 event.preventDefault();
                 checkInputs(); // 先执行输入验证
@@ -521,7 +537,6 @@
                     container.classList.add('shake');
                     return;
                 }
-
                 // 如果输入有效，继续执行链接生成逻辑
                 const id = idInput.value.trim();
                 const url = encodeURIComponent(urlInput.value.trim());
