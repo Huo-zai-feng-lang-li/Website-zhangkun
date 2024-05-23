@@ -29,16 +29,20 @@
         }
 
         .form-container {
-            background-color: #EAF3FF;
+            border: 1px dotted #d0d0d0;
+            box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+            margin: 15px 0 15px 0;
             border-radius: 5px;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            /* justify-content: space-around; */
             align-items: center;
             width: 700px;
-            /* height: 500px; */
             transition: all 0.3s ease-in-out;
+        }
+
+        .form-container:hover {
+            box-shadow: initial;
         }
 
 
@@ -110,6 +114,24 @@
         @media (max-width: 768px) {
             .container-face {
                 display: none;
+            }
+
+            .container {
+                display: flex;
+                justify-content: flex-start !important;
+                align-items: flex-start !important;
+                width: 31px;
+                height: 100%;
+
+            }
+
+            .form-container {
+                width: initial;
+
+            }
+
+            .error-message {
+                left: 50% !important;
             }
         }
 
@@ -245,6 +267,64 @@
             display: block;
             opacity: 1;
         }
+
+
+        /* 错误提示样式 */
+        .error-message {
+            position: fixed;
+            top: 20px;
+            left: 60%;
+            transform: translateX(-50%);
+            background-color: #ffcccc;
+            color: #cc0000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            /* 默认不显示 */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .error-message.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 定义滚动条的宽度和轨道颜色 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            /* 滚动条的宽度 */
+            height: 8px;
+            /* 水平滚动条的高度 */
+        }
+
+
+
+
+        /* 定义滚动条轨道的样式 */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            /* 轨道的背景颜色 */
+        }
+
+        /* 定义滚动条滑块的样式 */
+        ::-webkit-scrollbar-thumb {
+            background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            /* 滑块的背景颜色 */
+
+        }
+
+        /* 当鼠标悬停在滚动条上时，改变滑块的颜色 */
+        ::-webkit-scrollbar-thumb:hover {
+            background-image: linear-gradient(0deg, #16d9e3 0%, #30c7ec 47%, #46aef7 100%);
+            border-radius: 50%;
+            /* 鼠标小胖手 */
+            cursor: pointer;
+
+
+        }
     </style>
 </head>
 
@@ -298,18 +378,22 @@
     </div>
 
     <script>
+        const bodyoverflow = document.body
         // 显示错误消息的函数
         function showError(message) {
             const errorMessage = document.createElement('div');
+            bodyoverflow.style.overflow = 'hidden'
             errorMessage.className = 'error-message';
             errorMessage.textContent = message;
             document.body.appendChild(errorMessage);
             setTimeout(() => {
                 errorMessage.classList.add('visible');
+
             }, 10); // 稍微延迟显示，以便过渡效果能生效
 
             // 3秒后隐藏并移除错误消息
             setTimeout(() => {
+                bodyoverflow.style.overflow = 'auto'
                 errorMessage.classList.remove('visible');
                 setTimeout(() => {
                     document.body.removeChild(errorMessage);
@@ -483,6 +567,10 @@
 
                 function fallbackCopyTextToClipboard(text) {
                     const textArea = document.createElement('textarea');
+                    // 设置textarea样式使其不在屏幕上显示
+                    textArea.style.position = 'fixed';  // 使用fixed定位
+                    textArea.style.top = '0';           // 定位到顶部
+                    textArea.style.left = '-9999px';    // 移出可视区域
                     textArea.value = text;
                     document.body.appendChild(textArea);
                     textArea.focus();

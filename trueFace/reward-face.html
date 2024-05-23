@@ -11,6 +11,7 @@
         body {
             box-sizing: border-box;
             width: 97%;
+            height: 100%;
             min-width: 300px;
             height: 1000px;
             margin: 0;
@@ -118,6 +119,7 @@
             /* 渐变字体 */
             background: linear-gradient(270deg, #03a9f4, #cc39a4, #ffb5d2);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             font-size: 2.5em;
         }
@@ -1160,9 +1162,9 @@
                 function fallbackCopyTextToClipboard(text) {
                     const textArea = document.createElement('textarea');
                     // 设置textarea样式使其不在屏幕上显示
-                    // textArea.style.position = 'fixed';  // 使用fixed定位
-                    // textArea.style.top = '0';           // 定位到顶部
-                    // textArea.style.left = '-9999px';    // 移出可视区域
+                    textArea.style.position = 'fixed';  // 使用fixed定位
+                    textArea.style.top = '0';           // 定位到顶部
+                    textArea.style.left = '-9999px';    // 移出可视区域
                     textArea.value = text;
                     document.body.appendChild(textArea);
                     textArea.focus();
