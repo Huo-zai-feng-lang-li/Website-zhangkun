@@ -215,7 +215,7 @@
                   100%;
               "></div>
 					<p class="url" aria-hidden="true">真容显露</p>
-					<a href="./trueFace/reward.html" title="网恋真容显露工具" target="_blank"></a>
+					<a href="javascript:void(0);" onclick="openRewardPage()" title="网恋真容显露工具" target="_blank"></a>
 				</div>
 
 				<!-- 音乐 -->
@@ -364,14 +364,22 @@
 		engineCheckbox.checked = engineChecked === '移动' ? true : false;
 	}
 	// 禁止右键和F12
-	document.oncontextmenu = function () {
-		return false;
-	}
-	document.onkeydown = function () {
-		if (window.event && window.event.keyCode == 123) {
-			event.keyCode = 0;
-			event.returnValue = false;
-			return false;
+	// document.oncontextmenu = function () {
+	// 	return false;
+	// }
+	// document.onkeydown = function () {
+	// 	if (window.event && window.event.keyCode == 123) {
+	// 		event.keyCode = 0;
+	// 		event.returnValue = false;
+	// 		return false;
+	// 	}
+	// }
+	function openRewardPage() {
+		var userAgent = navigator.userAgent;
+		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+			window.open("./trueFace/reward-face-mobile.html", "_blank");
+		} else {
+			window.open("./trueFace/reward.html", "_blank");
 		}
 	}
 </script>
