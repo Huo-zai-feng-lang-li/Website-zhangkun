@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>邮件发送系统</title>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--primary-color: #4F46E5;
+			--hover-color: #4338CA;
+			--bg-color: #F3F4F6;
+			--card-bg: #FFFFFF;
+			--text-color: #1F2937;
+			--error-color: #EF4444;
+			--success-color: #10B981;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Noto Sans SC', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			min-height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 20px;
+		}
+
+		.container {
+			background: var(--card-bg);
+			border-radius: 16px;
+			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+			width: 100%;
+			max-width: 500px;
+			padding: 2rem;
+			opacity: 0;
+			transform: translateY(20px);
+			animation: slideUp 0.6s ease forwards;
+		}
+
+		@keyframes slideUp {
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		h1 {
+			text-align: center;
+			color: var(--text-color);
+			font-size: 1.875rem;
+			margin-bottom: 2rem;
+			position: relative;
+		}
+
+		h1::after {
+			content: '';
+			position: absolute;
+			bottom: -8px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 60px;
+			height: 4px;
+			background: var(--primary-color);
+			border-radius: 2px;
+		}
+
+		.form-group {
+			margin-bottom: 1.5rem;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 0.5rem;
+			font-weight: 500;
+			color: var(--text-color);
+		}
+
+		input {
+			width: 100%;
+			padding: 0.75rem;
+			border: 2px solid #E5E7EB;
+			border-radius: 8px;
+			font-size: 1rem;
+			transition: all 0.3s ease;
+		}
+
+		input:focus {
+			outline: none;
+			border-color: var(--primary-color);
+			box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+		}
+
+		button {
+			width: 100%;
+			padding: 0.875rem;
+			background: var(--primary-color);
+			color: white;
+			border: none;
+			border-radius: 8px;
+			font-size: 1rem;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			position: relative;
+			overflow: hidden;
+		}
+
+		button:hover {
+			background: var(--hover-color);
+			transform: translateY(-1px);
+		}
+
+		button:active {
+			transform: translateY(0);
+		}
+
+		button::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 5px;
+			height: 5px;
+			background: rgba(255, 255, 255, 0.5);
+			opacity: 0;
+			border-radius: 100%;
+			transform: scale(1, 1) translate(-50%);
+			transform-origin: 50% 50%;
+		}
+
+		button:focus:not(:active)::after {
+			animation: ripple 1s ease-out;
+		}
+
+		@keyframes ripple {
+			0% {
+				transform: scale(0, 0);
+				opacity: 0.5;
+			}
+
+			100% {
+				transform: scale(100, 100);
+				opacity: 0;
+			}
+		}
+
+		#result {
+			margin-top: 1.5rem;
+			max-height: 300px;
+			overflow-y: auto;
+			padding-right: 10px;
+		}
+
+		#result::-webkit-scrollbar {
+			width: 6px;
+		}
+
+		#result::-webkit-scrollbar-track {
+			background: #F3F4F6;
+			border-radius: 3px;
+		}
+
+		#result::-webkit-scrollbar-thumb {
+			background: #CBD5E1;
+			border-radius: 3px;
+		}
+
+		.message {
+			padding: 1rem;
+			border-radius: 8px;
+			margin-bottom: 1rem;
+			animation: fadeIn 0.3s ease;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.success {
+			background: rgba(16, 185, 129, 0.1);
+			color: var(--success-color);
+			border: 1px solid rgba(16, 185, 129, 0.2);
+		}
+
+		.error {
+			background: rgba(239, 68, 68, 0.1);
+			color: var(--error-color);
+			border: 1px solid rgba(239, 68, 68, 0.2);
+		}
+
+		.loading {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			border: 3px solid rgba(255, 255, 255, 0.3);
+			border-radius: 50%;
+			border-top-color: white;
+			animation: spin 1s ease-in-out infinite;
+			margin-left: 8px;
+		}
+
+		@keyframes spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.progress-bar {
+			width: 100%;
+			height: 4px;
+			background: #E5E7EB;
+			border-radius: 2px;
+			margin-top: 1rem;
+			overflow: hidden;
+			display: none;
+		}
+
+		.progress-bar-fill {
+			height: 100%;
+			background: var(--primary-color);
+			width: 0%;
+			transition: width 0.3s ease;
+		}
+
+		/* 新增：输入框提示文字样式 */
+		input::placeholder {
+			color: #9CA3AF;
+		}
+
+		/* 新增：按钮文字样式 */
+		button {
+			text-align: center;
+		}
+
+		/* 新增：优化标题文字样式 */
+		h1 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		/* 新增：调整表单组间距 */
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		/* 新增：调整结果区域背景色 */
+		#result {
+			background-color: #F9FAFB;
+		}
+
+		/* 新增：优化消息提示框圆角 */
+		.message {
+			border-radius: 10px;
+		}
+
+		/* 新增：优化加载图标大小 */
+		.loading {
+			width: 16px;
+			height: 16px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>邮件发送系统</h1>
+		<form id="emailForm">
+			<div class="form-group">
+				<label for="to">收件人邮箱</label>
+				<input type="email" id="to" required placeholder="请输入收件人邮箱地址">
+			</div>
+			<div class="form-group">
+				<label for="times">发送次数</label>
+				<input type="number" id="times" required min="1" value="1" placeholder="请输入发送次数">
+			</div>
+			<div class="form-group">
+				<label for="frequency">发送频率（秒）</label>
+				<input type="number" id="frequency" required min="0.1" step="0.1" value="1" placeholder="请输入发送频率">
+			</div>
+			<button type="submit" id="submitBtn">
+				发送邮件
+				<span class="loading" style="display: none;"></span>
+			</button>
+		</form>
+		<div class="progress-bar">
+			<div class="progress-bar-fill"></div>
+		</div>
+		<div id="result"></div>
+	</div>
+
+	<script>
+		function validateEmail(email) {
+			return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+		}
+
+		function showMessage(message, type, resultDiv) {
+			const messageDiv = document.createElement('div');
+			messageDiv.className = `message ${type}`;
+			messageDiv.textContent = message;
+			resultDiv.insertBefore(messageDiv, resultDiv.firstChild);
+		}
+
+		async function sendGetRequest(url, params, resultDiv) {
+			const email = params.to;
+			const username = 'hh';
+			const fullUrl = `https://ygwyy.top/邮箱/index.php?email=${encodeURIComponent(email)}&username=${username}`;
+
+			const response = await fetch(fullUrl);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			const responseData = await response.text();
+			showMessage(`请求已发送: ${responseData}`, 'success', resultDiv);
+		}
+
+		async function sendRequests(event) {
+			event.preventDefault();
+			const submitBtn = document.getElementById('submitBtn');
+			const loadingSpinner = submitBtn.querySelector('.loading');
+			const progressBar = document.querySelector('.progress-bar');
+			const progressBarFill = document.querySelector('.progress-bar-fill');
+
+			const to = document.getElementById('to').value;
+			const times = parseInt(document.getElementById('times').value);
+			const frequency = parseFloat(document.getElementById('frequency').value);
+			const resultDiv = document.getElementById('result');
+
+			resultDiv.innerHTML = '';
+
+			if (!validateEmail(to)) {
+				showMessage('邮箱格式不正确，请重新输入！', 'error', resultDiv);
+				return;
+			}
+
+			if (isNaN(times) || times < 1) {
+				showMessage('请输入有效的发送次数（大于等于1）！', 'error', resultDiv);
+				return;
+			}
+
+			if (isNaN(frequency) || frequency < 0.1) {
+				showMessage('请输入有效的发送频率（大于等于0.1秒）！', 'error', resultDiv);
+				return;
+			}
+
+			// 显示加载状态
+			submitBtn.disabled = true;
+			loadingSpinner.style.display = 'inline-block';
+			progressBar.style.display = 'block';
+
+			let successCount = 0;
+			let errorCount = 0;
+
+			try {
+				for (let i = 0; i < times; i++) {
+					const progress = ((i + 1) / times) * 100;
+					progressBarFill.style.width = `${progress}%`;
+
+					const params = { to };
+					try {
+						await sendGetRequest('', params, resultDiv);
+						successCount++;
+					} catch (error) {
+						errorCount++;
+					}
+
+					if (i < times - 1) {
+						await new Promise(resolve => setTimeout(resolve, frequency * 1000));
+					}
+				}
+			} catch (error) {
+				showMessage(`发送过程中出现错误: ${error.message}`, 'error', resultDiv);
+			} finally {
+				// 显示最终结果
+				if (successCount > 0) {
+					showMessage(`成功发送 ${successCount} 条消息`, 'success', resultDiv);
+				}
+				if (errorCount > 0) {
+					showMessage(`${errorCount} 条消息发送成功`, 'error', resultDiv);
+				}
+
+				// 恢复按钮状态
+				submitBtn.disabled = false;
+				loadingSpinner.style.display = 'none';
+				setTimeout(() => {
+					progressBar.style.display = 'none';
+					progressBarFill.style.width = '0%';
+				}, 1000);
+			}
+		}
+
+		document.getElementById('emailForm').addEventListener('submit', sendRequests);
+	</script>
+</body>
+
+</html>

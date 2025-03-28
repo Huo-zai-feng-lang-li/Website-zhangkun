@@ -25,12 +25,26 @@
   <script src="./script.js"></script>
   <!-- 3秒跳转首页 -->
   <script>
-    setTimeout(function () {
-      window.location.href = "./home.html";
-    }, 3000);
-    // 为了判断是否进入过该网站
     window.onload = function () {
-      localStorage.setItem("first", JSON.stringify({ time: new Date().getTime(), text: '进入过该网站' }));
+      // 检查是否首次访问
+      const isFirstVisit = !localStorage.getItem("first");
+
+      setTimeout(function () {
+        // 根据是否首次访问决定跳转路径
+        const redirectPath = isFirstVisit
+          ? "./Login/login.html"
+          : "./home.html";
+
+        // 如果是首次访问则设置标记
+        if (isFirstVisit) {
+          localStorage.setItem("first", JSON.stringify({
+            time: new Date().getTime(),
+            text: '进入过该网站'
+          }));
+        }
+
+        window.location.href = redirectPath;
+      }, 3000);
     }
   </script>
 
