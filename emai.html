@@ -1,20 +1,73 @@
-<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>邮件发送系统</title>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+	<title>智能邮件发送系统</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&amp;family=Noto+Sans+SC:wght@300;400;500;600;700&amp;display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<style>
 		:root {
-			--primary-color: #4F46E5;
-			--hover-color: #4338CA;
-			--bg-color: #F3F4F6;
+			--primary-color: #6366F1;
+			--primary-light: #818CF8;
+			--primary-dark: #4F46E5;
+			--primary-gradient: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%);
+			--secondary-color: #06B6D4;
+			--secondary-gradient: linear-gradient(135deg, #0891B2 0%, #22D3EE 100%);
+			--accent-color: #F43F5E;
+			--accent-gradient: linear-gradient(135deg, #E11D48 0%, #FB7185 100%);
+
+			--bg-color: #F8FAFC;
+			--bg-alt: #F1F5F9;
 			--card-bg: #FFFFFF;
-			--text-color: #1F2937;
+			--card-bg-dark: #1E293B;
+
+			--text-color: #0F172A;
+			--text-secondary: #475569;
+			--text-light: #94A3B8;
+			--text-on-dark: #E2E8F0;
+
 			--error-color: #EF4444;
 			--success-color: #10B981;
+			--warning-color: #F59E0B;
+			--info-color: #0EA5E9;
+
+			--border-color: #E2E8F0;
+			--border-focus: #CBD5E1;
+
+			--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+			--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+			--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+			--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+			--shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+			--spacing-1: 0.25rem;
+			--spacing-2: 0.5rem;
+			--spacing-3: 0.75rem;
+			--spacing-4: 1rem;
+			--spacing-5: 1.25rem;
+			--spacing-6: 1.5rem;
+			--spacing-8: 2rem;
+			--spacing-10: 2.5rem;
+			--spacing-12: 3rem;
+			--spacing-16: 4rem;
+			--spacing-20: 5rem;
+
+			--radius-xs: 0.25rem;
+			--radius-sm: 0.5rem;
+			--radius-md: 0.75rem;
+			--radius-lg: 1rem;
+			--radius-xl: 1.5rem;
+			--radius-2xl: 2rem;
+			--radius-full: 9999px;
+
+			--input-height: 3.5rem;
+			--anim-duration: 0.3s;
+			--transition-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 		}
 
 		* {
@@ -24,161 +77,816 @@
 		}
 
 		body {
-			font-family: 'Noto Sans SC', sans-serif;
-			background-color: var(--bg-color);
+			font-family: 'Outfit', 'Noto Sans SC', sans-serif;
+			background: var(--bg-color);
 			color: var(--text-color);
 			min-height: 100vh;
+			overflow-x: hidden;
+			display: flex;
+			flex-direction: column;
+			position: relative;
+		}
+
+		.page-loader {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: #fff;
+			z-index: 9999;
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			padding: 20px;
+			flex-direction: column;
 		}
 
-		.container {
-			background: var(--card-bg);
-			border-radius: 16px;
-			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-			width: 100%;
-			max-width: 500px;
-			padding: 2rem;
-			opacity: 0;
-			transform: translateY(20px);
-			animation: slideUp 0.6s ease forwards;
+		.loader-icon {
+			position: relative;
+			width: 80px;
+			height: 80px;
 		}
 
-		@keyframes slideUp {
-			to {
-				opacity: 1;
+		.loader-letter {
+			position: absolute;
+			width: 60px;
+			height: 60px;
+			background: var(--primary-gradient);
+			border-radius: var(--radius-md);
+			top: 0;
+			left: 10px;
+			z-index: 1;
+			animation: letterMove 2s infinite var(--transition-bezier);
+		}
+
+		.loader-envelope {
+			position: absolute;
+			width: 80px;
+			height: 50px;
+			border-radius: var(--radius-sm);
+			background: var(--secondary-gradient);
+			bottom: 0;
+			z-index: 2;
+			perspective: 700px;
+			overflow: hidden;
+		}
+
+		.loader-flap {
+			position: absolute;
+			width: 80px;
+			height: 50px;
+			background: var(--secondary-color);
+			border-radius: var(--radius-sm);
+			transform-origin: top;
+			transform-style: preserve-3d;
+			transform: rotateX(0deg);
+			top: 0;
+			z-index: 3;
+			animation: flapMove 2s infinite var(--transition-bezier);
+		}
+
+		@keyframes letterMove {
+
+			0%,
+			15% {
+				transform: translateY(0);
+			}
+
+			30%,
+			40% {
+				transform: translateY(30px);
+			}
+
+			85%,
+			100% {
 				transform: translateY(0);
 			}
 		}
 
-		h1 {
-			text-align: center;
+		@keyframes flapMove {
+
+			0%,
+			15% {
+				transform: rotateX(0deg);
+				background: var(--secondary-color);
+			}
+
+			30%,
+			40% {
+				transform: rotateX(90deg);
+				background: var(--primary-light);
+			}
+
+			85%,
+			100% {
+				transform: rotateX(0deg);
+				background: var(--secondary-color);
+			}
+		}
+
+		.loader-text {
+			margin-top: var(--spacing-8);
+			font-size: 1.25rem;
+			color: var(--text-secondary);
+			font-weight: 500;
+			letter-spacing: 0.05em;
+		}
+
+		.hero-background {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: -1;
+			overflow: hidden;
+		}
+
+		.hero-blob {
+			position: absolute;
+			border-radius: var(--radius-full);
+			filter: blur(50px);
+			opacity: 0.1;
+		}
+
+		.blob-1 {
+			width: 60vw;
+			height: 60vw;
+			background: var(--primary-color);
+			top: -20vw;
+			right: -20vw;
+			animation: blob-float 20s ease-in-out infinite alternate;
+		}
+
+		.blob-2 {
+			width: 40vw;
+			height: 40vw;
+			background: var(--secondary-color);
+			bottom: -10vw;
+			left: -10vw;
+			animation: blob-float 15s ease-in-out infinite alternate-reverse;
+		}
+
+		.blob-3 {
+			width: 30vw;
+			height: 30vw;
+			background: var(--accent-color);
+			top: 30vh;
+			left: 20vw;
+			animation: blob-float 25s ease-in-out infinite alternate;
+		}
+
+		@keyframes blob-float {
+			0% {
+				transform: translate(0, 0) scale(1);
+			}
+
+			50% {
+				transform: translate(5%, 5%) scale(1.1);
+			}
+
+			100% {
+				transform: translate(-5%, -5%) scale(0.9);
+			}
+		}
+
+		.main-container {
+			display: flex;
+			flex-direction: column;
+			min-height: 100vh;
+			max-width: 1440px;
+			width: 100%;
+			margin: 0 auto;
+			padding: var(--spacing-6);
+			position: relative;
+			z-index: 1;
+		}
+
+		.header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: var(--spacing-4) 0;
+		}
+
+		.logo {
+			display: flex;
+			align-items: center;
+			gap: var(--spacing-3);
+		}
+
+		.logo-icon {
+			font-size: 1.5rem;
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: var(--primary-gradient);
+			color: white;
+			border-radius: var(--radius-lg);
+		}
+
+		.logo-text {
+			font-weight: 700;
+			font-size: 1.25rem;
 			color: var(--text-color);
-			font-size: 1.875rem;
-			margin-bottom: 2rem;
+		}
+
+		.content-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: var(--spacing-16);
+			flex: 1;
+			align-items: center;
+			margin: var(--spacing-8) 0;
+		}
+
+		.hero-content {
 			position: relative;
 		}
 
-		h1::after {
-			content: '';
-			position: absolute;
-			bottom: -8px;
-			left: 50%;
-			transform: translateX(-50%);
-			width: 60px;
-			height: 4px;
-			background: var(--primary-color);
-			border-radius: 2px;
-		}
-
-		.form-group {
-			margin-bottom: 1.5rem;
-		}
-
-		label {
-			display: block;
-			margin-bottom: 0.5rem;
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			gap: var(--spacing-2);
+			background: var(--bg-alt);
+			color: var(--text-secondary);
+			padding: var(--spacing-2) var(--spacing-4);
+			border-radius: var(--radius-full);
+			font-size: 0.875rem;
 			font-weight: 500;
-			color: var(--text-color);
-		}
-
-		input {
-			width: 100%;
-			padding: 0.75rem;
-			border: 2px solid #E5E7EB;
-			border-radius: 8px;
-			font-size: 1rem;
-			transition: all 0.3s ease;
-		}
-
-		input:focus {
-			outline: none;
-			border-color: var(--primary-color);
-			box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-		}
-
-		button {
-			width: 100%;
-			padding: 0.875rem;
-			background: var(--primary-color);
-			color: white;
-			border: none;
-			border-radius: 8px;
-			font-size: 1rem;
-			font-weight: 500;
-			cursor: pointer;
-			transition: all 0.3s ease;
+			margin-bottom: var(--spacing-6);
 			position: relative;
 			overflow: hidden;
 		}
 
-		button:hover {
-			background: var(--hover-color);
-			transform: translateY(-1px);
-		}
-
-		button:active {
-			transform: translateY(0);
-		}
-
-		button::after {
+		.badge::after {
 			content: '';
 			position: absolute;
-			top: 50%;
-			left: 50%;
-			width: 5px;
-			height: 5px;
-			background: rgba(255, 255, 255, 0.5);
-			opacity: 0;
-			border-radius: 100%;
-			transform: scale(1, 1) translate(-50%);
-			transform-origin: 50% 50%;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 30px;
+			background: linear-gradient(90deg,
+					rgba(255, 255, 255, 0) 0%,
+					rgba(255, 255, 255, 0.8) 50%,
+					rgba(255, 255, 255, 0) 100%);
+			animation: shine 3s infinite;
 		}
 
-		button:focus:not(:active)::after {
-			animation: ripple 1s ease-out;
-		}
-
-		@keyframes ripple {
+		@keyframes shine {
 			0% {
-				transform: scale(0, 0);
-				opacity: 0.5;
+				transform: translateX(-100%);
 			}
 
 			100% {
-				transform: scale(100, 100);
+				transform: translateX(400%);
+			}
+		}
+
+		.badge i {
+			color: var(--primary-color);
+		}
+
+		.hero-title {
+			font-size: clamp(2.5rem, 5vw, 4rem);
+			font-weight: 700;
+			line-height: 1.1;
+			margin-bottom: var(--spacing-6);
+			background: var(--primary-gradient);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+		}
+
+		.hero-description {
+			font-size: clamp(1rem, 1.5vw, 1.25rem);
+			color: var(--text-secondary);
+			line-height: 1.6;
+			margin-bottom: var(--spacing-8);
+			max-width: 90%;
+		}
+
+		.hero-features {
+			display: flex;
+			flex-direction: column;
+			gap: var(--spacing-4);
+			margin-bottom: var(--spacing-8);
+		}
+
+		.feature {
+			display: flex;
+			align-items: center;
+			gap: var(--spacing-4);
+		}
+
+		.feature-icon {
+			width: 48px;
+			height: 48px;
+			border-radius: var(--radius-lg);
+			background: var(--bg-alt);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.25rem;
+			color: var(--primary-color);
+			transition: all 0.3s ease;
+		}
+
+		.feature:hover .feature-icon {
+			background: var(--primary-gradient);
+			color: white;
+			transform: translateY(-3px);
+			box-shadow: var(--shadow-md);
+		}
+
+		.feature-text {
+			flex: 1;
+		}
+
+		.feature-title {
+			font-weight: 600;
+			font-size: 1.125rem;
+			margin-bottom: var(--spacing-1);
+		}
+
+		.feature-description {
+			color: var(--text-secondary);
+			font-size: 0.875rem;
+			line-height: 1.5;
+		}
+
+		.hero-graphic {
+			position: relative;
+		}
+
+		.mail-illustration {
+			width: 100%;
+			height: 500px;
+			background: var(--card-bg);
+			border-radius: var(--radius-2xl);
+			box-shadow: var(--shadow-xl);
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+			transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+			transition: all 0.5s ease;
+		}
+
+		.mail-illustration:hover {
+			transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+		}
+
+		.mail-graphic {
+			position: relative;
+			width: 70%;
+			height: 70%;
+			z-index: 2;
+		}
+
+		.envelope {
+			position: absolute;
+			width: 220px;
+			height: 150px;
+			background: var(--secondary-gradient);
+			border-radius: var(--radius-md);
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			box-shadow: var(--shadow-lg);
+			overflow: hidden;
+		}
+
+		.envelope-flap {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			clip-path: polygon(0 0, 100% 0, 50% 50%);
+			background: var(--secondary-color);
+			z-index: 2;
+			transform-origin: top;
+			animation: flapWave 4s ease-in-out infinite;
+		}
+
+		@keyframes flapWave {
+
+			0%,
+			100% {
+				transform: rotateX(0deg);
+			}
+
+			50% {
+				transform: rotateX(30deg);
+			}
+		}
+
+		.letter {
+			position: absolute;
+			width: 180px;
+			height: 110px;
+			background: white;
+			border-radius: var(--radius-sm);
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 1;
+			padding: var(--spacing-4);
+			display: flex;
+			flex-direction: column;
+			animation: letterPulse 4s ease-in-out infinite;
+		}
+
+		@keyframes letterPulse {
+
+			0%,
+			100% {
+				transform: translate(-50%, -50%) scale(1);
+			}
+
+			50% {
+				transform: translate(-50%, -50%) scale(0.95);
+			}
+		}
+
+		.letter-line {
+			height: 8px;
+			background: var(--border-color);
+			border-radius: var(--radius-full);
+			margin-bottom: var(--spacing-3);
+		}
+
+		.letter-line:nth-child(1) {
+			width: 70%;
+		}
+
+		.letter-line:nth-child(2) {
+			width: 90%;
+		}
+
+		.letter-line:nth-child(3) {
+			width: 50%;
+		}
+
+		.particles-container {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+		}
+
+		.particle {
+			position: absolute;
+			width: 10px;
+			height: 10px;
+			border-radius: var(--radius-full);
+			opacity: 0.6;
+			animation: particleFloat linear infinite;
+		}
+
+		@keyframes particleFloat {
+			0% {
+				transform: translate(0, 0) rotate(0deg);
+				opacity: 0.6;
+			}
+
+			100% {
+				transform: translate(var(--end-x), var(--end-y)) rotate(360deg);
 				opacity: 0;
 			}
 		}
 
-		#result {
-			margin-top: 1.5rem;
-			max-height: 300px;
+		.abstract-shape {
+			position: absolute;
+			z-index: 0;
+		}
+
+		.shape1 {
+			top: -20px;
+			right: -20px;
+			width: 140px;
+			height: 140px;
+			border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+			background: var(--primary-gradient);
+			opacity: 0.1;
+			animation: morphShape 15s ease-in-out infinite;
+		}
+
+		.shape2 {
+			bottom: -30px;
+			left: -30px;
+			width: 180px;
+			height: 180px;
+			border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+			background: var(--secondary-gradient);
+			opacity: 0.1;
+			animation: morphShape 20s ease-in-out infinite reverse;
+		}
+
+		@keyframes morphShape {
+
+			0%,
+			100% {
+				border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+			}
+
+			25% {
+				border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+			}
+
+			50% {
+				border-radius: 30% 70% 30% 70% / 70% 30% 70% 30%;
+			}
+
+			75% {
+				border-radius: 70% 30% 70% 30% / 30% 70% 30% 70%;
+			}
+		}
+
+		.form-card {
+			background: var(--card-bg);
+			border-radius: var(--radius-2xl);
+			box-shadow: var(--shadow-xl);
+			position: relative;
+			overflow: hidden;
+			border: 1px solid var(--border-color);
+			backdrop-filter: blur(10px);
+		}
+
+		.form-header {
+			padding: var(--spacing-8) var(--spacing-8) var(--spacing-4);
+			text-align: left;
+			position: relative;
+		}
+
+		.form-header h2 {
+			font-size: 1.75rem;
+			font-weight: 700;
+			color: var(--text-color);
+			margin-bottom: var(--spacing-2);
+		}
+
+		.form-header p {
+			color: var(--text-secondary);
+			font-size: 1rem;
+			max-width: 90%;
+		}
+
+		.form-body {
+			padding: 0 var(--spacing-8) var(--spacing-8);
+		}
+
+		.form-group {
+			position: relative;
+			margin-bottom: var(--spacing-6);
+		}
+
+		.input-container {
+			position: relative;
+		}
+
+		.input-icon {
+			position: absolute;
+			left: var(--spacing-4);
+			top: 50%;
+			transform: translateY(-50%);
+			color: var(--text-light);
+			font-size: 1.25rem;
+			transition: all 0.3s ease;
+		}
+
+		.form-input {
+			width: 100%;
+			height: var(--input-height);
+			background: var(--bg-alt);
+			border: 2px solid transparent;
+			border-radius: var(--radius-lg);
+			padding: 0 var(--spacing-4) 0 var(--spacing-12);
+			font-size: 1rem;
+			color: var(--text-color);
+			transition: all 0.3s ease;
+			outline: none;
+		}
+
+		.form-input:focus {
+			border-color: var(--primary-color);
+			background: var(--card-bg);
+			box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+		}
+
+		.form-input:focus+.input-icon {
+			color: var(--primary-color);
+		}
+
+		.form-label {
+			position: absolute;
+			top: 0;
+			left: var(--spacing-12);
+			transform: translateY(-50%);
+			background: var(--bg-alt);
+			padding: 0 var(--spacing-2);
+			font-size: 0.875rem;
+			color: var(--text-secondary);
+			transition: all 0.3s ease;
+			pointer-events: none;
+		}
+
+		.form-input:focus~.form-label,
+		.form-input:not(:placeholder-shown)~.form-label {
+			color: var(--primary-color);
+			background: var(--card-bg);
+			font-weight: 500;
+		}
+
+		.form-input::placeholder {
+			color: var(--text-light);
+			font-size: 0.875rem;
+		}
+
+		.error-message {
+			display: flex;
+			align-items: center;
+			gap: var(--spacing-2);
+			color: var(--error-color);
+			font-size: 0.75rem;
+			margin-top: var(--spacing-2);
+			opacity: 0;
+			height: 0;
+			transition: all 0.2s ease;
+			overflow: hidden;
+		}
+
+		.error-message.visible {
+			opacity: 1;
+			height: auto;
+		}
+
+		.form-input.error {
+			border-color: var(--error-color);
+			box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+		}
+
+		.form-input.error+.input-icon {
+			color: var(--error-color);
+		}
+
+		.form-input.error~.form-label {
+			color: var(--error-color);
+		}
+
+		.button {
+			position: relative;
+			width: 100%;
+			height: var(--input-height);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: var(--spacing-3);
+			border: none;
+			border-radius: var(--radius-lg);
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			overflow: hidden;
+		}
+
+		.primary-button {
+			background: var(--primary-gradient);
+			color: white;
+		}
+
+		.primary-button:hover {
+			box-shadow: var(--shadow-lg), 0 0 15px rgba(99, 102, 241, 0.5);
+			transform: translateY(-2px);
+		}
+
+		.primary-button:active {
+			transform: translateY(0);
+		}
+
+		.button .loading {
+			width: 20px;
+			height: 20px;
+			border: 3px solid rgba(255, 255, 255, 0.3);
+			border-radius: 50%;
+			border-top-color: white;
+			animation: spin 1s ease-in-out infinite;
+			display: none;
+		}
+
+		@keyframes spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.button-text {
+			z-index: 1;
+		}
+
+		.button-shine {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg,
+					rgba(255, 255, 255, 0) 0%,
+					rgba(255, 255, 255, 0.1) 50%,
+					rgba(255, 255, 255, 0) 100%);
+			transform: skewX(-20deg) translateX(-100%);
+			animation: buttonShine 3s infinite;
+		}
+
+		@keyframes buttonShine {
+			100% {
+				transform: skewX(-20deg) translateX(200%);
+			}
+		}
+
+		.send-status {
+			margin-top: var(--spacing-6);
+		}
+
+		.progress-container {
+			display: none;
+			margin-bottom: var(--spacing-6);
+			animation: fadeIn 0.3s ease forwards;
+		}
+
+		.progress-info {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: var(--spacing-2);
+			font-size: 0.875rem;
+		}
+
+		.progress-status {
+			color: var(--primary-color);
+			font-weight: 500;
+		}
+
+		.progress-count {
+			color: var(--text-secondary);
+		}
+
+		.progress-bar-container {
+			width: 100%;
+			height: 8px;
+			background: var(--bg-alt);
+			border-radius: var(--radius-full);
+			overflow: hidden;
+		}
+
+		.progress-bar-fill {
+			height: 100%;
+			background: var(--primary-gradient);
+			width: 0%;
+			transition: width 0.3s ease;
+			border-radius: var(--radius-full);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.progress-bar-fill::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg,
+					rgba(255, 255, 255, 0) 0%,
+					rgba(255, 255, 255, 0.3) 50%,
+					rgba(255, 255, 255, 0) 100%);
+			animation: progressShine 2s infinite;
+		}
+
+		@keyframes progressShine {
+			from {
+				transform: translateX(-100%);
+			}
+
+			to {
+				transform: translateX(100%);
+			}
+		}
+
+		.result-container {
+			background: var(--bg-alt);
+			border-radius: var(--radius-lg);
+			max-height: 200px;
 			overflow-y: auto;
-			padding-right: 10px;
-		}
-
-		#result::-webkit-scrollbar {
-			width: 6px;
-		}
-
-		#result::-webkit-scrollbar-track {
-			background: #F3F4F6;
-			border-radius: 3px;
-		}
-
-		#result::-webkit-scrollbar-thumb {
-			background: #CBD5E1;
-			border-radius: 3px;
-		}
-
-		.message {
-			padding: 1rem;
-			border-radius: 8px;
-			margin-bottom: 1rem;
-			animation: fadeIn 0.3s ease;
+			margin-top: var(--spacing-6);
+			display: none;
+			animation: fadeIn 0.3s ease forwards;
 		}
 
 		@keyframes fadeIn {
@@ -193,176 +901,620 @@
 			}
 		}
 
-		.success {
-			background: rgba(16, 185, 129, 0.1);
-			color: var(--success-color);
-			border: 1px solid rgba(16, 185, 129, 0.2);
+		.result-container::-webkit-scrollbar {
+			width: 4px;
 		}
 
-		.error {
-			background: rgba(239, 68, 68, 0.1);
-			color: var(--error-color);
-			border: 1px solid rgba(239, 68, 68, 0.2);
+		.result-container::-webkit-scrollbar-track {
+			background: var(--bg-alt);
+			border-radius: var(--radius-xs);
 		}
 
-		.loading {
-			display: inline-block;
-			width: 20px;
-			height: 20px;
-			border: 3px solid rgba(255, 255, 255, 0.3);
-			border-radius: 50%;
-			border-top-color: white;
-			animation: spin 1s ease-in-out infinite;
-			margin-left: 8px;
+		.result-container::-webkit-scrollbar-thumb {
+			background: var(--primary-light);
+			border-radius: var(--radius-xs);
 		}
 
-		@keyframes spin {
+		.message {
+			padding: var(--spacing-4);
+			margin: var(--spacing-3);
+			border-radius: var(--radius-lg);
+			display: flex;
+			align-items: center;
+			gap: var(--spacing-3);
+			animation: messageSlide 0.3s ease-out forwards;
+		}
+
+		@keyframes messageSlide {
+			from {
+				opacity: 0;
+				transform: translateY(10px);
+			}
+
 			to {
-				transform: rotate(360deg);
+				opacity: 1;
+				transform: translateY(0);
 			}
 		}
 
-		.progress-bar {
-			width: 100%;
-			height: 4px;
-			background: #E5E7EB;
-			border-radius: 2px;
-			margin-top: 1rem;
-			overflow: hidden;
-			display: none;
+		.message i {
+			font-size: 1.25rem;
 		}
 
-		.progress-bar-fill {
-			height: 100%;
-			background: var(--primary-color);
-			width: 0%;
-			transition: width 0.3s ease;
+		.message.success {
+			background: rgba(16, 185, 129, 0.1);
+			color: var(--success-color);
+			border-left: 4px solid var(--success-color);
 		}
 
-		/* 新增：输入框提示文字样式 */
-		input::placeholder {
-			color: #9CA3AF;
+		.message.error {
+			background: rgba(239, 68, 68, 0.1);
+			color: var(--error-color);
+			border-left: 4px solid var(--error-color);
 		}
 
-		/* 新增：按钮文字样式 */
-		button {
-			text-align: center;
+		.features-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: var(--spacing-6);
+			margin-top: var(--spacing-16);
 		}
 
-		/* 新增：优化标题文字样式 */
-		h1 {
-			font-size: 24px;
-			margin-bottom: 20px;
+		.feature-card {
+			background: var(--card-bg);
+			border-radius: var(--radius-xl);
+			padding: var(--spacing-6);
+			box-shadow: var(--shadow-md);
+			transition: all 0.3s ease;
+			border: 1px solid var(--border-color);
 		}
 
-		/* 新增：调整表单组间距 */
-		.form-group {
-			margin-bottom: 20px;
+		.feature-card:hover {
+			transform: translateY(-5px);
+			box-shadow: var(--shadow-xl);
 		}
 
-		/* 新增：调整结果区域背景色 */
-		#result {
-			background-color: #F9FAFB;
+		.feature-card-icon {
+			width: 60px;
+			height: 60px;
+			border-radius: var(--radius-lg);
+			background: var(--primary-gradient);
+			color: white;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.5rem;
+			margin-bottom: var(--spacing-4);
 		}
 
-		/* 新增：优化消息提示框圆角 */
-		.message {
-			border-radius: 10px;
+		.feature-card-title {
+			font-size: 1.25rem;
+			font-weight: 700;
+			margin-bottom: var(--spacing-3);
+			color: var(--text-color);
 		}
 
-		/* 新增：优化加载图标大小 */
-		.loading {
-			width: 16px;
-			height: 16px;
+		.feature-card-description {
+			color: var(--text-secondary);
+			line-height: 1.6;
+		}
+
+		.footer {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: var(--spacing-8) 0;
+			border-top: 1px solid var(--border-color);
+			margin-top: var(--spacing-16);
+		}
+
+		.footer-text {
+			color: var(--text-secondary);
+			font-size: 0.875rem;
+		}
+
+		.footer-links {
+			display: flex;
+			gap: var(--spacing-4);
+		}
+
+		.footer-link {
+			color: var(--text-secondary);
+			height: 40px;
+			width: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: var(--radius-full);
+			background: var(--bg-alt);
+			transition: all 0.3s ease;
+		}
+
+		.footer-link:hover {
+			background: var(--primary-gradient);
+			color: white;
+			transform: translateY(-3px);
+		}
+
+		@media (max-width: 1200px) {
+			.content-grid {
+				gap: var(--spacing-8);
+			}
+		}
+
+		@media (max-width: 992px) {
+			.content-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.hero-content {
+				order: 1;
+			}
+
+			.hero-graphic {
+				order: 0;
+				margin-bottom: var(--spacing-8);
+			}
+
+			.mail-illustration {
+				max-width: 500px;
+				margin: 0 auto;
+				height: 400px;
+			}
+
+			.footer {
+				flex-direction: column;
+				gap: var(--spacing-4);
+			}
+		}
+
+		@media (max-width: 768px) {
+			.main-container {
+				padding: var(--spacing-4);
+			}
+
+			.hero-title {
+				font-size: 2.5rem;
+			}
+		}
+
+		@media (max-width: 576px) {
+			.form-card {
+				padding: var(--spacing-4);
+			}
+
+			.form-header,
+			.form-body {
+				padding-left: var(--spacing-4);
+				padding-right: var(--spacing-4);
+			}
+
+			.hero-title {
+				font-size: 2rem;
+			}
+		}
+	</style>
+	<style type="text/css">
+		@font-face {
+			font-family: TencentSans;
+			src: url("chrome-extension://lkjkfecdnfjopaeaibboihfkmhdjmanm/static/fonts/TencentSans.woff2");
 		}
 	</style>
 </head>
 
 <body>
-	<div class="container">
-		<h1>邮件发送系统</h1>
-		<form id="emailForm">
-			<div class="form-group">
-				<label for="to">收件人邮箱</label>
-				<input type="email" id="to" required placeholder="请输入收件人邮箱地址">
+	<div class="page-loader" id="page-loader" style="opacity: 0; display: none;">
+		<div class="loader-icon">
+			<div class="loader-letter"></div>
+			<div class="loader-envelope">
+				<div class="loader-flap"></div>
 			</div>
-			<div class="form-group">
-				<label for="times">发送次数</label>
-				<input type="number" id="times" required min="1" value="1" placeholder="请输入发送次数">
-			</div>
-			<div class="form-group">
-				<label for="frequency">发送频率（秒）</label>
-				<input type="number" id="frequency" required min="0.1" step="0.1" value="1" placeholder="请输入发送频率">
-			</div>
-			<button type="submit" id="submitBtn">
-				发送邮件
-				<span class="loading" style="display: none;"></span>
-			</button>
-		</form>
-		<div class="progress-bar">
-			<div class="progress-bar-fill"></div>
 		</div>
-		<div id="result"></div>
+		<div class="loader-text">加载中...</div>
+	</div>
+
+	<div class="hero-background">
+		<div class="hero-blob blob-1"></div>
+		<div class="hero-blob blob-2"></div>
+		<div class="hero-blob blob-3"></div>
+	</div>
+
+	<div class="main-container">
+		<header class="header">
+			<div class="logo">
+				<div class="logo-icon">
+					<i class="fas fa-paper-plane"></i>
+				</div>
+				<div class="logo-text">智能邮件系统</div>
+			</div>
+		</header>
+
+		<div class="content-grid">
+			<div class="hero-content">
+				<div class="badge">
+					<i class="fas fa-bolt"></i>
+					<span>高性能 · 安全可靠</span>
+				</div>
+
+				<h1 class="hero-title">智能高效的<br>邮件发送系统</h1>
+
+				<p class="hero-description">
+					立即体验全新的邮件发送服务，提升您的沟通效率，轻松实现批量操作和定时管理
+				</p>
+
+				<div class="hero-features">
+					<div class="feature">
+						<div class="feature-icon">
+							<i class="fas fa-rocket"></i>
+						</div>
+						<div class="feature-text">
+							<div class="feature-title">高速发送</div>
+							<div class="feature-description">优化的发送队列，确保您的邮件快速抵达收件人</div>
+						</div>
+					</div>
+
+					<div class="feature">
+						<div class="feature-icon">
+							<i class="fas fa-tasks"></i>
+						</div>
+						<div class="feature-text">
+							<div class="feature-title">批量操作</div>
+							<div class="feature-description">自定义频率的批量发送功能，满足各类营销需求</div>
+						</div>
+					</div>
+
+					<div class="feature">
+						<div class="feature-icon">
+							<i class="fas fa-shield-alt"></i>
+						</div>
+						<div class="feature-text">
+							<div class="feature-title">安全保障</div>
+							<div class="feature-description">端到端加密技术，保护您的邮件内容安全无忧</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="hero-graphic">
+				<div class="mail-illustration">
+					<div class="abstract-shape shape1"></div>
+					<div class="abstract-shape shape2"></div>
+
+					<div class="mail-graphic">
+						<div class="envelope">
+							<div class="envelope-flap"></div>
+							<div class="letter">
+								<div class="letter-line"></div>
+								<div class="letter-line"></div>
+								<div class="letter-line"></div>
+							</div>
+						</div>
+						<div class="particles-container" id="particles">
+							<div class="particle"
+								style="width: 5.10868px; height: 5.10868px; left: 32.8269px; top: 85.9782px; background: rgba(99, 102, 241, 0.7); --end-x: -15.033372326882585px; --end-y: -33.52345943664474px; animation-duration: 9.97025s;">
+							</div>
+							<div class="particle"
+								style="width: 11.8966px; height: 11.8966px; left: 74.0347px; top: 192.948px; background: rgba(99, 102, 241, 0.7); --end-x: -24.92252007737487px; --end-y: 42.27057966437422px; animation-duration: 11.0148s;">
+							</div>
+							<div class="particle"
+								style="width: 5.46335px; height: 5.46335px; left: 40.413px; top: 29.2721px; background: rgba(6, 182, 212, 0.7); --end-x: 27.76231968641479px; --end-y: -54.428730298009896px; animation-duration: 12.2846s;">
+							</div>
+							<div class="particle"
+								style="width: 11.0904px; height: 11.0904px; left: 73.9291px; top: 132.796px; background: rgba(34, 211, 238, 0.7); --end-x: 62.13532079179936px; --end-y: 8.175571181790843px; animation-duration: 19.3998s;">
+							</div>
+							<div class="particle"
+								style="width: 9.69231px; height: 9.69231px; left: 175.535px; top: 124.155px; background: rgba(129, 140, 248, 0.7); --end-x: 110.58531872008533px; --end-y: 66.80439235798131px; animation-duration: 18.2642s;">
+							</div>
+							<div class="particle"
+								style="width: 10.0749px; height: 10.0749px; left: 158.457px; top: 138.831px; background: rgba(129, 140, 248, 0.7); --end-x: 79.58753603048021px; --end-y: 31.851079191023814px; animation-duration: 7.45982s;">
+							</div>
+							<div class="particle"
+								style="width: 5.22844px; height: 5.22844px; left: 15.1418px; top: 125.218px; background: rgba(129, 140, 248, 0.7); --end-x: -144.4997789426812px; --end-y: 53.782505894947974px; animation-duration: 14.3201s;">
+							</div>
+							<div class="particle"
+								style="width: 9.91296px; height: 9.91296px; left: 98.494px; top: 6.12127px; background: rgba(129, 140, 248, 0.7); --end-x: 55.70906229849251px; --end-y: -163.73656565000627px; animation-duration: 19.7775s;">
+							</div>
+							<div class="particle"
+								style="width: 10.1232px; height: 10.1232px; left: 147.777px; top: 162.324px; background: rgba(6, 182, 212, 0.7); --end-x: 113.53947556267366px; --end-y: 85.1919464538291px; animation-duration: 6.88115s;">
+							</div>
+							<div class="particle"
+								style="width: 11.5992px; height: 11.5992px; left: 74.1911px; top: 0.844442px; background: rgba(129, 140, 248, 0.7); --end-x: -41.70620826957743px; --end-y: -198.96326369474815px; animation-duration: 8.95719s;">
+							</div>
+							<div class="particle"
+								style="width: 7.90677px; height: 7.90677px; left: 106.617px; top: 178.913px; background: rgba(99, 102, 241, 0.7); --end-x: 71.90009248277555px; --end-y: 34.01554828473637px; animation-duration: 17.1733s;">
+							</div>
+							<div class="particle"
+								style="width: 6.41837px; height: 6.41837px; left: 192.3px; top: 123.838px; background: rgba(129, 140, 248, 0.7); --end-x: 54.2405097542288px; --end-y: 121.60018260411829px; animation-duration: 16.9048s;">
+							</div>
+							<div class="particle"
+								style="width: 10.5386px; height: 10.5386px; left: 87.9588px; top: 182.699px; background: rgba(129, 140, 248, 0.7); --end-x: -0.5640269090913108px; --end-y: 13.684214018352947px; animation-duration: 10.5031s;">
+							</div>
+							<div class="particle"
+								style="width: 11.788px; height: 11.788px; left: 106.692px; top: 110.891px; background: rgba(129, 140, 248, 0.7); --end-x: 12.214509485845142px; --end-y: -28.87846787326432px; animation-duration: 8.3202s;">
+							</div>
+							<div class="particle"
+								style="width: 4.53149px; height: 4.53149px; left: 138.662px; top: 8.05062px; background: rgba(129, 140, 248, 0.7); --end-x: 31.862228619248597px; --end-y: -177.7329659630896px; animation-duration: 14.8597s;">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-card">
+			<div class="form-header">
+				<h2>开始发送您的邮件</h2>
+				<p>填写必要信息，定制您的邮件发送方案</p>
+			</div>
+
+			<div class="form-body">
+				<form id="emailForm">
+					<div class="form-group">
+						<div class="input-container">
+							<input type="email" id="to" class="form-input" placeholder="例如：example@domain.com"
+								required="">
+							<i class="fas fa-envelope input-icon"></i>
+							<label class="form-label" for="to">收件人邮箱</label>
+						</div>
+						<div class="error-message" id="to-error">
+							<i class="fas fa-exclamation-circle"></i>
+							<span>请输入有效的邮箱地址</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-container">
+							<input type="number" id="times" class="form-input" placeholder="请输入大于或等于1的整数" min="1"
+								value="1" required="">
+							<i class="fas fa-redo input-icon"></i>
+							<label class="form-label" for="times">发送次数</label>
+						</div>
+						<div class="error-message" id="times-error">
+							<i class="fas fa-exclamation-circle"></i>
+							<span>请输入大于或等于1的整数</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="input-container">
+							<input type="number" id="frequency" class="form-input" placeholder="建议值：0.1-10秒之间" min="0.1"
+								step="0.1" value="1" required="">
+							<i class="fas fa-clock input-icon"></i>
+							<label class="form-label" for="frequency">发送频率（秒）</label>
+						</div>
+						<div class="error-message" id="frequency-error">
+							<i class="fas fa-exclamation-circle"></i>
+							<span>请输入大于或等于0.1的数字</span>
+						</div>
+					</div>
+
+					<button type="submit" id="submitBtn" class="button primary-button">
+						<span class="button-shine"></span>
+						<span class="button-text">立即发送</span>
+						<span class="loading"></span>
+					</button>
+				</form>
+
+				<div class="send-status">
+					<div class="progress-container" id="progress-container">
+						<div class="progress-info">
+							<div class="progress-status" id="progress-status">正在发送...</div>
+							<div class="progress-count" id="progress-count">0/0</div>
+						</div>
+						<div class="progress-bar-container">
+							<div class="progress-bar-fill"></div>
+						</div>
+					</div>
+
+					<div class="result-container" id="result"></div>
+				</div>
+			</div>
+		</div>
+
+		<footer class="footer">
+			<div class="footer-text">© 2023 智能邮件发送系统 - 为您的沟通加速</div>
+			<div class="footer-links">
+				<a href="#" class="footer-link"><i class="fab fa-github"></i></a>
+				<a href="#" class="footer-link"><i class="fab fa-twitter"></i></a>
+				<a href="#" class="footer-link"><i class="fas fa-envelope"></i></a>
+			</div>
+		</footer>
 	</div>
 
 	<script>
+		// Page loader
+		window.addEventListener('load', function () {
+			setTimeout(() => {
+				document.getElementById('page-loader').style.opacity = '0';
+				setTimeout(() => {
+					document.getElementById('page-loader').style.display = 'none';
+				}, 500);
+			}, 1500);
+		});
+
+		// Generate particles for the mail animation
+		function createParticles() {
+			const particlesContainer = document.getElementById('particles');
+			const particleCount = 15;
+			const colors = [
+				'rgba(99, 102, 241, 0.7)',
+				'rgba(129, 140, 248, 0.7)',
+				'rgba(6, 182, 212, 0.7)',
+				'rgba(34, 211, 238, 0.7)'
+			];
+
+			for (let i = 0; i < particleCount; i++) {
+				const particle = document.createElement('div');
+				particle.classList.add('particle');
+
+				const size = Math.random() * 8 + 4;
+				const startX = Math.random() * 200 - 100;
+				const startY = Math.random() * 200 - 100;
+				const endX = startX + (Math.random() * 200 - 100);
+				const endY = startY + (Math.random() * 200 - 100);
+				const duration = Math.random() * 15 + 5;
+				const colorIndex = Math.floor(Math.random() * colors.length);
+
+				particle.style.width = `${size}px`;
+				particle.style.height = `${size}px`;
+				particle.style.left = `${100 + startX}px`;
+				particle.style.top = `${100 + startY}px`;
+				particle.style.background = colors[colorIndex];
+				particle.style.setProperty('--end-x', `${endX}px`);
+				particle.style.setProperty('--end-y', `${endY}px`);
+				particle.style.animationDuration = `${duration}s`;
+
+				particlesContainer.appendChild(particle);
+			}
+		}
+
+		// Initialize the particles animation
+		window.addEventListener('load', createParticles);
+
+		// 3D hover effect for mail illustration
+		const mailIllustration = document.querySelector('.mail-illustration');
+
+		mailIllustration.addEventListener('mousemove', (e) => {
+			const rect = mailIllustration.getBoundingClientRect();
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+
+			const xPercent = (x / rect.width - 0.5) * 2;
+			const yPercent = (y / rect.height - 0.5) * 2;
+
+			const rotateY = xPercent * 10;
+			const rotateX = -yPercent * 10;
+
+			mailIllustration.style.transform = `perspective(1000px) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+		});
+
+		mailIllustration.addEventListener('mouseleave', () => {
+			mailIllustration.style.transform = `perspective(1000px) rotateY(-5deg) rotateX(5deg)`;
+		});
+
+		// Form validation functions
 		function validateEmail(email) {
 			return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 		}
 
+		function validateNumber(value, min) {
+			const num = parseFloat(value);
+			return !isNaN(num) && num >= min;
+		}
+
+		function showError(inputId, show) {
+			const errorMessage = document.getElementById(`${inputId}-error`);
+			const input = document.getElementById(inputId);
+
+			if (show) {
+				errorMessage.classList.add('visible');
+				input.classList.add('error');
+			} else {
+				errorMessage.classList.remove('visible');
+				input.classList.remove('error');
+			}
+		}
+
+		// Live validation for input fields
+		document.getElementById('to').addEventListener('input', function () {
+			const isValid = validateEmail(this.value);
+			showError('to', this.value && !isValid);
+		});
+
+		document.getElementById('times').addEventListener('input', function () {
+			const isValid = validateNumber(this.value, 1);
+			showError('times', this.value && !isValid);
+		});
+
+		document.getElementById('frequency').addEventListener('input', function () {
+			const isValid = validateNumber(this.value, 0.1);
+			showError('frequency', this.value && !isValid);
+		});
+
 		function showMessage(message, type, resultDiv) {
 			const messageDiv = document.createElement('div');
 			messageDiv.className = `message ${type}`;
-			messageDiv.textContent = message;
+
+			const icon = document.createElement('i');
+			icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-times-circle';
+
+			const text = document.createElement('span');
+			text.textContent = message;
+
+			messageDiv.appendChild(icon);
+			messageDiv.appendChild(text);
 			resultDiv.insertBefore(messageDiv, resultDiv.firstChild);
+
+			// Make sure the result div is visible
+			resultDiv.style.display = 'block';
 		}
 
 		async function sendGetRequest(url, params, resultDiv) {
 			const email = params.to;
 			const username = 'hh';
-			const fullUrl = `https://ygwyy.top/邮箱/index.php?email=${encodeURIComponent(email)}&username=${username}`;
+			const fullUrl = `https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(email)}&username=${username}`;
 
 			const response = await fetch(fullUrl);
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			const responseData = await response.text();
-			showMessage(`请求已发送: ${responseData}`, 'success', resultDiv);
+			// const responseData = await response.text();
+			// showMessage(`请求已发送: ${responseData}`, 'success', resultDiv);
 		}
 
 		async function sendRequests(event) {
 			event.preventDefault();
+
+			// Get form elements
 			const submitBtn = document.getElementById('submitBtn');
 			const loadingSpinner = submitBtn.querySelector('.loading');
-			const progressBar = document.querySelector('.progress-bar');
+			const buttonText = submitBtn.querySelector('.button-text');
+			const progressContainer = document.getElementById('progress-container');
 			const progressBarFill = document.querySelector('.progress-bar-fill');
+			const progressStatus = document.getElementById('progress-status');
+			const progressCount = document.getElementById('progress-count');
 
 			const to = document.getElementById('to').value;
 			const times = parseInt(document.getElementById('times').value);
 			const frequency = parseFloat(document.getElementById('frequency').value);
 			const resultDiv = document.getElementById('result');
 
+			// Clear previous messages
 			resultDiv.innerHTML = '';
+			resultDiv.style.display = 'none';
+
+			// Validate inputs
+			let hasError = false;
 
 			if (!validateEmail(to)) {
-				showMessage('邮箱格式不正确，请重新输入！', 'error', resultDiv);
-				return;
+				showError('to', true);
+				hasError = true;
+			} else {
+				showError('to', false);
 			}
 
-			if (isNaN(times) || times < 1) {
-				showMessage('请输入有效的发送次数（大于等于1）！', 'error', resultDiv);
-				return;
+			if (!validateNumber(times, 1)) {
+				showError('times', true);
+				hasError = true;
+			} else {
+				showError('times', false);
 			}
 
-			if (isNaN(frequency) || frequency < 0.1) {
-				showMessage('请输入有效的发送频率（大于等于0.1秒）！', 'error', resultDiv);
-				return;
+			if (!validateNumber(frequency, 0.1)) {
+				showError('frequency', true);
+				hasError = true;
+			} else {
+				showError('frequency', false);
 			}
 
-			// 显示加载状态
+			if (hasError) return;
+
+			// Show loading state
 			submitBtn.disabled = true;
+			buttonText.textContent = '发送中...';
 			loadingSpinner.style.display = 'inline-block';
-			progressBar.style.display = 'block';
+			progressContainer.style.display = 'block';
+			progressCount.textContent = `0/${times}`;
 
 			let successCount = 0;
 			let errorCount = 0;
@@ -371,6 +1523,7 @@
 				for (let i = 0; i < times; i++) {
 					const progress = ((i + 1) / times) * 100;
 					progressBarFill.style.width = `${progress}%`;
+					progressCount.textContent = `${i + 1}/${times}`;
 
 					const params = { to };
 					try {
@@ -378,6 +1531,7 @@
 						successCount++;
 					} catch (error) {
 						errorCount++;
+						showMessage(`发送失败: ${error.message}`, 'error', resultDiv);
 					}
 
 					if (i < times - 1) {
@@ -387,26 +1541,33 @@
 			} catch (error) {
 				showMessage(`发送过程中出现错误: ${error.message}`, 'error', resultDiv);
 			} finally {
-				// 显示最终结果
+				// Show final results
+				progressStatus.textContent = '发送完成';
+
 				if (successCount > 0) {
-					showMessage(`成功发送 ${successCount} 条消息`, 'success', resultDiv);
+					showMessage(`✅ 已成功发送 ${successCount} 条邮件到 ${to}`, 'success', resultDiv);
 				}
 				if (errorCount > 0) {
-					showMessage(`${errorCount} 条消息发送成功`, 'error', resultDiv);
+					showMessage(`❌ ${errorCount} 条消息发送失败，请检查网络连接`, 'error', resultDiv);
 				}
 
-				// 恢复按钮状态
+				// Reset button state
 				submitBtn.disabled = false;
+				buttonText.textContent = '立即发送';
 				loadingSpinner.style.display = 'none';
+
+				// Keep progress bar visible to show completion
 				setTimeout(() => {
-					progressBar.style.display = 'none';
+					progressContainer.style.display = 'none';
 					progressBarFill.style.width = '0%';
-				}, 1000);
+				}, 3000);
 			}
 		}
 
 		document.getElementById('emailForm').addEventListener('submit', sendRequests);
 	</script>
+
+
 </body>
 
 </html>
