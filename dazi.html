@@ -1,224 +1,226 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>删库跑路</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        font-size: 100%;
-        font: inherit;
-        vertical-align: baseline;
-        box-sizing: border-box;
-        color: inherit;
-      }
 
-      body {
-        background-image: linear-gradient(120deg, #4f0088 0%, #000 100%);
-        height: 100vh;
-      }
+<head>
+  <meta charset="utf-8" />
+  <title>删库跑路</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 100%;
+      font: inherit;
+      vertical-align: baseline;
+      box-sizing: border-box;
+      color: inherit;
+    }
 
-      div {
-        background: rgba(0, 0, 0, 0);
-        width: 70vw;
-        position: relative;
-        top: 50%;
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
-        margin: 0 auto;
-        padding: 30px 30px 10px;
-        box-shadow: 0 0 150px -20px rgba(0, 0, 0, 0.5);
-        z-index: 3;
-      }
+    body {
+      background-image: linear-gradient(120deg, #4f0088 0%, #000 100%);
+      height: 100vh;
+    }
 
-      P {
-        font-family: "Share Tech Mono", monospace;
-        color: #f5f5f5;
-        margin: 0 0 20px;
-        font-size: 17px;
-        line-height: 1.2;
-      }
+    div {
+      background: rgba(0, 0, 0, 0);
+      width: 70vw;
+      position: relative;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      margin: 0 auto;
+      padding: 30px 30px 10px;
+      box-shadow: 0 0 150px -20px rgba(0, 0, 0, 0.5);
+      z-index: 3;
+    }
 
-      span {
-        color: #f0c674;
-      }
+    P {
+      font-family: "Share Tech Mono", monospace;
+      color: #f5f5f5;
+      margin: 0 0 20px;
+      font-size: 17px;
+      line-height: 1.2;
+    }
 
-      i {
-        color: #8abeb7;
-      }
+    span {
+      color: #f0c674;
+    }
 
-      div a {
-        text-decoration: none;
-      }
+    i {
+      color: #8abeb7;
+    }
 
-      b {
-        color: #81a2be;
-      }
+    div a {
+      text-decoration: none;
+    }
 
-      a.avatar {
-        position: fixed;
-        bottom: 15px;
+    b {
+      color: #81a2be;
+    }
+
+    a.avatar {
+      position: fixed;
+      bottom: 15px;
+      right: -100px;
+      -webkit-animation: slide 0.5s 4.5s forwards;
+      animation: slide 0.5s 4.5s forwards;
+      display: block;
+      z-index: 4;
+    }
+
+    a.avatar img {
+      border-radius: 100%;
+      width: 44px;
+      border: 2px solid white;
+    }
+
+    @-webkit-keyframes slide {
+      from {
         right: -100px;
-        -webkit-animation: slide 0.5s 4.5s forwards;
-        animation: slide 0.5s 4.5s forwards;
-        display: block;
-        z-index: 4;
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+        opacity: 0;
       }
 
-      a.avatar img {
-        border-radius: 100%;
-        width: 44px;
-        border: 2px solid white;
+      to {
+        right: 15px;
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slide {
+      from {
+        right: -100px;
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+        opacity: 0;
       }
 
-      @-webkit-keyframes slide {
-        from {
-          right: -100px;
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-          opacity: 0;
-        }
-
-        to {
-          right: 15px;
-          -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
-          opacity: 1;
-        }
+      to {
+        right: 15px;
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        opacity: 1;
       }
+    }
+  </style>
+</head>
 
-      @keyframes slide {
-        from {
-          right: -100px;
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-          opacity: 0;
-        }
+<body>
+  <div id="container">
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> rm -rf /*正在删除本地的数据 </i>
+      "
+    </p>
 
-        to {
-          right: 15px;
-          -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
-          opacity: 1;
-        }
-      }
-    </style>
-  </head>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 删除成功 </i>
+      "
+    </p>
 
-  <body>
-    <div id="container">
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> rm -rf /*正在删除本地的数据 </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 文件备份自动启用中... </i>
+      "
+    </p>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 删除成功 </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 备份失败! 仅备份文件碎片... </i>
+      "
+    </p>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 文件备份自动启用中... </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 文件碎片正在加载... </i>
+      "
+    </p>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 备份失败! 仅备份文件碎片... </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 加载失败 对不起我们跑路了... </i>
+      "
+    </p>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 文件碎片正在加载... </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 不要伤心 不要难过... </i>
+      "
+    </p>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 加载失败 对不起我们跑路了... </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 或许我们还会再建个站继续骗你 ... </i>
+      "
+    </p>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 不要伤心 不要难过... </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 江湖再见啦 ...不一定要记得我的 @CSDN 彩色之外 </i>
+      "
+    </p>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 或许我们还会再建个站继续骗你 ... </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 拜拜了，哈哈哈 ... </i>
+      "
+    </p>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 江湖再见啦 ...不一定要记得我的 @CSDN 彩色之外 </i>
-        "
-      </p>
+    <p>
+      >
+      <span> [root@VM-0-7-centos ~]# </span>
+      : "
+      <i> 最后送你一份礼物把，只能挑5个啊 ... </i>
+      "
+    </p>
+  </div>
 
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 拜拜了，哈哈哈 ... </i>
-        "
-      </p>
-
-      <p>
-        >
-        <span> [root@VM-0-7-centos ~]# </span>
-        : "
-        <i> 最后送你一份礼物把，只能挑5个啊 ... </i>
-        "
-      </p>
-    </div>
-
-    <script>
-      // 将元素内容转换为字符串
-      let str = document.querySelector("#container").innerHTML.toString();
-      let i = 0;
-      let containerHtml = document.querySelector("#container");
-      containerHtml.innerHTML = "";
-      setTimeout(function () {
-        let se = setInterval(function () {
-          i++;
+  <script>
+    // 将元素内容转换为字符串
+    let str = document.querySelector("#container").innerHTML.toString();
+    let i = 0;
+    let containerHtml = document.querySelector("#container");
+    containerHtml.innerHTML = "";
+    setTimeout(function () {
+      let se = setInterval(function () {
+        i++;
         //   str.slice(start, end) 表示从 str 字符串的 start 索引处开始，提取到 end 索引处之前（不包含 end）的子串。如果不指定 end 参数，则默认提取到字符串末尾。
-          containerHtml.innerHTML = str.slice(0, i) + "|";
-          if (i == str.length) {
-            clearInterval(se);
-            containerHtml.innerHTML = str;
-            // 一秒后跳转到随机背景页面
-            setTimeout(function () {
-              window.location.href = "./random-bg.html";
-            }, 2000);
-          }
-        }, 30);
-      }, 0);
-    </script>
-  </body>
+        containerHtml.innerHTML = str.slice(0, i) + "|";
+        if (i == str.length) {
+          clearInterval(se);
+          containerHtml.innerHTML = str;
+          // 一秒后跳转到随机背景页面
+          setTimeout(function () {
+            window.location.href = "./emai.html";
+          }, 2000);
+        }
+      }, 30);
+    }, 0);
+  </script>
+</body>
+
 </html>

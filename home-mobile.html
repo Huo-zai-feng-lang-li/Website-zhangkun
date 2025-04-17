@@ -6,7 +6,643 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
 	<title>引擎-彩色之外</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-	<link rel="stylesheet" href="homepage.css" />
+
+	<style>
+		*,
+		*::before,
+		*::after {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		[data-theme="light"] {
+			--bg-color: #fff;
+			--text-color: #333;
+		}
+
+		[data-theme="dark"] {
+			--bg-color: #000;
+			--text-color: #fff;
+		}
+
+		body {
+			min-height: 100%;
+			max-width: 100%;
+			width: 600px;
+			margin: auto;
+			text-align: center;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+		}
+
+		#gesture-indicator {
+			height: 100%;
+			width: 100%;
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			z-index: 0;
+			overflow: hidden;
+			word-break: break-all;
+		}
+
+		#content {
+			position: absolute;
+			max-width: 600px;
+			width: 100%;
+		}
+
+		#content {
+			top: 25%;
+			transition: 0.14s;
+		}
+
+		@media only screen and (min-height: 250px) {
+			#content {
+				top: 62px;
+			}
+		}
+
+		@media only screen and (min-height: 350px) {
+			#content {
+				top: 87px;
+			}
+		}
+
+		@media only screen and (min-height: 450px) {
+			#content {
+				top: 135px;
+			}
+		}
+
+		@media only screen and (min-height: 650px) {
+			#content {
+				top: 195px;
+			}
+		}
+
+		@media only screen and (min-height: 850px) {
+			#content {
+				top: 255px;
+			}
+		}
+
+		.logo {
+			font-size: 28px;
+			font-weight: bold;
+			white-space: normal;
+			word-wrap: break-word;
+			overflow: auto;
+			text-decoration: none;
+		}
+
+		img.smaller {
+			height: 50px;
+			width: 50px;
+			border-radius: 50%;
+			object-fit: cover;
+			filter: drop-shadow(0 0 15px #fff) brightness(1.1);
+		}
+
+		span {
+			display: block;
+			overflow: hidden;
+			padding-left: 5px;
+
+		}
+
+		.search_part {
+			margin-bottom: 20px;
+		}
+
+		.search.icon:hover {
+			/* 小手 */
+			cursor: pointer;
+		}
+
+		.search.icon {
+			/* color: red; */
+			width: 12px;
+			height: 12px;
+			border: solid 2px var(--text-color);
+			border-radius: 100%;
+			-webkit-transform: rotate(-45deg);
+			transform: rotate(-45deg);
+			text-align: center;
+			margin: auto;
+		}
+
+		.search.icon:before {
+			content: "";
+			position: absolute;
+			top: 10px;
+			left: 3px;
+			height: 5px;
+			width: 2px;
+			background-color: var(--text-color);
+		}
+
+		.search_bar {
+			position: relative;
+			display: table;
+			vertical-align: middle;
+			width: 90%;
+			max-width: 600px;
+			margin: 15px auto 0;
+		}
+
+		#search_input {
+			height: 46px;
+			padding: 0 12px;
+			width: 100%;
+			outline: none;
+			border: none;
+			font-size: 15px;
+			background-color: transparent;
+		}
+
+		#search_submit {
+			display: none;
+			outline: none;
+			height: 46px;
+			width: 56px;
+			float: right;
+			font-size: 15px;
+			font-weight: bold;
+			border: none;
+			background-color: transparent;
+			padding: 0 10px;
+		}
+
+		.search_bar {
+			border: 1px solid var(--text-color);
+			border-radius: 24px;
+			background: var(--bg-color);
+		}
+
+		/* 输入框文字 */
+		#search_input,
+		#search_submit {
+			color: var(--text-color);
+		}
+
+		input::placeholder {
+			color: val(--text-color);
+		}
+
+		.bdSug_wpr {
+			overflow-y: scroll !important;
+			max-height: 30% !important;
+			background: rgba(255, 255, 255, 1) !important;
+			border: 1px solid !important;
+
+			border-radius: 0 0 24px 24px;
+		}
+
+		.bdSug_wpr table {
+			background: none !important;
+		}
+
+		.bdSug_wpr td {
+			margin: 4px !important;
+			padding: 10px !important;
+			color: #1b1b1b;
+			background: none;
+		}
+
+		.bdSug_sd {
+			height: 0px !important;
+		}
+
+		.bdSug_app {
+			display: none !important;
+		}
+
+		.bdSug_wpr {
+			width: 100% !important;
+			max-width: 600px !important;
+			left: 50% !important;
+			transform: translateX(-50%) !important;
+			margin: 2px 0 0 !important;
+			border-radius: 0 0 24px 24px !important;
+		}
+
+		.bdSug_wpr table {
+			width: 100% !important;
+			margin: 0 auto !important;
+		}
+
+		#bookmark_part {
+			text-align: center;
+			max-width: 600px;
+			background-color: transparent;
+			margin: 0 auto;
+			padding: 0;
+			border-radius: 0px;
+		}
+
+		#box_container-leable {
+			text-align: left;
+			margin: 0 auto;
+			font-size: 0;
+		}
+
+		/* 只有在是dark才显示filter */
+		.box {
+			margin: 4px 9px 4px;
+			width: 46px;
+			border: 0;
+			position: relative;
+			display: inline-block;
+			text-align: center;
+			filter: drop-shadow(0 0 10px #fff);
+		}
+
+		.box a {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+
+		.overlay {
+			position: absolute;
+			left: 0;
+			top: 0;
+			border-radius: 23px;
+			width: 46px;
+			height: 46px;
+		}
+
+		.title {
+			border-radius: 23px;
+			color: #ffffff;
+			width: 46px;
+			line-height: 46px;
+			height: 46px;
+			font-size: 15px;
+		}
+
+		.url {
+			margin: 2px 0 0;
+			width: 46px;
+			height: 20px;
+			line-height: 20px;
+			white-space: normal;
+			word-wrap: break-word;
+			overflow: hidden;
+			text-overflow: clip;
+			-o-text-overflow: clip;
+			ms-text-overflow: clip;
+			color: var(--text-color);
+			font-size: 10px;
+		}
+
+		@media only screen and (min-width: 128px) {
+			#box_container-leable {
+				width: 64px;
+			}
+		}
+
+		@media only screen and (min-width: 192px) {
+			#box_container-leable {
+				width: 128px;
+			}
+		}
+
+		@media only screen and (min-width: 256px) {
+			#box_container-leable {
+				width: 192px;
+			}
+		}
+
+		@media only screen and (min-width: 320px) {
+			#box_container-leable {
+				width: 256px;
+			}
+		}
+
+		@media only screen and (min-width: 384px) {
+			#box_container-leable {
+				width: 320px;
+			}
+		}
+
+		@media only screen and (min-width: 448px) {
+			#box_container-leable {
+				width: 384px;
+			}
+		}
+
+		@media only screen and (min-width: 512px) {
+			#box_container-leable {
+				width: 448px;
+			}
+		}
+
+		@media only screen and (min-width: 576px) {
+			#box_container-leable {
+				width: 512px;
+			}
+		}
+
+		.sort-ghost {
+			opacity: 0.3;
+		}
+
+		/* 主题 */
+
+		.container-leable {
+			width: 100%;
+			height: 100vh;
+		}
+
+		/* 开关样式 */
+		.switch {
+			font-size: 17px;
+			position: fixed;
+			right: 40px;
+			top: 25px;
+			display: inline-block;
+			width: 64px;
+			height: 34px;
+		}
+
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #73c0fc;
+			transition: 0.4s;
+			border-radius: 30px;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 30px;
+			width: 30px;
+			border-radius: 20px;
+			left: 2px;
+			bottom: 2px;
+			z-index: 2;
+			background-color: #e8e8e8;
+			transition: 0.4s;
+		}
+
+		.sun svg {
+			position: absolute;
+			top: 6px;
+			left: 36px;
+			z-index: 1;
+			width: 24px;
+			height: 24px;
+		}
+
+		.moon svg {
+			fill: #73c0fc;
+			position: absolute;
+			top: 5px;
+			left: 5px;
+			z-index: 1;
+			width: 24px;
+			height: 24px;
+		}
+
+		.input:checked+.slider {
+			background-color: #183153;
+		}
+
+		.input:focus+.slider {
+			box-shadow: 0 0 1px #183153;
+		}
+
+		.input:checked+.slider:before {
+			transform: translateX(30px);
+		}
+
+		@-webkit-keyframes tap-upper-1 {
+
+			0%,
+			50%,
+			100% {
+				-webkit-transform: rotate(10deg) scale(0.4);
+				transform: rotate(10deg) scale(0.4);
+			}
+
+			40% {
+				-webkit-transform: rotate(50deg) scale(0.4);
+				transform: rotate(50deg) scale(0.4);
+			}
+		}
+
+		@keyframes tap-upper-1 {
+
+			0%,
+			50%,
+			100% {
+				-webkit-transform: rotate(10deg) scale(0.4);
+				transform: rotate(10deg) scale(0.4);
+			}
+
+			40% {
+				-webkit-transform: rotate(50deg) scale(0.4);
+				transform: rotate(50deg) scale(0.4);
+			}
+		}
+
+		@-webkit-keyframes tap-upper-2 {
+
+			0%,
+			50%,
+			100% {
+				-webkit-transform: rotate(10deg) scale(0.6);
+				transform: rotate(10deg) scale(0.6);
+			}
+
+			40% {
+				-webkit-transform: rotate(50deg) scale(0.6);
+				transform: rotate(50deg) scale(0.6);
+			}
+		}
+
+		@keyframes tap-upper-2 {
+
+			0%,
+			50%,
+			100% {
+				-webkit-transform: rotate(10deg) scale(0.6);
+				transform: rotate(10deg) scale(0.6);
+			}
+
+			40% {
+				-webkit-transform: rotate(50deg) scale(0.6);
+				transform: rotate(50deg) scale(0.6);
+			}
+		}
+
+		@-webkit-keyframes tap-upper-3 {
+
+			0%,
+			50%,
+			100% {
+				-webkit-transform: rotate(10deg) scale(0.8);
+				transform: rotate(10deg) scale(0.8);
+			}
+
+			40% {
+				-webkit-transform: rotate(50deg) scale(0.8);
+				transform: rotate(50deg) scale(0.8);
+			}
+		}
+
+		@keyframes tap-upper-3 {
+
+			0%,
+			50%,
+			100% {
+				-webkit-transform: rotate(10deg) scale(0.8);
+				transform: rotate(10deg) scale(0.8);
+			}
+
+			40% {
+				-webkit-transform: rotate(50deg) scale(0.8);
+				transform: rotate(50deg) scale(0.8);
+			}
+		}
+
+		@-webkit-keyframes tap-upper-4 {
+
+			0%,
+			50%,
+			100% {
+				-webkit-transform: rotate(10deg) scale(1);
+				transform: rotate(10deg) scale(1);
+			}
+
+			40% {
+				-webkit-transform: rotate(50deg) scale(1);
+				transform: rotate(50deg) scale(1);
+			}
+		}
+
+		@keyframes tap-upper-4 {
+
+			0%,
+			50%,
+			100% {
+				-webkit-transform: rotate(10deg) scale(1);
+				transform: rotate(10deg) scale(1);
+			}
+
+			40% {
+				-webkit-transform: rotate(50deg) scale(1);
+				transform: rotate(50deg) scale(1);
+			}
+		}
+
+		/* 单选框 */
+
+		.container-leable {
+			display: block;
+			position: absolute;
+			cursor: pointer;
+			font-size: 20px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			border-radius: 5px;
+			-webkit-box-shadow: 2px 2px 0px rgb(183, 183, 183);
+			box-shadow: 2px 2px 0px rgb(183, 183, 183);
+			width: 10.6px;
+			height: 10.6px;
+			top: 60px;
+			left: -50px;
+		}
+
+		.container-leable input {
+			position: absolute;
+			top: 0;
+			right: 50px;
+			opacity: 0;
+			cursor: pointer;
+			height: 0;
+			width: 0;
+			border-radius: 5px;
+		}
+
+		/* Create a custom checkbox */
+		.checkmark {
+			position: relative;
+			top: 0;
+			left: 0;
+			height: 1.3em;
+			width: 1.3em;
+			background-color: #ccc;
+			border-radius: 5px;
+		}
+
+		/* When the checkbox is checked, add a blue background */
+		.container-leable input:checked~.checkmark {
+			-webkit-box-shadow: 3px 3px 0px rgb(183, 183, 183);
+			box-shadow: 3px 3px 0px rgb(183, 183, 183);
+			-webkit-transition: all 0.2s;
+			transition: all 0.2s;
+			opacity: 1;
+			background-image: linear-gradient(45deg,
+					rgb(100, 61, 219) 0%,
+					rgb(217, 21, 239) 100%);
+		}
+
+		.container-leable input~.checkmark {
+			-webkit-transition: all 0.2s;
+			transition: all 0.2s;
+			opacity: 1;
+			-webkit-box-shadow: 1px 1px 0px rgb(183, 183, 183);
+			box-shadow: 1px 1px 0px rgb(183, 183, 183);
+		}
+
+		/* Create the checkmark/indicator (hidden when not checked) */
+		.checkmark:after {
+			content: "";
+			position: absolute;
+			opacity: 0;
+			-webkit-transition: all 0.2s;
+			transition: all 0.2s;
+		}
+
+		/* Show the checkmark when checked */
+		.container-leable input:checked~.checkmark:after {
+			opacity: 1;
+			-webkit-transition: all 0.2s;
+			transition: all 0.2s;
+		}
+
+		/* Style the checkmark/indicator */
+		.container-leable .checkmark:after {
+			left: 0.5em;
+			top: 0.3em;
+			width: 0.25em;
+			height: 0.5em;
+			border: solid white;
+			border-width: 0 0.15em 0.15em 0;
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+		}
+	</style>
 
 </head>
 
@@ -34,16 +670,9 @@
 		<div id="bookmark_part">
 			<div id="box_container" title="选择移动引擎">
 				<!-- 切换移动引擎 -->
-				<div class="🤚">
-					<div class="👉"></div>
-					<div class="👉"></div>
-					<div class="👉"></div>
-					<div class="👉"></div>
-					<div class="🌴"></div>
-					<div class="👍"></div>
-					<!-- 单选框 -->
-					<label class="container-leable">
-						<input type="checkbox" checked="checked">
+				<div class="🤚" style="display: none;">
+					<label class=" container-leable">
+						<input type="checkbox" checked="checked" style="display: none;">
 						<div class="checkmark"></div>
 					</label>
 				</div>
@@ -216,6 +845,9 @@ background: url('https://img0.baidu.com/it/u=1308949746,652039931&fm=253&fmt=aut
 
 <script>
 	// 智能搜索下拉 Start
+	const searchInput = document.getElementById("search_input");
+	const engineCheckbox = document.querySelector(".container-leable input[type='checkbox']");
+	const engineChecked = localStorage.getItem("engineChecked");
 	function search() {
 		if (searchInput.value) {
 			try {
@@ -295,37 +927,6 @@ background: url('https://img0.baidu.com/it/u=1308949746,652039931&fm=253&fmt=aut
 	};
 	// 切换主题 End
 
-	// 搜索框按钮
-	const searchInput = document.getElementById("search_input");
-	const engineCheckbox = document.querySelector(".container-leable input[type='checkbox']");
-	const engineChecked = localStorage.getItem("engineChecked");
-
-
-
-	// 监听 checkbox 的 change 事件
-	engineCheckbox.addEventListener("change", function () {
-		if (this.checked) {
-			localStorage.setItem("engineChecked", '移动');
-		} else {
-			localStorage.setItem("engineChecked", 'PC');
-		}
-	});
-
-	// 如果 localStorage 中存储了状态，则根据状态设置 checkbox 的勾选状态
-	if (engineChecked !== null) {
-		engineCheckbox.checked = engineChecked === '移动' ? true : false;
-	}
-	// 禁止右键和F12
-	// document.oncontextmenu = function () {
-	// 	return false;
-	// }
-	// document.onkeydown = function () {
-	// 	if (window.event && window.event.keyCode == 123) {
-	// 		event.keyCode = 0;
-	// 		event.returnValue = false;
-	// 		return false;
-	// 	}
-	// }
 	function openRewardPage() {
 		var userAgent = navigator.userAgent;
 		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {

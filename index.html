@@ -435,6 +435,9 @@
 
   <!-- 1到3秒随机，然后跳转欢迎index -->
   <script>
+    function isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
     setTimeout(function () {
       // 判断是否第一次进入
       if (localStorage.getItem('first') == null) {
@@ -455,7 +458,9 @@
           }
           window.location.href = './welcome.html';
         } else {
-          window.location.href = './home.html';
+          // 修改这里：根据设备类型跳转不同页面
+          const targetPage = isMobile() ? './home-mobile.html' : './home-pc.html';
+          window.location.href = targetPage;
         }
       }
     }, Math.random() * 1000 + 500);
