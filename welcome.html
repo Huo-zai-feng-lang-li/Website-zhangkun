@@ -84,7 +84,7 @@
       // 检查是否首次访问
       const isFirstVisit = !localStorage.getItem("first");
       const targetPage = isMobile() ? './home-mobile.html' : './home-pc.html';
-      window.location.href = targetPage;
+
       setTimeout(function () {
         // 根据是否首次访问决定跳转路径
         const redirectPath = isFirstVisit
