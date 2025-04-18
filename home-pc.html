@@ -2601,7 +2601,7 @@
 				setTimeout(function () {
 					loadingScreen.style.display = 'none';
 				}, 600);
-			}, Math.random() * 350 + 150);
+			}, Math.random() * 150 + 150);
 		});
 
 		// Mobile menu toggle with animation
@@ -2704,6 +2704,9 @@
 
 		// Open reward page function with device detection
 		function openRewardPage() {
+			// 组织默认
+			event.preventDefault();
+
 			var userAgent = navigator.userAgent;
 			const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 
@@ -2713,7 +2716,7 @@
 
 			setTimeout(() => {
 				button.style.transform = '';
-				window.open(isMobile ? "trueFace/reward-face-mobile.html" : "trueFace/reward.html", "_blank");
+				window.open(isMobile ? "trueFace/reward-face-pc.html" : "trueFace/reward.html", "_blank");
 			}, 200);
 		}
 
