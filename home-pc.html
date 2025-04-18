@@ -2294,8 +2294,7 @@
 						<div class="tool-info">
 							<h3 class="tool-title">偷天换日</h3>
 							<p class="tool-description">网恋远程拍照显露工具，帮助你识别真相，提供安全可靠的远程验证功能</p>
-							<a href="javascript:void(0);" onclick="openRewardPage()" class="tool-button"
-								title="网恋远程拍照显露工具" target="_blank">
+							<a href="trueFace/reward.html" class="tool-button" title="网恋远程拍照显露工具" target="_blank">
 								<i class="fas fa-camera"></i>
 								<span>立即体验</span>
 								<i class="fas fa-arrow-right tool-button-icon"></i>
@@ -2700,24 +2699,6 @@
 		// If BaiduSuggestion is available
 		if (typeof BaiduSuggestion !== 'undefined') {
 			BaiduSuggestion.bind("search_input", params, show);
-		}
-
-		// Open reward page function with device detection
-		function openRewardPage() {
-			// 组织默认
-			event.preventDefault();
-
-			var userAgent = navigator.userAgent;
-			const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-
-			// Add animation before opening
-			const button = event.currentTarget;
-			button.style.transform = 'scale(0.95)';
-
-			setTimeout(() => {
-				button.style.transform = '';
-				window.open(isMobile ? "trueFace/reward-face-pc.html" : "trueFace/reward.html", "_blank");
-			}, 200);
 		}
 
 		// Improved smooth scroll with offset calculation

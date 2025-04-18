@@ -172,7 +172,7 @@
 			</div>
 			<div class="reward-support__shadow" @click.stop="rewardSupportCard = false"></div>
 		</div>
-		<iframe id="my-iframe" src="./reward-face-pc.html" frameborder="0"></iframe>
+		<iframe id="my-iframe" src="./reward-face-mobile.html" frameborder="0"></iframe>
 	</div>
 </body>
 
@@ -192,7 +192,7 @@
 				iframe.src = `./reward-face-loading${randomIndex}.html`;
 
 				setTimeout(() => {
-					iframe.src = "./reward-face-pc.html";
+					iframe.src = "./reward-face-mobile.html";
 				}, Math.random() * 1000 + 1000);
 			}
 			// 禁止打开控制台
