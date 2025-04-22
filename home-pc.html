@@ -32,7 +32,7 @@
 			--on-surface: #151C38;
 			--on-surface-medium: rgba(21, 28, 56, 0.75);
 			--on-surface-disabled: rgba(21, 28, 56, 0.45);
-
+			color-scheme: light dark;
 			/* RGB versions for transparency */
 			--primary-color-rgb: 106, 57, 226;
 			--accent-color-rgb: 255, 77, 106;
@@ -64,6 +64,58 @@
 			--border-radius-large: 20px;
 			--border-radius-xl: 28px;
 			--border-radius-circle: 50%;
+		}
+
+
+		/* 暗色主题下的滤镜调整 */
+		[data-theme="dark"] .app-bar {
+			background-image: radial-gradient(transparent 1px, #1a1a1a 1px);
+			/* 深色网格 */
+			backdrop-filter: saturate(150%) blur(6px);
+			/* 增强模糊效果 */
+		}
+
+		/* 滚动状态调整 */
+		[data-theme="dark"] .app-bar.scrolled {
+			background-image: radial-gradient(transparent 1px, #2a2a2a 1px);
+			/* 稍浅的深色 */
+			backdrop-filter: saturate(200%) blur(8px);
+			/* 更强的模糊效果 */
+			border-bottom-color: rgba(44, 44, 44, 0.2);
+			/* 调整边框颜色 */
+		}
+
+		.theme-btn {
+			width: 40px;
+			height: 40px;
+			top: 15px;
+			border-radius: 50%;
+			background: var(--surface-color);
+			border: 2px solid var(--primary-color);
+			color: var(--primary-color);
+			cursor: pointer;
+			position: relative;
+			transition: all 0.3s ease;
+		}
+
+		.theme-btn i {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			transition: opacity 0.3s ease;
+		}
+
+		.theme-btn .fa-sun {
+			opacity: 0;
+		}
+
+		[data-theme="dark"] .theme-btn .fa-moon {
+			opacity: 0;
+		}
+
+		[data-theme="dark"] .theme-btn .fa-sun {
+			opacity: 1;
 		}
 
 		[data-theme="dark"] {
@@ -273,20 +325,28 @@
 			left: 0;
 			width: 100%;
 			height: 80px;
-			background-color: rgba(var(--background-color-rgb), 0.8);
-			backdrop-filter: blur(15px);
-			-webkit-backdrop-filter: blur(15px);
+			line-height: 80px;
+			/* 滤镜效果 */
+			background-image: radial-gradient(transparent 1px, #ffffff 1px);
+			background-size: 4px 4px;
+			backdrop-filter: saturate(50%) blur(4px);
+
 			color: var(--on-surface);
 			z-index: 100;
 			transition: all var(--transition-standard);
 			border-bottom: 1px solid transparent;
 		}
 
+		/* 滚动 */
 		.app-bar.scrolled {
+
 			height: 70px;
+			line-height: 70px;
 			box-shadow: var(--shadow-2);
-			background-color: rgba(var(--background-color-rgb), 0.95);
 			border-bottom-color: rgba(var(--primary-color-rgb), 0.1);
+			background-image: radial-gradient(transparent 1px, #ffffff 1px);
+			background-size: 4px 4px;
+			backdrop-filter: saturate(50%) blur(4px);
 		}
 
 		.app-bar-content {
@@ -372,7 +432,7 @@
 			text-decoration: none;
 			font-size: 1.05rem;
 			font-weight: 600;
-			padding: 8px 4px;
+			padding: 0 4px;
 			transition: all var(--transition-standard);
 			display: flex;
 			align-items: center;
@@ -1758,6 +1818,10 @@
 
 		/* Responsive Styles */
 		@media (max-width: 1400px) {
+			#menu-toggle {
+				display: none;
+			}
+
 			.container {
 				max-width: 1200px;
 			}
@@ -1768,6 +1832,10 @@
 		}
 
 		@media (max-width: 1200px) {
+			#menu-toggle {
+				display: none;
+			}
+
 			.container {
 				max-width: 92%;
 			}
@@ -1787,9 +1855,11 @@
 		}
 
 		@media (max-width: 992px) {
+
 			.nav {
 				display: none;
 			}
+
 
 			.menu-toggle {
 				display: flex;
@@ -2006,13 +2076,18 @@
 		}
 
 		@media (max-width: 576px) {
+
 			.container {
 				padding: 0 16px;
 				max-width: 100%;
 			}
 
 			.app-bar {
+				background-image: radial-gradient(transparent 1px, #ffffff 1px);
+				background-size: 4px 4px;
+				backdrop-filter: saturate(50%) blur(4px);
 				height: 70px;
+				line-height: 50px;
 			}
 
 			.brand-logo {
@@ -2188,11 +2263,11 @@
 					</ul>
 				</nav>
 
-				<div class="theme-toggle">
-					<input type="checkbox" class="theme-toggle-input" id="themeToggle" aria-label="切换暗色模式">
-					<span class="theme-toggle-slider"></span>
-					<i class="fas fa-sun theme-toggle-icon sun"></i>
-					<i class="fas fa-moon theme-toggle-icon moon"></i>
+				<div class="theme-switch">
+					<button id="themeToggle" class="theme-btn">
+						<i class="fas fa-moon"></i>
+						<i class="fas fa-sun"></i>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -2521,15 +2596,7 @@
 								<a href="https://blog.csdn.net/m0_57904695?spm=1000.2115.3001.5343"
 									class="footer-list-link">
 									<i class="fas fa-chevron-right"></i>
-									<span>
-
-										ERROR: Error in streaming API call:
-
-
-
-										[Response incomplete. Requesting continuation...]
-
-										<span>技术博客</span>
+									<span>技术博客</span>
 								</a>
 							</li>
 							<li class="footer-list-item">
@@ -2836,44 +2903,27 @@
 			});
 		});
 
-		// Enhanced theme toggle with persistent state
-		document.getElementById('themeToggle').addEventListener('change', function () {
-			if (this.checked) {
-				document.documentElement.setAttribute('data-theme', 'dark');
-				localStorage.setItem('theme', 'dark');
+		const themeToggle = document.getElementById('themeToggle');
+		const body = document.body;
 
-				// Update RGB values for dark theme
-				document.documentElement.style.setProperty('--primary-color-rgb', '140, 106, 237');
-				document.documentElement.style.setProperty('--background-color-rgb', '19, 21, 37');
-			} else {
-				document.documentElement.setAttribute('data-theme', 'light');
-				localStorage.setItem('theme', 'light');
+		// 初始化主题
+		const savedTheme = localStorage.getItem('theme') || 'light';
+		body.setAttribute('data-theme', savedTheme);
 
-				// Reset RGB values for light theme
-				document.documentElement.style.setProperty('--primary-color-rgb', '106, 57, 226');
-				document.documentElement.style.setProperty('--background-color-rgb', '255, 255, 255');
-			}
+		themeToggle.addEventListener('click', () => {
+			const currentTheme = body.getAttribute('data-theme');
+			const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+			body.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
 		});
 
-		// Load saved theme preference with animation
-		const savedTheme = localStorage.getItem('theme');
-		if (savedTheme) {
-			if (savedTheme === 'dark') {
-				document.getElementById('themeToggle').checked = true;
-				document.documentElement.setAttribute('data-theme', 'dark');
-				document.documentElement.style.setProperty('--primary-color-rgb', '140, 106, 237');
-				document.documentElement.style.setProperty('--background-color-rgb', '19, 21, 37');
-			}
-		} else {
-			// Auto-detect preferred color scheme
-			if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-				document.getElementById('themeToggle').checked = true;
-				document.documentElement.setAttribute('data-theme', 'dark');
-				localStorage.setItem('theme', 'dark');
-				document.documentElement.style.setProperty('--primary-color-rgb', '140, 106, 237');
-				document.documentElement.style.setProperty('--background-color-rgb', '19, 21, 37');
-			}
-		}
+		// 在加载完成后添加过渡效果
+		document.addEventListener('DOMContentLoaded', () => {
+			setTimeout(() => {
+				document.documentElement.style.transition =
+					'background-color 0.3s ease, color 0.3s ease';
+			}, 500);
+		});
 	</script>
 </body>
 
