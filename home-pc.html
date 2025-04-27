@@ -735,7 +735,7 @@
 
 		.search-input {
 			width: 100%;
-			height: 40px;
+			height: 50px;
 			padding: 0 70px 0 30px;
 			border: none;
 			background-color: transparent;
@@ -756,8 +756,8 @@
 			top: 50%;
 			right: 15px;
 			transform: translateY(-50%);
-			width: 25px;
-			height: 25px;
+			width: 35px;
+			height: 35px;
 			border-radius: var(--border-radius-circle);
 			background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
 			color: var(--on-primary);
@@ -2292,8 +2292,8 @@
 						<div class="search-container">
 							<div class="search-box">
 								<form onsubmit="return search()" title="搜索">
-									<input class="search-input" onfocus="showButton()" onblur="hideButton()" type="text"
-										value="" autocomplete="off" id="search_input" title="搜索"
+									<input autofocus class="search-input" onfocus="showButton()" onblur="hideButton()"
+										type="text" value="" autocomplete="off" id="search_input" title="搜索"
 										placeholder="输入关键词，探索彩色之外的世界..." aria-label="搜索" />
 									<button id="search_submit" type="submit" class="search-button" aria-label="搜索">
 										<i class="fas fa-search search-button-icon"></i>
