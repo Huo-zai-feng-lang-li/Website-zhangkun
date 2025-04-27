@@ -667,7 +667,7 @@
 			position: relative;
 			font-size: 1rem;
 			margin: 26px 0;
-			padding: 20px 25px;
+			padding: 15px;
 			border-radius: var(--border-radius-medium);
 			background-color: rgba(var(--primary-color-rgb), 0.04);
 			border-left: 4px solid var(--primary-color);
@@ -735,7 +735,7 @@
 
 		.search-input {
 			width: 100%;
-			height: 70px;
+			height: 40px;
 			padding: 0 70px 0 30px;
 			border: none;
 			background-color: transparent;
@@ -756,8 +756,8 @@
 			top: 50%;
 			right: 15px;
 			transform: translateY(-50%);
-			width: 48px;
-			height: 48px;
+			width: 25px;
+			height: 25px;
 			border-radius: var(--border-radius-circle);
 			background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
 			color: var(--on-primary);
@@ -878,6 +878,9 @@
 			z-index: 1;
 			border-radius: var(--border-radius-large);
 			overflow: hidden;
+			width: 350px;
+			height: 500px;
+			margin: auto;
 		}
 
 		.hero-image-container:hover .hero-img {
@@ -909,8 +912,7 @@
 			width: 150px;
 			height: 150px;
 			background: linear-gradient(135deg, rgba(var(--accent-color-rgb), 0.2), rgba(var(--accent-color-rgb), 0.1));
-			bottom: -30px;
-			left: -60px;
+			bottom: -74px;
 			animation: floatAnimation 7s ease-in-out infinite 1s;
 		}
 
@@ -2312,8 +2314,7 @@
 					<div class="hero-image-container">
 						<div class="hero-image">
 							<div class="hero-img-wrapper">
-								<img src="https://img2.baidu.com/it/u=3184698640,144873903&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1686675600&t=6997b916c7e5143213a9262b017cb471"
-									alt="彩色之外互动游戏" class="hero-img" />
+								<img src="./img//偷天换日.jpg" alt="彩色之外互动游戏" class="hero-img" />
 							</div>
 							<div class="decoration-circle decoration-circle-1"></div>
 							<div class="decoration-circle decoration-circle-2"></div>
@@ -2343,7 +2344,7 @@
 					<div class="tool-card" data-aos="fade-up" data-aos-delay="100">
 						<div class="tool-icon">
 							<div class="tool-overlay"
-								style="background: url('https://img0.baidu.com/it/u=1814080934,2262722&fm=253&fmt=auto?w=333&h=500') no-repeat 0 -50px/cover;">
+								style="background: url('./img/偷天换日.jpg') no-repeat 0 -150px/cover;">
 							</div>
 						</div>
 						<div class="tool-info">
@@ -2362,7 +2363,7 @@
 					<div class="tool-card" data-aos="fade-up" data-aos-delay="200">
 						<div class="tool-icon">
 							<div class="tool-overlay"
-								style="background-image: url('https://img0.baidu.com/it/u=1308949746,652039931&fm=253&fmt=auto&app=120&f=JPEG?w=806&h=500');">
+								style="background: url('https://img0.baidu.com/it/u=951226400,1166992928&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=889') no-repeat 0 -220px/cover;">
 							</div>
 						</div>
 						<div class="tool-info">
@@ -2380,12 +2381,12 @@
 					<div class="tool-card" data-aos="fade-up" data-aos-delay="300">
 						<div class="tool-icon">
 							<div class="tool-overlay"
-								style="background-image: url('https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3');">
+								style="background-image: url('https://img0.baidu.com/it/u=466504567,3964421695&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500');">
 							</div>
 						</div>
 						<div class="tool-info">
 							<h3 class="tool-title">AI输字</h3>
-							<p class="tool-description">智能输入助手，提升效率，让你的文字输入更快速、更智能、更轻松</p>
+							<p class="tool-description">智能输入助手，模拟AI打字效果，学习打字效果特效制作</p>
 							<a href="./dazi.html" class="tool-button" title="AI输字" target="_blank">
 								<i class="fas fa-keyboard"></i>
 								<span>立即体验</span>
@@ -2394,8 +2395,26 @@
 						</div>
 					</div>
 
-					<!-- 音乐 -->
+					<!-- 手写字生成 -->
 					<div class="tool-card" data-aos="fade-up" data-aos-delay="400">
+						<div class="tool-icon">
+							<div class="tool-overlay"
+								style="background: url('https://img2.baidu.com/it/u=1887825136,3154724208&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=667') no-repeat 0 0/cover;">
+							</div>
+						</div>
+						<div class="tool-info">
+							<h3 class="tool-title">手写字生成</h3>
+							<p class="tool-description">将文字化为艺术，瞬间创造优雅手写</p>
+							<a href="./handwritten-image.html" class="tool-button" title="手写字生成" target="_blank">
+								<i class="fas fa-keyboard"></i>
+								<span>立即体验</span>
+								<i class="fas fa-arrow-right tool-button-icon"></i>
+							</a>
+						</div>
+					</div>
+
+					<!-- 音乐 -->
+					<div class="tool-card" data-aos="fade-up" data-aos-delay="500">
 						<div class="tool-icon">
 							<div class="tool-overlay"
 								style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3');">

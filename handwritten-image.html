@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>手写图生成器</title>
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap">
+	<style>
+		:root {
+			--primary-color: #3a0ca3;
+			--secondary-color: #4361ee;
+			--accent-color: #f72585;
+			--text-color: #2b2d42;
+			--light-text: #f8f9fa;
+			--background-color: #f8f9fa;
+			--card-background: #ffffff;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			transition: all 0.3s ease;
+		}
+
+		html {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		body {
+			font-family: 'Poppins', sans-serif;
+			color: var(--text-color);
+			background: linear-gradient(#03a9f4, #03a9f4 10%, #fff 50%, #fff 100%);
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 20px;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.decoration {
+			position: absolute;
+			z-index: -1;
+		}
+
+		.decoration.circle1 {
+			width: 300px;
+			height: 300px;
+			border-radius: 50%;
+			background: radial-gradient(circle at 30% 30%, var(--secondary-color), transparent 70%);
+			top: -100px;
+			right: -100px;
+			opacity: 0.4;
+		}
+
+		.decoration.circle2 {
+			width: 200px;
+			height: 200px;
+			border-radius: 50%;
+			background: radial-gradient(circle at 30% 30%, var(--accent-color), transparent 70%);
+			bottom: -50px;
+			left: -50px;
+			opacity: 0.3;
+		}
+
+		.container {
+			width: 90%;
+			max-width: 1000px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 30px;
+			background: var(--card-background);
+			border-radius: 20px;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+			position: relative;
+		}
+
+		.preview-pane {
+			padding: 40px;
+			background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.preview-decoration {
+			position: absolute;
+			font-size: 120px;
+			color: rgba(255, 255, 255, 0.2);
+			font-family: 'Playfair Display', serif;
+		}
+
+		.preview-decoration.top-left {
+			top: -20px;
+			left: -10px;
+			transform: rotate(-15deg);
+		}
+
+		.preview-decoration.bottom-right {
+			bottom: -30px;
+			right: -10px;
+			transform: rotate(10deg);
+		}
+
+
+
+		.preview-text {
+			font-family: 'Playfair Display', serif;
+			color: var(--light-text);
+			text-align: center;
+			margin-top: 20px;
+			font-size: 18px;
+		}
+
+		.content-pane {
+			padding: 40px;
+			position: relative;
+		}
+
+		h1 {
+			font-family: 'Playfair Display', serif;
+			font-size: 2.5rem;
+			margin-bottom: 30px;
+			color: var(--primary-color);
+			position: relative;
+		}
+
+		h1::after {
+			content: '';
+			position: absolute;
+			bottom: -10px;
+			left: 0;
+			width: 60px;
+			height: 3px;
+			background: var(--accent-color);
+		}
+
+		textarea {
+			width: 100%;
+			padding: 15px;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			margin-bottom: 25px;
+			resize: vertical;
+			font-size: 16px;
+			min-height: 120px;
+			box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+			font-family: 'Poppins', sans-serif;
+		}
+
+		textarea:focus {
+			outline: none;
+			border-color: var(--secondary-color);
+			box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+		}
+
+		.style-selector {
+			margin-bottom: 25px;
+		}
+
+		.style-selector h3 {
+			margin-bottom: 15px;
+			font-size: 18px;
+			color: var(--primary-color);
+		}
+
+		.style-options {
+			display: flex;
+			gap: 15px;
+		}
+
+		.style-option {
+			flex: 1;
+			text-align: center;
+			padding: 15px;
+			border: 2px solid #ddd;
+			border-radius: 8px;
+			cursor: pointer;
+		}
+
+		.style-option.active {
+			border-color: var(--accent-color);
+			background-color: rgba(247, 37, 133, 0.05);
+		}
+
+		.btn {
+			display: inline-block;
+			width: 100%;
+			padding: 15px;
+			margin-bottom: 15px;
+			background: var(--primary-color);
+			color: white;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			font-size: 16px;
+			font-weight: 600;
+			text-align: center;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.btn:hover {
+			background: var(--secondary-color);
+			transform: translateY(-3px);
+			box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+		}
+
+		.btn:active {
+			transform: translateY(0);
+		}
+
+		.btn::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+			transition: all 0.5s;
+		}
+
+		.btn:hover::before {
+			left: 100%;
+		}
+
+		.result {
+			margin-top: 20px;
+			text-align: center;
+
+		}
+
+		.footer {
+			text-align: center;
+			margin-top: 30px;
+			color: #777;
+			font-size: 14px;
+			font-weight: 300;
+		}
+
+		.footer p {
+			margin: 5px 0;
+		}
+
+		.loading {
+			text-align: center;
+			margin: 20px 0;
+		}
+
+		.loading p {
+			margin: 30px 0 20px 0;
+			/* 渐变文字 */
+			background: linear-gradient(#03a9f4 10%, #fff 50%, #03a9f4 100%);
+
+			background-clip: text;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			font-size: 18px;
+			font-weight: 500;
+		}
+
+		.loading-dots {
+			display: inline-block;
+		}
+
+		.loading-dots span {
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background-color: var(--accent-color);
+			margin: 0 3px;
+			animation: loadingDot 1.4s infinite ease-in-out both;
+		}
+
+		.loading-dots span:nth-child(1) {
+			animation-delay: -0.32s;
+		}
+
+		.loading-dots span:nth-child(2) {
+			animation-delay: -0.16s;
+		}
+
+		@keyframes loadingDot {
+
+			0%,
+			80%,
+			100% {
+				transform: scale(0);
+			}
+
+			40% {
+				transform: scale(1);
+			}
+		}
+
+		@media (max-width: 768px) {
+			.container {
+				grid-template-columns: 1fr;
+			}
+
+			.preview-pane {
+				padding: 30px;
+			}
+
+			.content-pane {
+				padding: 30px;
+			}
+
+			h1 {
+				font-size: 2rem;
+			}
+		}
+
+		@keyframes float {
+			0% {
+				transform: translateY(0px);
+			}
+
+			50% {
+				transform: translateY(-15px);
+			}
+
+			100% {
+				transform: translateY(0px);
+			}
+		}
+
+		.handwriting-preview {
+			animation: float 6s ease-in-out infinite;
+		}
+
+		/* Dark mode support */
+		@media (prefers-color-scheme: dark) {
+			:root {
+				--primary-color: #7b2cbf;
+				--secondary-color: #5a67d8;
+				--accent-color: #f25f4c;
+				--text-color: #e5e5e5;
+				--light-text: #f8f9fa;
+				--background-color: #121212;
+				--card-background: #1e1e1e;
+			}
+
+			body {
+				background: linear-gradient(135deg, #2b2b2b 0%, #121212 100%);
+			}
+
+			textarea {
+				background-color: #2d2d2d;
+				color: #e5e5e5;
+				border-color: #444;
+			}
+
+			.style-option {
+				border-color: #444;
+				color: #e5e5e5;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Decorative elements -->
+	<div class="decoration circle1"></div>
+	<div class="decoration circle2"></div>
+
+	<div class="container">
+		<div class="preview-pane">
+			<div class="preview-decoration top-left">文</div>
+			<!-- <div class="handwriting-preview" id="previewArea">
+				<div id="previewContent"></div>
+			</div> -->
+			<div class="result" id="result"></div>
+			<div class="loading" id="loadingIndicator" style="display: none;">
+				<p>正在生成您的手写效果</p>
+				<div class="loading-dots">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+
+			<p class="preview-text">生成专属于你的手写风格</p>
+			<div class="preview-decoration bottom-right">字</div>
+		</div>
+		<div class="content-pane">
+			<h1>手写图生成器</h1>
+			<textarea id="inputText" placeholder="输入你想要的手写内容" rows="5"></textarea>
+
+			<div class="style-selector">
+				<h3>生成模式选择</h3>
+				<div class="style-options">
+					<div class="style-option active" data-style="custom">自定义手写</div>
+					<div class="style-option" data-style="random">随机手写</div>
+				</div>
+			</div>
+
+			<button class="btn" id="generateBtn">立即生成</button>
+
+			<div class="footer">
+				<p>快速生成手写效果，支持多种生成模式</p>
+				<p>完美呈现您的文字，赋予其独特个性</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// 处理模式选择
+		const styleOptions = document.querySelectorAll('.style-option');
+		let selectedStyle = 'custom';
+
+		styleOptions.forEach(option => {
+			option.addEventListener('click', function () {
+				styleOptions.forEach(opt => opt.classList.remove('active'));
+				this.classList.add('active');
+				selectedStyle = this.dataset.style;
+			});
+		});
+
+		// 实时预览功能
+		const inputText = document.getElementById('inputText');
+		const previewContent = document.getElementById('previewContent');
+
+		inputText.addEventListener('input', function () {
+			const text = this.value;
+			previewContent.textContent = text.length > 30 ? text.substring(0, 30) + '...' : text;
+		});
+
+		// 生成按钮功能
+		document.getElementById('generateBtn').addEventListener('click', function () {
+			const text = inputText.value.trim();
+
+			if (selectedStyle === 'custom' && !text) {
+				alert('请输入手写内容');
+				return;
+			}
+
+			generateHandwriting(selectedStyle);
+		});
+
+		// 核心生成函数
+		function generateHandwriting(style) {
+			const loadingIndicator = document.getElementById('loadingIndicator');
+			const result = document.getElementById('result');
+
+			loadingIndicator.style.display = 'block';
+			result.innerHTML = '';
+
+			let apiUrl;
+			if (style === 'custom') {
+				const text = inputText.value;
+				apiUrl = `https://api.uuuix.com/api/v1/diym?xukey=o2Y4ZGjKoo0Q6W4QnO2U&msg=${encodeURIComponent(text)}`;
+			} else {
+				// 修正后的随机生成接口
+				apiUrl = 'https://api.uuuix.com/api/v1/diy?xukey=o2Y4ZGjKoo0Q6W4QnO2U&type=random';
+			}
+
+			const resultImage = new Image();
+			resultImage.style.maxWidth = '100%';
+			resultImage.style.borderRadius = '8px';
+			resultImage.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.1)';
+			resultImage.alt = '手写图片';
+
+			// 设置10秒超时
+			const timeoutTimer = setTimeout(() => {
+				resultImage.onerror();
+			}, 10000);
+
+			resultImage.onload = function () {
+				clearTimeout(timeoutTimer);
+				loadingIndicator.style.display = 'none';
+
+				const resultHTML = document.createElement('div');
+				const heading = document.createElement('h3');
+				heading.textContent = `${style === 'custom' ? '自定义' : '随机'}手写已生成!`;
+
+				const imgContainer = document.createElement('div');
+				imgContainer.style.marginTop = '20px';
+				imgContainer.appendChild(resultImage);
+
+				const saveText = document.createElement('p');
+				saveText.style.marginTop = '15px';
+				saveText.style.fontSize = '14px';
+				saveText.textContent = '点击图片查看大图';
+
+				resultHTML.appendChild(heading);
+				resultHTML.appendChild(imgContainer);
+				resultHTML.appendChild(saveText);
+
+				resultImage.style.cursor = 'pointer';
+				resultImage.addEventListener('click', function () {
+					openModal(this.src);
+				});
+
+				result.innerHTML = '';
+				result.appendChild(resultHTML);
+			};
+
+			resultImage.onerror = function () {
+				clearTimeout(timeoutTimer);
+				loadingIndicator.style.display = 'none';
+				result.innerHTML = `
+            <p style="color: var(--accent-color); text-align:center;">
+                ${style === 'random' ? '随机生成' : '自定义生成'}失败<br>
+                <small>${style === 'random' ? '正在尝试重新生成...' : '请检查输入内容'}</small>
+            </p>
+        `;
+
+				if (style === 'random') {
+					setTimeout(() => {
+						generateHandwriting('random');
+					}, 2000);
+				}
+			};
+
+			// 添加随机参数防止缓存
+			resultImage.src = apiUrl + '&_cache=' + Date.now();
+		}
+		// 图片模态框功能
+		function openModal(imgSrc) {
+			const modal = document.getElementById('imageModal');
+			const modalImg = document.getElementById('modalImage');
+
+			if (!modal) {
+				createImageModal();
+				const newModal = document.getElementById('imageModal');
+				const newModalImg = document.getElementById('modalImage');
+
+				newModal.style.display = "block";
+				newModalImg.src = imgSrc;
+			} else {
+				modal.style.display = "block";
+				modalImg.src = imgSrc;
+			}
+		}
+
+		function createImageModal() {
+			const modalHTML = `
+                <div id="imageModal" class="modal">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <img class="modal-content" id="modalImage">
+                </div>
+            `;
+
+			const modalStyles = `
+                <style>
+                    .modal {
+                        display: none;
+                        position: fixed;
+                        z-index: 1000;
+                        padding-top: 50px;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: auto;
+                        background-color: rgba(0,0,0,0.9);
+                    }
+                    
+                    .modal-content {
+                        margin: auto;
+                        display: block;
+                        max-width: 90%;
+                        max-height: 80vh;
+                    }
+                    
+                    .close {
+                        position: absolute;
+                        top: 15px;
+                        right: 35px;
+                        color: #f1f1f1;
+                        font-size: 40px;
+                        font-weight: bold;
+                        transition: 0.3s;
+                        cursor: pointer;
+                    }
+                    
+                    .close:hover,
+                    .close:focus {
+                        color: var(--accent-color);
+                        text-decoration: none;
+                    }
+                </style>
+            `;
+
+			document.body.insertAdjacentHTML('beforeend', modalHTML);
+			document.head.insertAdjacentHTML('beforeend', modalStyles);
+
+			window.addEventListener('click', function (event) {
+				const modal = document.getElementById('imageModal');
+				if (event.target == modal) {
+					closeModal();
+				}
+			});
+		}
+
+		function closeModal() {
+			const modal = document.getElementById('imageModal');
+			if (modal) {
+				modal.style.display = "none";
+			}
+		}
+	</script>
+</body>
+
+</html>
