@@ -1448,7 +1448,7 @@
 			// Make sure the result div is visible
 			resultDiv.style.display = 'block';
 		}
-
+		let responseData = null
 		async function sendGetRequest(url, params, resultDiv) {
 			const email = params.to;
 			const username = 'hh';
@@ -1458,8 +1458,8 @@
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			// const responseData = await response.text();
-			// showMessage(`请求已发送: ${responseData}`, 'success', resultDiv);
+			responseData = await response.json();
+			// console.log('🤖----- responseData ---->:', responseData);
 		}
 
 		async function sendRequests(event) {
@@ -1518,36 +1518,51 @@
 
 			let successCount = 0;
 			let errorCount = 0;
-
 			try {
-				// 创建并发的Promise数组
-				const requests = [];
-				let completed = 0;
+				// 新的分批次处理逻辑
+				const BATCH_SIZE = 10; // 每批并发量
+				let currentIndex = 0;
+				const totalBatches = Math.ceil(times / BATCH_SIZE);
 
-				// 创建指定数量的请求
-				for (let i = 0; i < times; i++) {
-					requests.push(
-						sendGetRequest('', { to }, resultDiv)
-							.then(() => successCount++)
-							.catch(() => errorCount++)
-							.finally(() => {
-								completed++;
-								const progress = (completed / times) * 100;
-								progressBarFill.style.width = `${progress}%`;
-								progressCount.textContent = `${completed}/${times}`;
-							})
-					);
+				for (let batch = 0; batch < totalBatches; batch++) {
+					// 计算当前批次的数量
+					const batchSize = Math.min(BATCH_SIZE, times - currentIndex);
+					const batchRequests = [];
+
+					// 创建当前批次的请求
+					for (let i = 0; i < batchSize; i++) {
+						batchRequests.push(
+							sendGetRequest('', { to }, resultDiv)
+								.then(() => successCount++)
+								.catch(() => errorCount++)
+								.finally(() => {
+									completed++;
+									const progress = (completed / times) * 100;
+									progressBarFill.style.width = `${progress}%`;
+									progressCount.textContent = `${completed}/${times}`;
+								})
+						);
+						currentIndex++;
+					}
+
+					// 等待当前批次全部完成
+					await Promise.all(batchRequests);
+
+					// 可选：添加批次间隔（如需可取消注释）
+					// await new Promise(resolve => setTimeout(resolve, 1000)); 
 				}
 
-				// 等待所有请求完成
-				await Promise.all(requests);
+			}
+			finally {
+				if (responseData?.success) {
+					progressBarFill.style.width = `100%`;
+					progressCount.textContent = `${times}/${times}`;
+					progressStatus.textContent = '发送完成';
+					showMessage(`✅ 已成功发送 ${successCount || times} 条邮件到 ${to}（共${times}条）`, 'success', resultDiv);
+				} else {
+					showMessage(` 发送失败: ${responseData?.message || '未知错误'}`, 'error', resultDiv);
+				}
 
-			} catch (error) {
-				showMessage(`发送过程中出现错误: ${error.message}`, 'error', resultDiv);
-			} finally {
-				// 显示最终结果（修改了成功提示）
-				progressStatus.textContent = '发送完成';
-				showMessage(`✅ 已成功发送 ${successCount} 条邮件到 ${to}（共${times}条）`, 'success', resultDiv);
 
 				// Reset button state
 				submitBtn.disabled = false;
