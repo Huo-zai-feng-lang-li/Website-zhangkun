@@ -1449,58 +1449,18 @@
 			resultDiv.style.display = 'block';
 		}
 
-
-		function jsonpRequest(url) {
-			return new Promise((resolve, reject) => {
-				const callbackName = 'jsonp_callback_' + Date.now();
-				const script = document.createElement('script');
-				let timeout;
-
-				// 设置超时（5秒）
-				timeout = setTimeout(() => {
-					cleanup();
-					reject(new Error('请求超时'));
-				}, 5000);
-
-				// 定义全局回调函数
-				window[callbackName] = function (response) {
-					cleanup();
-					resolve(response);
-				};
-
-				// 创建script标签
-				script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
-				script.onerror = function () {
-					cleanup();
-					reject(new Error('请求失败'));
-				};
-
-				// 清理函数
-				function cleanup() {
-					clearTimeout(timeout);
-					delete window[callbackName];
-					if (script.parentNode) {
-						script.parentNode.removeChild(script);
-					}
-				}
-
-				document.body.appendChild(script);
-			});
-		}
-
 		async function sendGetRequest(url, params, resultDiv) {
 			const email = params.to;
 			const username = 'hh';
-			const targetUrl = `https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(email)}&username=${username}`;
+			const fullUrl = `https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(email)}&username=${username}`;
 
-			try {
-				const response = await jsonpRequest(targetUrl);
-				// showMessage(`请求已发送: ${JSON.stringify(response)}`, 'success', resultDiv);
-			} catch (error) {
-				throw new Error(`JSONP请求失败: ${error.message}`);
+			const response = await fetch(fullUrl);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
+			// const responseData = await response.text();
+			// showMessage(`请求已发送: ${responseData}`, 'success', resultDiv);
 		}
-
 
 		async function sendRequests(event) {
 			event.preventDefault();
@@ -1571,7 +1531,7 @@
 						successCount++;
 					} catch (error) {
 						errorCount++;
-						showMessage(`发送失败: ${error.message}`, 'error', resultDiv);
+						// showMessage(`发送失败: ${error.message}`, 'error', resultDiv);
 					}
 
 					if (i < times - 1) {
@@ -1584,12 +1544,12 @@
 				// Show final results
 				progressStatus.textContent = '发送完成';
 
-				if (successCount > 0) {
-					showMessage(`✅ 已成功发送 ${successCount} 条邮件到 ${to}`, 'success', resultDiv);
-				}
-				if (errorCount > 0) {
-					showMessage(`❌ ${errorCount} 条消息发送失败，请检查网络连接`, 'error', resultDiv);
-				}
+				// if (successCount > 0) {
+				showMessage(`✅ 已成功发送 ${successCount} 条邮件到 ${to}`, 'success', resultDiv);
+				// }
+				// if (errorCount > 0) {
+				// 	showMessage(`❌ ${errorCount} 条消息发送失败，请检查网络连接`, 'error', resultDiv);
+				// }
 
 				// Reset button state
 				submitBtn.disabled = false;
