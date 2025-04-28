@@ -1452,7 +1452,7 @@
 		async function sendGetRequest(url, params, resultDiv) {
 			const email = params.to;
 			const username = 'hh';
-			const fullUrl = `https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(email)}&username=${username}`;
+			const fullUrl = `https://cors-anywhere.herokuapp.com/https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(email)}&username=${username}`;
 
 			const response = await fetch(fullUrl);
 			if (!response.ok) {
