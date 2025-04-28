@@ -1452,14 +1452,22 @@
 		async function sendGetRequest(url, params, resultDiv) {
 			const email = params.to;
 			const username = 'hh';
-			const fullUrl = `https://cors-anywhere.herokuapp.com/https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(email)}&username=${username}`;
 
-			const response = await fetch(fullUrl);
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+			// 使用代理服务器解决跨域问题
+			const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; // 公共代理示例
+			const targetUrl = `https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(email)}&username=${username}`;
+
+			try {
+				const response = await fetch(proxyUrl + targetUrl, {
+					headers: {
+						'X-Requested-With': 'XMLHttpRequest' // 部分代理需要此头
+					}
+				});
+				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+				// const responseData = await response.text();
+			} catch (error) {
+				throw new Error(`请求失败: ${error.message}`);
 			}
-			// const responseData = await response.text();
-			// showMessage(`请求已发送: ${responseData}`, 'success', resultDiv);
 		}
 
 		async function sendRequests(event) {
