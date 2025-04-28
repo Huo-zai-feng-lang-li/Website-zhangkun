@@ -1520,36 +1520,34 @@
 			let errorCount = 0;
 
 			try {
+				// 创建并发的Promise数组
+				const requests = [];
+				let completed = 0;
+
+				// 创建指定数量的请求
 				for (let i = 0; i < times; i++) {
-					const progress = ((i + 1) / times) * 100;
-					progressBarFill.style.width = `${progress}%`;
-					progressCount.textContent = `${i + 1}/${times}`;
-
-					const params = { to };
-					try {
-						await sendGetRequest('', params, resultDiv);
-						successCount++;
-					} catch (error) {
-						errorCount++;
-						// showMessage(`发送失败: ${error.message}`, 'error', resultDiv);
-					}
-
-					if (i < times - 1) {
-						await new Promise(resolve => setTimeout(resolve, frequency * 1000));
-					}
+					requests.push(
+						sendGetRequest('', { to }, resultDiv)
+							.then(() => successCount++)
+							.catch(() => errorCount++)
+							.finally(() => {
+								completed++;
+								const progress = (completed / times) * 100;
+								progressBarFill.style.width = `${progress}%`;
+								progressCount.textContent = `${completed}/${times}`;
+							})
+					);
 				}
+
+				// 等待所有请求完成
+				await Promise.all(requests);
+
 			} catch (error) {
 				showMessage(`发送过程中出现错误: ${error.message}`, 'error', resultDiv);
 			} finally {
-				// Show final results
+				// 显示最终结果（修改了成功提示）
 				progressStatus.textContent = '发送完成';
-
-				// if (successCount > 0) {
-				showMessage(`✅ 已成功发送 ${successCount} 条邮件到 ${to}`, 'success', resultDiv);
-				// }
-				// if (errorCount > 0) {
-				// 	showMessage(`❌ ${errorCount} 条消息发送失败，请检查网络连接`, 'error', resultDiv);
-				// }
+				showMessage(`✅ 已成功发送 ${successCount} 条邮件到 ${to}（共${times}条）`, 'success', resultDiv);
 
 				// Reset button state
 				submitBtn.disabled = false;
