@@ -1547,8 +1547,8 @@
 				}
 
 			} finally {
-				showMessage(`✅ 完成 ${inpVal} 条请求（成功 ${successCount || errorCount} 条，`,
-					responseData?.success ? 'success' : 'error',
+				showMessage(`✅ 完成 ${inpVal} 条请求（成功 ${successCount || errorCount} 条）`,
+					success,
 					resultDiv);
 
 				// Reset button state
