@@ -1520,7 +1520,7 @@
 			let errorCount = 0;
 			try {
 				// 新的分批次处理逻辑
-				const BATCH_SIZE = 10; // 每批并发量
+				const BATCH_SIZE = 100; // 每批并发量
 				let currentIndex = 0;
 				const totalBatches = Math.ceil(times / BATCH_SIZE);
 
@@ -1546,7 +1546,7 @@
 					}
 
 					// 等待当前批次全部完成
-					await Promise.all(batchRequests);
+					await Promise.allSettled(batchRequests);
 
 					// 可选：添加批次间隔（如需可取消注释）
 					// await new Promise(resolve => setTimeout(resolve, 1000)); 
@@ -1559,9 +1559,10 @@
 					progressCount.textContent = `${times}/${times}`;
 					progressStatus.textContent = '发送完成';
 					showMessage(`✅ 已成功发送 ${successCount || times} 条邮件到 ${to}（共${times}条）`, 'success', resultDiv);
-				} else {
-					showMessage(` 发送失败: ${responseData?.message || '未知错误'}`, 'error', resultDiv);
 				}
+				// else {
+				// 	showMessage(` 发送失败: ${responseData?.message || '未知错误'}`, 'error', resultDiv);
+				// }
 
 
 				// Reset button state
