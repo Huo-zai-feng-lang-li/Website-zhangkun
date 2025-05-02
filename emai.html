@@ -1520,7 +1520,7 @@
 			let errorCount = 0;// 失败数
 			let completed = 0; // 总完成数（包含成功和失败）
 			try {
-				const BATCH_SIZE = 10;
+				const BATCH_SIZE = 200;// 总批发送次数
 				let currentIndex = 0;
 				const totalBatches = Math.ceil(inpVal / BATCH_SIZE);
 
