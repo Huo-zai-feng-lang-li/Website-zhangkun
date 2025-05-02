@@ -1264,12 +1264,12 @@
 
 					<div class="form-group">
 						<div class="input-container">
-							<input type="number" id="times" class="form-input" placeholder="请输入大于或等于1的整数" min="1"
+							<input type="number" id="inpVal" class="form-input" placeholder="请输入大于或等于1的整数" min="1"
 								value="1" required="">
 							<i class="fas fa-redo input-icon"></i>
-							<label class="form-label" for="times">发送次数</label>
+							<label class="form-label" for="inpVal">发送次数</label>
 						</div>
-						<div class="error-message" id="times-error">
+						<div class="error-message" id="inpVal-error">
 							<i class="fas fa-exclamation-circle"></i>
 							<span>请输入大于或等于1的整数</span>
 						</div>
@@ -1421,9 +1421,9 @@
 			showError('to', this.value && !isValid);
 		});
 
-		document.getElementById('times').addEventListener('input', function () {
+		document.getElementById('inpVal').addEventListener('input', function () {
 			const isValid = validateNumber(this.value, 1);
-			showError('times', this.value && !isValid);
+			showError('inpVal', this.value && !isValid);
 		});
 
 		document.getElementById('frequency').addEventListener('input', function () {
@@ -1436,7 +1436,7 @@
 			messageDiv.className = `message ${type}`;
 
 			const icon = document.createElement('i');
-			icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-times-circle';
+			icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-inpVal-circle';
 
 			const text = document.createElement('span');
 			text.textContent = message;
@@ -1475,7 +1475,7 @@
 			const progressCount = document.getElementById('progress-count');
 
 			const to = document.getElementById('to').value;
-			const times = parseInt(document.getElementById('times').value);
+			const inpVal = parseInt(document.getElementById('inpVal').value);
 			const frequency = parseFloat(document.getElementById('frequency').value);
 			const resultDiv = document.getElementById('result');
 
@@ -1493,11 +1493,11 @@
 				showError('to', false);
 			}
 
-			if (!validateNumber(times, 1)) {
-				showError('times', true);
+			if (!validateNumber(inpVal, 1)) {
+				showError('inpVal', true);
 				hasError = true;
 			} else {
-				showError('times', false);
+				showError('inpVal', false);
 			}
 
 			if (!validateNumber(frequency, 0.1)) {
@@ -1514,56 +1514,42 @@
 			buttonText.textContent = '发送中...';
 			loadingSpinner.style.display = 'inline-block';
 			progressContainer.style.display = 'block';
-			progressCount.textContent = `0/${times}`;
+			progressCount.textContent = `0/${inpVal}`;
 
-			let successCount = 0;
-			let errorCount = 0;
+			let successCount = 0;// 成功数
+			let errorCount = 0;// 失败数
+			let completed = 0; // 总完成数（包含成功和失败）
 			try {
-				// 新的分批次处理逻辑
-				const BATCH_SIZE = 100; // 每批并发量
+				const BATCH_SIZE = 10;
 				let currentIndex = 0;
-				const totalBatches = Math.ceil(times / BATCH_SIZE);
+				const totalBatches = Math.ceil(inpVal / BATCH_SIZE);
 
 				for (let batch = 0; batch < totalBatches; batch++) {
-					// 计算当前批次的数量
-					const batchSize = Math.min(BATCH_SIZE, times - currentIndex);
+					const batchSize = Math.min(BATCH_SIZE, inpVal - currentIndex);
 					const batchRequests = [];
 
-					// 创建当前批次的请求
 					for (let i = 0; i < batchSize; i++) {
 						batchRequests.push(
 							sendGetRequest('', { to }, resultDiv)
 								.then(() => successCount++)
 								.catch(() => errorCount++)
 								.finally(() => {
-									completed++;
-									const progress = (completed / times) * 100;
+									completed++; // 无论成功失败都计数
+									const progress = (completed / inpVal) * 100;
 									progressBarFill.style.width = `${progress}%`;
-									progressCount.textContent = `${completed}/${times}`;
+									progressCount.textContent = `${completed}/${inpVal}`;
 								})
 						);
 						currentIndex++;
 					}
 
-					// 等待当前批次全部完成
 					await Promise.allSettled(batchRequests);
-
-					// 可选：添加批次间隔（如需可取消注释）
-					// await new Promise(resolve => setTimeout(resolve, 1000)); 
 				}
 
-			}
-			finally {
-				if (responseData?.success) {
-					progressBarFill.style.width = `100%`;
-					progressCount.textContent = `${times}/${times}`;
-					progressStatus.textContent = '发送完成';
-					showMessage(`✅ 已成功发送 ${successCount || times} 条邮件到 ${to}（共${times}条）`, 'success', resultDiv);
-				}
-				// else {
-				// 	showMessage(` 发送失败: ${responseData?.message || '未知错误'}`, 'error', resultDiv);
-				// }
-
+			} finally {
+				showMessage(`✅ 完成 ${inpVal} 条请求（成功 ${successCount || errorCount} 条，`,
+					responseData?.success ? 'success' : 'error',
+					resultDiv);
 
 				// Reset button state
 				submitBtn.disabled = false;
