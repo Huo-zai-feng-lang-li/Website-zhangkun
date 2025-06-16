@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>临时邮箱</title>
+    <title>临时邮箱 - 安全可靠的临时邮箱服务</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,64 +15,340 @@
         }
         
         :root {
-            --primary: #4361ee;
-            --primary-dark: #3a0ca3;
-            --secondary: #4cc9f0;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --error: #e74c3c;
-            --light: #f8f9fa;
-            --dark: #2b2d42;
-            --gray: #8d99ae;
-            --card-bg: #ffffff;
-            --border: #e0e0e0;
-            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #f093fb;
+            --accent: #4facfe;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --error: #f56565;
+            --light: #f7fafc;
+            --dark: #2d3748;
+            --gray: #718096;
+            --gray-light: #a0aec0;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            pointer-events: none;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             width: 100%;
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
         }
         
         .card {
             background: var(--card-bg);
-            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             box-shadow: var(--shadow);
             overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
         }
         
         .header {
-            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 25px;
+            padding: 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
         }
         
         .header h1 {
-            font-size: 1.6rem;
-            margin-bottom: 5px;
+            font-size: 2rem;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .header h1 i {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
         
         .header p {
             font-size: 1rem;
             opacity: 0.9;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: 12px;
+            min-width: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #f0f0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .trust-badge:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+        
+        .trust-badge i {
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.25);
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .trust-badge:hover i {
+            transform: scale(1.1);
         }
         
         .content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        /* Getting Started Guide */
+        .getting-started {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(240, 147, 251, 0.1) 100%);
+            border: 2px solid rgba(79, 172, 254, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .getting-started.hidden {
+            display: none;
+        }
+        
+        .getting-started::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(79, 172, 254, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .guide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .guide-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .guide-title i {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        
+        .close-guide {
+            background: rgba(102, 126, 234, 0.1);
+            border: none;
+            color: var(--primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .close-guide:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .guide-step {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
             padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .guide-step:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        
+        .step-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .main-section {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
+            align-items: start;
+        }
+        
+        .email-section {
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -80,136 +357,516 @@
         .email-box {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            padding: 20px;
-            border-radius: 12px;
-            background: rgba(67, 97, 238, 0.05);
-            border: 1px dashed var(--primary);
+            gap: 18px;
+            padding: 25px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.2);
             position: relative;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .email-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .email-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        
+        .email-box-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
         }
         
         .email-display {
-            font-size: 1.3rem;
-            font-weight: 500;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: var(--dark);
-            background: var(--light);
-            padding: 12px 20px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 14px;
             width: 100%;
             text-align: center;
             overflow: hidden;
             text-overflow: ellipsis;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(102, 126, 234, 0.2);
             position: relative;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            word-break: break-all;
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+        }
+        
+        .email-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+        
+        .email-display.placeholder {
+            color: var(--gray);
+            font-weight: 400;
+            font-size: 1.1rem;
+            border-left: 4px solid var(--gray-light);
+            cursor: default;
+        }
+        
+        .email-display.placeholder:hover {
+            transform: none;
+        }
+        
+        .email-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--gray);
         }
         
         .actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
             width: 100%;
+            flex-wrap: wrap;
         }
         
         .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 14px 24px;
+            border-radius: 14px;
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 600;
             border: none;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            justify-content: center;
+            letter-spacing: 0.3px;
+            min-width: 120px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4), 0 0 0 4px rgba(102, 126, 234, 0.1);
+            filter: brightness(1.05);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4), 0 0 0 4px rgba(79, 172, 254, 0.1);
+            filter: brightness(1.05);
+        }
+        
+        .btn-secondary:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+        }
+        
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--primary);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+        
+        .btn-outline:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        
+        .btn i {
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover i {
+            transform: scale(1.15);
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 255, 0.9));
+            border-radius: 18px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .qr-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .qr-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-align: center;
+            position: relative;
+            padding-bottom: 6px;
+        }
+        
+        .qr-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .qr-code {
+            width: 130px;
+            height: 130px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-light);
+            font-size: 2.5rem;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qr-code i {
+            animation: pulse 2s infinite;
+        }
+        
+        .qr-code canvas {
+            border-radius: 6px;
+            z-index: 2;
+            position: relative;
+        }
+        
+        /* Control Panel */
+        .control-panel {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 18px;
+            padding: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .control-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .btn-primary {
+        .control-title i {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 6px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .control-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .control-toggle {
+            width: 40px;
+            height: 22px;
+            background: var(--gray-light);
+            border-radius: 11px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .control-toggle.active {
             background: var(--primary);
-            color: white;
         }
         
-        .btn-primary:hover {
-            background: var(--primary-dark);
+        .control-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
-        .btn-secondary {
-            background: var(--secondary);
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #3ab4d9;
+        .control-toggle.active::after {
+            transform: translateX(18px);
         }
         
         .inbox-section {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
         }
         
         .inbox-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
         }
         
         .inbox-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--dark);
-            font-weight: 600;
+            font-weight: 800;
             display: flex;
             align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+        
+        .inbox-title i {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .inbox-title:hover i {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .inbox-actions {
+            display: flex;
             gap: 8px;
+            align-items: center;
+        }
+        
+        .refresh-btn {
+            background: rgba(102, 126, 234, 0.1);
+            border: none;
+            color: var(--primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .refresh-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .refresh-btn.loading i {
+            animation: spin 1s linear infinite;
         }
         
         .email-count {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 3px 12px;
-            border-radius: 20px;
+            padding: 5px 14px;
+            border-radius: 16px;
             font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .email-search {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .email-search input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .email-search input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .email-search i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
         }
         
         .email-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 300px;
+            gap: 10px;
+            max-height: 450px;
             overflow-y: auto;
-            padding: 5px;
+            padding: 8px;
+            border-radius: 14px;
+        }
+        
+        .email-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .email-list::-webkit-scrollbar-track {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+        }
+        
+        .email-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 8px;
         }
         
         .email-item {
-            background: var(--light);
-            border-radius: 8px;
-            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 14px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            border-left: 3px solid var(--primary);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
         }
         
         .email-item:hover {
-            background: #f0f4f8;
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
         
         .email-item.unread {
-            background: rgba(76, 201, 240, 0.1);
-            border-left: 3px solid var(--secondary);
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(240, 147, 251, 0.1) 100%);
+            border-left: 3px solid var(--accent);
         }
         
         .email-icon {
             font-size: 1.1rem;
-            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 8px;
+            border-radius: 10px;
+            min-width: 36px;
+            text-align: center;
         }
         
         .email-item.unread .email-icon {
-            color: var(--secondary);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
         }
         
         .email-content {
@@ -217,39 +874,88 @@
             min-width: 0;
         }
         
-        .email-sender {
-            font-weight: 500;
-            margin-bottom: 2px;
-            color: var(--dark);
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 3px;
         }
         
-        .email-subject {
+        .email-sender {
+            font-weight: 600;
             color: var(--dark);
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 180px;
         }
         
         .email-time {
             color: var(--gray);
             font-size: 0.75rem;
             white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .email-subject {
+            color: var(--gray);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 3px;
+        }
+        
+        .email-preview {
+            color: var(--gray-light);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .email-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .email-item:hover .email-actions {
+            opacity: 1;
+        }
+        
+        .email-action-btn {
+            background: rgba(102, 126, 234, 0.1);
+            border: none;
+            color: var(--primary);
+            padding: 5px 7px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+        }
+        
+        .email-action-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        .email-action-btn.delete:hover {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--error);
         }
         
         .status-bar {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(67, 97, 238, 0.1);
-            border-radius: 8px;
-            margin-top: 10px;
+            gap: 12px;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(72, 187, 120, 0.05) 100%);
+            border-radius: 14px;
+            margin-top: 8px;
             font-size: 0.9rem;
+            border: 1px solid rgba(72, 187, 120, 0.2);
         }
         
         .status-dot {
@@ -257,141 +963,101 @@
             height: 10px;
             border-radius: 50%;
             background: var(--success);
+            box-shadow: 0 0 15px rgba(72, 187, 120, 0.5);
         }
         
         .status-dot.loading {
             background: var(--warning);
             animation: pulse 1.5s infinite;
+            box-shadow: 0 0 15px rgba(237, 137, 54, 0.5);
         }
         
         .status-dot.error {
             background: var(--error);
+            box-shadow: 0 0 15px rgba(245, 101, 101, 0.5);
         }
         
         .status-text {
             flex: 1;
-        }
-        
-        .email-detail {
-            display: none;
-            padding: 15px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-top: 10px;
-            background: var(--light);
-        }
-        
-        .email-detail-header {
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .email-detail-subject {
-            font-size: 1.2rem;
-            color: var(--dark);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .email-detail-meta {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .sender-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .sender-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-        
-        .sender-details {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sender-name {
             font-weight: 500;
             color: var(--dark);
-            font-size: 0.9rem;
         }
         
-        .sender-email {
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
             color: var(--gray);
-            font-size: 0.8rem;
         }
         
-        .email-received {
-            color: var(--gray);
-            font-size: 0.8rem;
-        }
-        
-        .email-detail-body {
-            line-height: 1.6;
-            color: var(--dark);
-            padding: 10px 0;
-            white-space: pre-wrap;
-            font-size: 0.9rem;
-        }
-        
-        .close-detail {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: block;
-            margin: 10px auto 0;
-            font-size: 0.9rem;
+        .countdown {
+            font-weight: 600;
+            color: var(--primary);
         }
         
         .empty-inbox {
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
             color: var(--gray);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 18px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .empty-inbox:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
         }
         
         .empty-inbox i {
-            font-size: 2.5rem;
-            color: #ddd;
-            margin-bottom: 10px;
+            font-size: 3.5rem;
+            color: rgba(102, 126, 234, 0.3);
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            padding: 25px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .empty-inbox h3 {
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
         }
         
         .footer {
             text-align: center;
-            padding: 15px;
+            padding: 18px;
             color: var(--gray);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            background: rgba(102, 126, 234, 0.02);
         }
         
         .loader {
             display: none;
             width: 24px;
             height: 24px;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
             position: absolute;
-            right: 15px;
+            right: 18px;
             top: 50%;
             transform: translateY(-50%);
         }
@@ -400,24 +1066,128 @@
             display: block;
         }
         
-        .error-message {
-            background: rgba(231, 76, 60, 0.1);
-            color: var(--error);
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
+        .message {
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-top: 12px;
             text-align: center;
             display: none;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+        }
+        
+        .error-message {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(245, 101, 101, 0.2);
         }
         
         .success-message {
-            background: rgba(46, 204, 113, 0.1);
+            background: rgba(72, 187, 120, 0.1);
             color: var(--success);
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            text-align: center;
+            border: 1px solid rgba(72, 187, 120, 0.2);
+        }
+        
+        .email-detail {
             display: none;
+            padding: 22px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 18px;
+            margin-top: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 6px 28px rgba(0, 0, 0, 0.1);
+        }
+        
+        .email-detail-header {
+            padding-bottom: 18px;
+            margin-bottom: 18px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .email-detail-subject {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        .email-detail-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .sender-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sender-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .sender-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sender-name {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+        
+        .sender-email {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+        
+        .email-received {
+            color: var(--gray);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .email-detail-body {
+            line-height: 1.7;
+            color: var(--dark);
+            padding: 18px 0;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+        }
+        
+        .close-detail {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            margin: 18px auto 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .close-detail:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
         
         @keyframes spin {
@@ -425,23 +1195,70 @@
         }
         
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
         
-        @media (max-width: 600px) {
+        @media (max-width: 1024px) {
+            .main-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sidebar {
+                order: -1;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                margin-top: 15px;
+            }
+            
             .header {
-                padding: 20px 15px;
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.7rem;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .stats-row {
+                gap: 18px;
+            }
+            
+            .trust-badges {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
             }
             
             .content {
-                padding: 15px;
+                padding: 18px;
+            }
+            
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .guide-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .email-box {
+                padding: 18px;
             }
             
             .email-display {
-                font-size: 1.1rem;
-                padding: 10px 15px;
+                font-size: 1.05rem;
+                padding: 16px;
             }
             
             .actions {
@@ -450,6 +1267,8 @@
             
             .btn {
                 width: 100%;
+                justify-content: center;
+                min-width: auto;
             }
             
             .email-detail-meta {
@@ -459,100 +1278,311 @@
             
             .email-received {
                 width: 100%;
-                text-align: right;
+                text-align: left;
+            }
+            
+            .inbox-title {
+                font-size: 1.1rem;
+            }
+            
+            .inbox-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            
+            .inbox-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .email-header {
+                flex-direction: column;
+                gap: 4px;
+                align-items: flex-start;
+            }
+            
+            .email-sender {
+                max-width: none;
+            }
+            
+            .qr-code {
+                width: 110px;
+                height: 110px;
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .email-display {
+                font-size: 0.95rem;
+            }
+            
+            .empty-inbox i {
+                font-size: 2.8rem;
+                padding: 18px;
+            }
+            
+            .qr-code {
+                width: 100px;
+                height: 100px;
+                font-size: 2rem;
+            }
+            
+            .guide-step {
+                padding: 15px;
             }
         }
     </style>
-</head>
+<script src="https://lib.youware.com/youware-lib.1747145198.js" id="yourware-lib"></script></head>
 <body>
     <div class="container">
         <div class="card">
             <div class="header">
-                <h1><i class="fas fa-envelope"></i> 临时邮箱</h1>
-                <p>安全可靠的临时邮箱服务</p>
+                <div class="header-content">
+                    <h1><i class="fas fa-shield-alt"></i> 临时邮箱</h1>
+                    <p>安全可靠的临时邮箱服务</p>
+                    
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-number" id="emails-received">0</div>
+                            <div class="stat-label">邮件接收</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="time-remaining">--</div>
+                            <div class="stat-label">剩余时间</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="uptime">0</div>
+                            <div class="stat-label">运行时间</div>
+                        </div>
+                    </div>
+                    
+                    <div class="trust-badges">
+                        <div class="trust-badge">
+                            <i class="fas fa-lock"></i>
+                            <span>隐私保护</span>
+                        </div>
+                        <div class="trust-badge">
+                            <i class="fas fa-clock"></i>
+                            <span>即时生效</span>
+                        </div>
+                        <div class="trust-badge">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>自动清理</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="content">
-                <div class="email-box">
-                    <div class="email-display" id="email-address">
-                        点击下方按钮生成邮箱
-                        <div class="loader" id="email-loader"></div>
+                <!-- Getting Started Guide -->
+                <div class="getting-started" id="getting-started">
+                    <div class="guide-header">
+                        <div class="guide-title">
+                            <i class="fas fa-rocket"></i>
+                            快速上手指南
+                        </div>
+                        <button class="close-guide" id="close-guide">
+                            <i class="fas fa-times"></i> 关闭
+                        </button>
                     </div>
-                    <div class="error-message" id="email-error"></div>
-                    <div class="success-message" id="email-success"></div>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="generate-btn">
-                            <i class="fas fa-plus-circle"></i> 生成邮箱
-                        </button>
-                        <button class="btn btn-secondary" id="copy-btn">
-                            <i class="fas fa-copy"></i> 复制
-                        </button>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>生成邮箱</h4>
+                                <p>点击"生成邮箱"按钮，系统将自动创建一个临时邮箱地址</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>复制使用</h4>
+                                <p>复制邮箱地址，在需要的网站或应用中使用这个临时邮箱</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>接收邮件</h4>
+                                <p>系统会自动检查并显示发送到这个邮箱的所有邮件</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="inbox-section">
-                    <div class="inbox-header">
-                        <div class="inbox-title">
-                            <i class="fas fa-inbox"></i> 收件箱
-                            <div class="email-count" id="email-count">0</div>
-                        </div>
-                    </div>
-                    
-                    <div class="email-list" id="email-list">
-                        <div class="empty-inbox">
-                            <i class="fas fa-inbox"></i>
-                            <p>收件箱为空</p>
-                            <p>发送到该地址的邮件将显示在这里</p>
-                        </div>
-                    </div>
-                    
-                    <div class="status-bar" id="status-bar">
-                        <div class="status-dot" id="status-dot"></div>
-                        <div class="status-text" id="status-text">准备就绪</div>
-                    </div>
-                </div>
-                
-                <div class="email-detail" id="email-detail">
-                    <div class="email-detail-header">
-                        <h3 class="email-detail-subject" id="detail-subject"></h3>
-                        <div class="email-detail-meta">
-                            <div class="sender-info">
-                                <div class="sender-avatar" id="sender-avatar">S</div>
-                                <div class="sender-details">
-                                    <div class="sender-name" id="sender-name"></div>
-                                    <div class="sender-email" id="sender-email"></div>
+                <div class="main-section">
+                    <div class="email-section">
+                        <div class="email-box">
+                            <div class="email-box-content">
+                                <div class="email-display placeholder" id="email-address" onclick="copyEmailToClipboard()">
+                                    点击下方按钮生成邮箱
+                                    <div class="loader" id="email-loader"></div>
+                                </div>
+                                
+                                <div class="email-info" id="email-info" style="display: none;">
+                                    <span><i class="fas fa-clock"></i> 创建时间: <span id="creation-time">--</span></span>
+                                    <span><i class="fas fa-server"></i> 服务器: mail.tm</span>
+                                </div>
+                                
+                                <div class="error-message message" id="email-error"></div>
+                                <div class="success-message message" id="email-success"></div>
+                                
+                                <div class="actions">
+                                    <button class="btn btn-primary" id="generate-btn">
+                                        <i class="fas fa-magic"></i> 生成邮箱
+                                    </button>
+                                    <button class="btn btn-secondary" id="copy-btn">
+                                        <i class="fas fa-copy"></i> 复制
+                                    </button>
+                                    <button class="btn btn-outline" id="new-email-btn" style="display: none;">
+                                        <i class="fas fa-plus"></i> 新邮箱
+                                    </button>
                                 </div>
                             </div>
-                            <div class="email-received" id="email-received"></div>
+                        </div>
+                        
+                        <div class="inbox-section">
+                            <div class="inbox-header">
+                                <div class="inbox-title">
+                                    <i class="fas fa-inbox"></i> 收件箱
+                                    <div class="email-count" id="email-count">0</div>
+                                </div>
+                                <div class="inbox-actions">
+                                    <button class="refresh-btn" id="refresh-btn">
+                                        <i class="fas fa-sync-alt"></i> 刷新
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="email-search" id="email-search" style="display: none;">
+                                <input type="text" placeholder="搜索邮件..." id="search-input">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            
+                            <div class="email-list" id="email-list">
+                                <div class="empty-inbox">
+                                    <i class="fas fa-envelope-open"></i>
+                                    <h3>收件箱为空</h3>
+                                    <p>发送到该地址的邮件将显示在这里</p>
+                                </div>
+                            </div>
+                            
+                            <div class="status-bar" id="status-bar">
+                                <div class="status-dot" id="status-dot"></div>
+                                <div class="status-text" id="status-text">准备就绪</div>
+                                <div class="auto-refresh" id="auto-refresh" style="display: none;">
+                                    <i class="fas fa-sync-alt"></i>
+                                    <span>下次检查: <span class="countdown" id="countdown">5</span>s</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="email-detail" id="email-detail">
+                            <div class="email-detail-header">
+                                <h3 class="email-detail-subject" id="detail-subject"></h3>
+                                <div class="email-detail-meta">
+                                    <div class="sender-info">
+                                        <div class="sender-avatar" id="sender-avatar">S</div>
+                                        <div class="sender-details">
+                                            <div class="sender-name" id="sender-name"></div>
+                                            <div class="sender-email" id="sender-email"></div>
+                                        </div>
+                                    </div>
+                                    <div class="email-received" id="email-received"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="email-detail-body" id="email-body"></div>
+                            
+                            <button class="close-detail" id="close-detail">
+                                <i class="fas fa-times"></i> 关闭
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="email-detail-body" id="email-body"></div>
-                    
-                    <button class="close-detail" id="close-detail">
-                        <i class="fas fa-times"></i> 关闭
-                    </button>
+                    <div class="sidebar">
+                        <div class="qr-section">
+                            <div class="qr-title">扫码分享</div>
+                            <div class="qr-code" id="qr-code">
+                                <i class="fas fa-qrcode"></i>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--gray); text-align: center;">
+                                扫描二维码快速获取邮箱地址
+                            </div>
+                            <button class="btn btn-outline" id="share-btn" style="display: none; margin-top: 8px; padding: 6px 12px; font-size: 0.85rem;">
+                                <i class="fas fa-share-alt"></i> 分享链接
+                            </button>
+                        </div>
+                        
+                        <div class="control-panel">
+                            <div class="control-title">
+                                <i class="fas fa-cog"></i>
+                                设置选项
+                            </div>
+                            <div class="control-group">
+                                <div class="control-item">
+                                    <span>自动刷新</span>
+                                    <button class="control-toggle active" id="auto-refresh-toggle"></button>
+                                </div>
+                                <div class="control-item">
+                                    <span>声音提醒</span>
+                                    <button class="control-toggle" id="sound-toggle"></button>
+                                </div>
+                                <div class="control-item">
+                                    <span>显示预览</span>
+                                    <button class="control-toggle active" id="preview-toggle"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <div class="footer">
-                <p>临时邮箱服务 • 邮件保留1小时</p>
+                <p><i class="fas fa-clock"></i> 临时邮箱服务 • 邮件保留1小时 • <i class="fas fa-shield-alt"></i> 安全可靠</p>
             </div>
         </div>
     </div>
+    
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     
     <script>
         const API_BASE_URL = 'https://api.mail.tm';
         let currentEmail = '';
         let refreshInterval = null;
+        let countdownInterval = null;
+        let uptimeInterval = null;
         let accountId = '';
         let token = '';
+        let creationTime = null;
+        let emailCount = 0;
+        let countdownSeconds = 5;
+        let startTime = null;
+        let emails = [];
+        let filteredEmails = [];
+        
+        // Settings
+        let autoRefreshEnabled = true;
+        let soundEnabled = false;
+        let previewEnabled = true;
         
         const emailDisplay = document.getElementById('email-address');
         const generateBtn = document.getElementById('generate-btn');
         const copyBtn = document.getElementById('copy-btn');
+        const newEmailBtn = document.getElementById('new-email-btn');
         const emailList = document.getElementById('email-list');
-        const emailCount = document.getElementById('email-count');
+        const emailCountEl = document.getElementById('email-count');
         const statusText = document.getElementById('status-text');
         const statusDot = document.getElementById('status-dot');
         const emailDetail = document.getElementById('email-detail');
@@ -560,6 +1590,23 @@
         const emailError = document.getElementById('email-error');
         const emailSuccess = document.getElementById('email-success');
         const emailLoader = document.getElementById('email-loader');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const autoRefresh = document.getElementById('auto-refresh');
+        const countdown = document.getElementById('countdown');
+        const emailInfo = document.getElementById('email-info');
+        const creationTimeEl = document.getElementById('creation-time');
+        const qrCode = document.getElementById('qr-code');
+        const emailsReceivedEl = document.getElementById('emails-received');
+        const timeRemainingEl = document.getElementById('time-remaining');
+        const uptimeEl = document.getElementById('uptime');
+        const shareBtn = document.getElementById('share-btn');
+        const gettingStarted = document.getElementById('getting-started');
+        const closeGuide = document.getElementById('close-guide');
+        const emailSearch = document.getElementById('email-search');
+        const searchInput = document.getElementById('search-input');
+        const autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+        const soundToggle = document.getElementById('sound-toggle');
+        const previewToggle = document.getElementById('preview-toggle');
         
         function updateStatus(message, type = 'default') {
             statusText.textContent = message;
@@ -606,10 +1653,144 @@
             }
         }
         
+        function generateQRCode(text) {
+            qrCode.innerHTML = '';
+            if (text) {
+                const size = 130;
+                const qrImg = document.createElement('img');
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&margin=8&format=png`;
+                qrImg.style.width = '130px';
+                qrImg.style.height = '130px';
+                qrImg.style.borderRadius = '6px';
+                qrImg.alt = '二维码';
+                
+                qrImg.onload = function() {
+                    qrCode.appendChild(qrImg);
+                };
+                
+                qrImg.onerror = function() {
+                    if (typeof QRCode !== 'undefined') {
+                        try {
+                            QRCode.toCanvas(text, { width: 130, margin: 1 }, function (error, canvas) {
+                                if (error) {
+                                    qrCode.innerHTML = `
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 15px;">
+                                            <i class="fas fa-qrcode" style="font-size: 1.8rem; color: var(--gray);"></i>
+                                            <span style="font-size: 0.8rem; color: var(--gray);">二维码生成失败</span>
+                                        </div>
+                                    `;
+                                } else {
+                                    canvas.style.borderRadius = '6px';
+                                    qrCode.appendChild(canvas);
+                                }
+                            });
+                        } catch (e) {
+                            showFallbackQR();
+                        }
+                    } else {
+                        showFallbackQR();
+                    }
+                };
+            } else {
+                qrCode.innerHTML = '<i class="fas fa-qrcode"></i>';
+            }
+        }
+        
+        function showFallbackQR() {
+            qrCode.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 15px; cursor: pointer;" onclick="copyEmailToClipboard()">
+                    <i class="fas fa-qrcode" style="font-size: 1.8rem; color: var(--primary);"></i>
+                    <span style="font-size: 0.75rem; color: var(--gray); text-align: center;">点击复制邮箱地址</span>
+                </div>
+            `;
+        }
+        
+        function updateStats() {
+            emailsReceivedEl.textContent = emailCount;
+            
+            if (creationTime) {
+                const now = Date.now();
+                const elapsed = now - creationTime;
+                const remaining = Math.max(0, 3600000 - elapsed); // 1 hour = 3600000ms
+                
+                if (remaining > 0) {
+                    const minutes = Math.floor(remaining / 60000);
+                    timeRemainingEl.textContent = `${minutes}分钟`;
+                } else {
+                    timeRemainingEl.textContent = '已过期';
+                }
+            } else {
+                timeRemainingEl.textContent = '--';
+            }
+            
+            if (startTime) {
+                const now = Date.now();
+                const uptime = Math.floor((now - startTime) / 1000);
+                const minutes = Math.floor(uptime / 60);
+                const seconds = uptime % 60;
+                uptimeEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+        
+        function startCountdown() {
+            if (!autoRefreshEnabled) return;
+            
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            countdownSeconds = 5;
+            autoRefresh.style.display = 'flex';
+            
+            countdownInterval = setInterval(() => {
+                countdownSeconds--;
+                countdown.textContent = countdownSeconds;
+                
+                if (countdownSeconds <= 0) {
+                    countdownSeconds = 5;
+                    countdown.textContent = countdownSeconds;
+                }
+            }, 1000);
+        }
+        
+        function startUptime() {
+            if (uptimeInterval) {
+                clearInterval(uptimeInterval);
+            }
+            
+            startTime = Date.now();
+            uptimeInterval = setInterval(updateStats, 1000);
+        }
+        
+        function playNotificationSound() {
+            if (!soundEnabled) return;
+            
+            // Create a simple notification sound
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
         async function generateRandomEmail() {
             showLoader(true);
             emailError.style.display = 'none';
             emailSuccess.style.display = 'none';
+            
+            // Hide getting started guide
+            gettingStarted.classList.add('hidden');
+            
             try {
                 const domainsResponse = await fetch(`${API_BASE_URL}/domains`);
                 if (!domainsResponse.ok) {
@@ -654,9 +1835,36 @@
                 const tokenData = await tokenResponse.json();
                 token = tokenData.token;
                 currentEmail = email;
+                creationTime = Date.now();
+                emailCount = 0;
+                emails = [];
+                filteredEmails = [];
+                
                 emailDisplay.textContent = currentEmail;
+                emailDisplay.classList.remove('placeholder');
+                
+                // Show email info
+                emailInfo.style.display = 'flex';
+                creationTimeEl.textContent = new Date().toLocaleTimeString('zh-CN');
+                
+                // Show new email button and share button
+                generateBtn.style.display = 'none';
+                newEmailBtn.style.display = 'flex';
+                shareBtn.style.display = 'flex';
+                
+                // Show email search
+                emailSearch.style.display = 'block';
+                
+                // Generate QR code
+                setTimeout(() => {
+                    generateQRCode(currentEmail);
+                }, 500);
+                
                 startEmailCheck();
-                updateStatus('邮箱已生成', 'success');
+                startCountdown();
+                startUptime();
+                updateStats();
+                updateStatus('邮箱已生成并监听中', 'success');
                 showSuccess('邮箱生成成功！');
             } catch (error) {
                 updateStatus('生成邮箱失败', 'error');
@@ -667,12 +1875,59 @@
             }
         }
         
+        function resetInterface() {
+            // Clear intervals
+            if (refreshInterval) clearInterval(refreshInterval);
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (uptimeInterval) clearInterval(uptimeInterval);
+            
+            // Reset variables
+            currentEmail = '';
+            token = '';
+            accountId = '';
+            creationTime = null;
+            emailCount = 0;
+            emails = [];
+            filteredEmails = [];
+            startTime = null;
+            
+            // Reset UI
+            emailDisplay.textContent = '点击下方按钮生成邮箱';
+            emailDisplay.classList.add('placeholder');
+            emailInfo.style.display = 'none';
+            generateBtn.style.display = 'flex';
+            newEmailBtn.style.display = 'none';
+            shareBtn.style.display = 'none';
+            autoRefresh.style.display = 'none';
+            emailDetail.style.display = 'none';
+            emailSearch.style.display = 'none';
+            searchInput.value = '';
+            
+            // Show getting started guide
+            gettingStarted.classList.remove('hidden');
+            
+            // Reset stats
+            emailsReceivedEl.textContent = '0';
+            timeRemainingEl.textContent = '--';
+            uptimeEl.textContent = '0';
+            
+            // Reset QR code
+            qrCode.innerHTML = '<i class="fas fa-qrcode"></i>';
+            
+            // Reset inbox
+            showEmptyInbox();
+            
+            updateStatus('准备就绪', 'default');
+        }
+        
         function startEmailCheck() {
             if (refreshInterval) {
                 clearInterval(refreshInterval);
             }
             checkEmails();
-            refreshInterval = setInterval(checkEmails, 5000);
+            if (autoRefreshEnabled) {
+                refreshInterval = setInterval(checkEmails, 5000);
+            }
         }
         
         async function checkEmails() {
@@ -691,14 +1946,26 @@
                     throw new Error('获取邮件失败');
                 }
                 const emailsData = await response.json();
-                const emails = emailsData['hydra:member'] || [];
+                const newEmails = emailsData['hydra:member'] || [];
+                
+                // Check for new emails
+                const previousCount = emails.length;
+                emails = newEmails;
+                emailCount = emails.length;
+                emailCountEl.textContent = emailCount;
+                
+                // Play notification sound for new emails
+                if (emailCount > previousCount && previousCount > 0) {
+                    playNotificationSound();
+                }
+                
                 if (emails.length > 0) {
-                    emailCount.textContent = emails.length;
-                    renderEmailList(emails);
-                    updateStatus(`已加载 ${emails.length} 封邮件`, 'success');
+                    applySearchFilter();
+                    updateStatus(`已收到 ${emailCount} 封邮件`, 'success');
+                    updateStats();
                 } else {
                     showEmptyInbox();
-                    updateStatus('没有新邮件', 'success');
+                    updateStatus('监听中，暂无新邮件', 'success');
                 }
             } catch (error) {
                 updateStatus('获取邮件失败', 'error');
@@ -706,22 +1973,38 @@
             }
         }
         
+        function applySearchFilter() {
+            const searchTerm = searchInput.value.toLowerCase();
+            if (searchTerm) {
+                filteredEmails = emails.filter(email => {
+                    const sender = email.from ? (email.from.name || email.from.address || '').toLowerCase() : '';
+                    const subject = (email.subject || '').toLowerCase();
+                    const intro = (email.intro || '').toLowerCase();
+                    return sender.includes(searchTerm) || subject.includes(searchTerm) || intro.includes(searchTerm);
+                });
+            } else {
+                filteredEmails = emails;
+            }
+            renderEmailList(filteredEmails);
+        }
+        
         function showEmptyInbox() {
             emailList.innerHTML = `
                 <div class="empty-inbox">
-                    <i class="fas fa-inbox"></i>
-                    <p>收件箱为空</p>
+                    <i class="fas fa-envelope-open"></i>
+                    <h3>收件箱为空</h3>
                     <p>发送到该地址的邮件将显示在这里</p>
                 </div>
             `;
-            emailCount.textContent = '0';
+            emailCountEl.textContent = '0';
         }
         
-        function renderEmailList(emails) {
-            emails.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            emailList.innerHTML = emails.map(email => {
+        function renderEmailList(emailsToRender) {
+            emailsToRender.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            emailList.innerHTML = emailsToRender.map(email => {
                 const sender = email.from ? email.from.name || email.from.address : '未知发件人';
                 const subject = email.subject || '无主题';
+                const preview = previewEnabled ? (email.intro || '无预览内容') : '预览已隐藏';
                 const date = email.createdAt;
                 const id = email.id;
                 const read = false;
@@ -731,19 +2014,24 @@
                             <i class="fas fa-envelope${read ? '-open' : ''}"></i>
                         </div>
                         <div class="email-content">
-                            <div class="email-sender">${sender}</div>
+                            <div class="email-header">
+                                <div class="email-sender">${sender}</div>
+                                <div class="email-time">${formatTime(date)}</div>
+                            </div>
                             <div class="email-subject">${subject}</div>
+                            <div class="email-preview">${preview}</div>
                         </div>
-                        <div class="email-time">${formatTime(date)}</div>
+                        <div class="email-actions">
+                            <button class="email-action-btn" onclick="viewEmailDetails('${id}')" title="查看">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="email-action-btn delete" onclick="deleteEmail('${id}')" title="删除">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
             }).join('');
-            document.querySelectorAll('.email-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const emailId = item.getAttribute('data-id');
-                    viewEmailDetails(emailId);
-                });
-            });
         }
         
         async function viewEmailDetails(emailId) {
@@ -781,6 +2069,7 @@
                         document.getElementById('email-body').textContent = body;
                     }
                     emailDetail.style.display = 'block';
+                    emailDetail.scrollIntoView({ behavior: 'smooth' });
                     updateStatus('邮件已加载', 'success');
                 } else {
                     throw new Error('无法加载邮件');
@@ -788,6 +2077,23 @@
             } catch (error) {
                 updateStatus('加载邮件失败', 'error');
                 console.error('查看邮件详情失败:', error);
+            }
+        }
+        
+        function deleteEmail(emailId) {
+            if (confirm('确定要删除这封邮件吗？')) {
+                emails = emails.filter(email => email.id !== emailId);
+                emailCount = emails.length;
+                emailCountEl.textContent = emailCount;
+                
+                applySearchFilter();
+                
+                if (emails.length === 0) {
+                    showEmptyInbox();
+                }
+                
+                updateStats();
+                showSuccess('邮件已删除');
             }
         }
         
@@ -804,13 +2110,147 @@
                     setTimeout(() => {
                         copyBtn.innerHTML = originalText;
                     }, 2000);
-                    updateStatus('邮箱已复制', 'success');
+                    updateStatus('邮箱已复制到剪贴板', 'success');
                     showSuccess('邮箱地址已复制到剪贴板');
                 })
                 .catch(err => {
                     updateStatus('复制失败', 'error');
                     showError('无法复制到剪贴板，请手动复制');
                 });
+        }
+        
+        function manualRefresh() {
+            if (!currentEmail || !token) return;
+            refreshBtn.classList.add('loading');
+            checkEmails().finally(() => {
+                refreshBtn.classList.remove('loading');
+            });
+        }
+        
+        function shareEmail() {
+            if (!currentEmail) {
+                showError('请先生成邮箱地址');
+                return;
+            }
+            
+            const shareData = {
+                title: '临时邮箱地址',
+                text: `我的临时邮箱地址：${currentEmail}`,
+                url: window.location.href
+            };
+            
+            if (navigator.share) {
+                navigator.share(shareData).then(() => {
+                    showSuccess('分享成功');
+                }).catch((error) => {
+                    console.log('分享失败:', error);
+                    fallbackShare();
+                });
+            } else {
+                fallbackShare();
+            }
+        }
+        
+        function fallbackShare() {
+            const shareText = `我的临时邮箱地址：${currentEmail}\n\n访问 ${window.location.href} 获取您的临时邮箱`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showSuccess('分享内容已复制到剪贴板');
+                }).catch(() => {
+                    showManualShare(shareText);
+                });
+            } else {
+                showManualShare(shareText);
+            }
+        }
+        
+        function showManualShare(text) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    padding: 25px;
+                    border-radius: 12px;
+                    max-width: 400px;
+                    width: 90%;
+                    text-align: center;
+                ">
+                    <h3 style="margin-bottom: 12px; color: var(--dark);">分享邮箱地址</h3>
+                    <textarea readonly style="
+                        width: 100%;
+                        height: 70px;
+                        margin-bottom: 12px;
+                        padding: 8px;
+                        border: 1px solid #ddd;
+                        border-radius: 6px;
+                        resize: none;
+                        font-family: inherit;
+                        font-size: 0.9rem;
+                    ">${text}</textarea>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        padding: 6px 16px;
+                        background: var(--primary);
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                    ">关闭</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.querySelector('textarea').select();
+        }
+        
+        function toggleSetting(setting, button) {
+            switch(setting) {
+                case 'autoRefresh':
+                    autoRefreshEnabled = !autoRefreshEnabled;
+                    button.classList.toggle('active', autoRefreshEnabled);
+                    if (autoRefreshEnabled && currentEmail) {
+                        startEmailCheck();
+                        startCountdown();
+                        autoRefresh.style.display = 'flex';
+                    } else {
+                        if (refreshInterval) clearInterval(refreshInterval);
+                        if (countdownInterval) clearInterval(countdownInterval);
+                        autoRefresh.style.display = 'none';
+                    }
+                    break;
+                case 'sound':
+                    soundEnabled = !soundEnabled;
+                    button.classList.toggle('active', soundEnabled);
+                    if (soundEnabled) {
+                        showSuccess('声音提醒已开启');
+                        playNotificationSound();
+                    } else {
+                        showSuccess('声音提醒已关闭');
+                    }
+                    break;
+                case 'preview':
+                    previewEnabled = !previewEnabled;
+                    button.classList.toggle('active', previewEnabled);
+                    if (emails.length > 0) {
+                        applySearchFilter();
+                    }
+                    showSuccess(previewEnabled ? '邮件预览已开启' : '邮件预览已关闭');
+                    break;
+            }
         }
         
         function formatTime(dateString) {
@@ -826,12 +2266,37 @@
             return `${diffDays}天前`;
         }
         
+        // Make functions globally available
+        window.viewEmailDetails = viewEmailDetails;
+        window.deleteEmail = deleteEmail;
+        window.copyEmailToClipboard = copyEmailToClipboard;
+        
         document.addEventListener('DOMContentLoaded', () => {
             generateBtn.addEventListener('click', generateRandomEmail);
+            newEmailBtn.addEventListener('click', resetInterface);
             copyBtn.addEventListener('click', copyEmailToClipboard);
+            shareBtn.addEventListener('click', shareEmail);
+            refreshBtn.addEventListener('click', manualRefresh);
             closeDetailBtn.addEventListener('click', () => {
                 emailDetail.style.display = 'none';
             });
+            
+            // Getting started guide
+            closeGuide.addEventListener('click', () => {
+                gettingStarted.classList.add('hidden');
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', applySearchFilter);
+            
+            // Setting toggles
+            autoRefreshToggle.addEventListener('click', () => toggleSetting('autoRefresh', autoRefreshToggle));
+            soundToggle.addEventListener('click', () => toggleSetting('sound', soundToggle));
+            previewToggle.addEventListener('click', () => toggleSetting('preview', previewToggle));
+            
+            // Start stats update
+            updateStats();
+            setInterval(updateStats, 1000);
         });
     </script>
 </body>
