@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临时邮箱</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #4cc9f0;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --error: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2b2d42;
+            --gray: #8d99ae;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .email-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(67, 97, 238, 0.05);
+            border: 1px dashed var(--primary);
+            position: relative;
+        }
+        
+        .email-display {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--dark);
+            background: var(--light);
+            padding: 12px 20px;
+            border-radius: 8px;
+            width: 100%;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #3ab4d9;
+        }
+        
+        .inbox-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .inbox-title {
+            font-size: 1.2rem;
+            color: var(--dark);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .email-count {
+            background: var(--primary);
+            color: white;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .email-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        
+        .email-item {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .email-item:hover {
+            background: #f0f4f8;
+        }
+        
+        .email-item.unread {
+            background: rgba(76, 201, 240, 0.1);
+            border-left: 3px solid var(--secondary);
+        }
+        
+        .email-icon {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+        
+        .email-item.unread .email-icon {
+            color: var(--secondary);
+        }
+        
+        .email-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .email-sender {
+            font-weight: 500;
+            margin-bottom: 2px;
+            color: var(--dark);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .email-subject {
+            color: var(--dark);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .email-time {
+            color: var(--gray);
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+        
+        .status-dot.loading {
+            background: var(--warning);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .status-dot.error {
+            background: var(--error);
+        }
+        
+        .status-text {
+            flex: 1;
+        }
+        
+        .email-detail {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-top: 10px;
+            background: var(--light);
+        }
+        
+        .email-detail-header {
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .email-detail-subject {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .email-detail-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .sender-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sender-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .sender-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sender-name {
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        
+        .sender-email {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+        
+        .email-received {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+        
+        .email-detail-body {
+            line-height: 1.6;
+            color: var(--dark);
+            padding: 10px 0;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+        }
+        
+        .close-detail {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: block;
+            margin: 10px auto 0;
+            font-size: 0.9rem;
+        }
+        
+        .empty-inbox {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .empty-inbox i {
+            font-size: 2.5rem;
+            color: #ddd;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: var(--gray);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .loader {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .loading .loader {
+            display: block;
+        }
+        
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success-message {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        @media (max-width: 600px) {
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .email-display {
+                font-size: 1.1rem;
+                padding: 10px 15px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .email-detail-meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .email-received {
+                width: 100%;
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1><i class="fas fa-envelope"></i> 临时邮箱</h1>
+                <p>安全可靠的临时邮箱服务</p>
+            </div>
+            
+            <div class="content">
+                <div class="email-box">
+                    <div class="email-display" id="email-address">
+                        点击下方按钮生成邮箱
+                        <div class="loader" id="email-loader"></div>
+                    </div>
+                    <div class="error-message" id="email-error"></div>
+                    <div class="success-message" id="email-success"></div>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="generate-btn">
+                            <i class="fas fa-plus-circle"></i> 生成邮箱
+                        </button>
+                        <button class="btn btn-secondary" id="copy-btn">
+                            <i class="fas fa-copy"></i> 复制
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="inbox-section">
+                    <div class="inbox-header">
+                        <div class="inbox-title">
+                            <i class="fas fa-inbox"></i> 收件箱
+                            <div class="email-count" id="email-count">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="email-list" id="email-list">
+                        <div class="empty-inbox">
+                            <i class="fas fa-inbox"></i>
+                            <p>收件箱为空</p>
+                            <p>发送到该地址的邮件将显示在这里</p>
+                        </div>
+                    </div>
+                    
+                    <div class="status-bar" id="status-bar">
+                        <div class="status-dot" id="status-dot"></div>
+                        <div class="status-text" id="status-text">准备就绪</div>
+                    </div>
+                </div>
+                
+                <div class="email-detail" id="email-detail">
+                    <div class="email-detail-header">
+                        <h3 class="email-detail-subject" id="detail-subject"></h3>
+                        <div class="email-detail-meta">
+                            <div class="sender-info">
+                                <div class="sender-avatar" id="sender-avatar">S</div>
+                                <div class="sender-details">
+                                    <div class="sender-name" id="sender-name"></div>
+                                    <div class="sender-email" id="sender-email"></div>
+                                </div>
+                            </div>
+                            <div class="email-received" id="email-received"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="email-detail-body" id="email-body"></div>
+                    
+                    <button class="close-detail" id="close-detail">
+                        <i class="fas fa-times"></i> 关闭
+                    </button>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>临时邮箱服务 • 邮件保留1小时</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'https://api.mail.tm';
+        let currentEmail = '';
+        let refreshInterval = null;
+        let accountId = '';
+        let token = '';
+        
+        const emailDisplay = document.getElementById('email-address');
+        const generateBtn = document.getElementById('generate-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const emailList = document.getElementById('email-list');
+        const emailCount = document.getElementById('email-count');
+        const statusText = document.getElementById('status-text');
+        const statusDot = document.getElementById('status-dot');
+        const emailDetail = document.getElementById('email-detail');
+        const closeDetailBtn = document.getElementById('close-detail');
+        const emailError = document.getElementById('email-error');
+        const emailSuccess = document.getElementById('email-success');
+        const emailLoader = document.getElementById('email-loader');
+        
+        function updateStatus(message, type = 'default') {
+            statusText.textContent = message;
+            statusDot.className = 'status-dot';
+            switch(type) {
+                case 'loading':
+                    statusDot.classList.add('loading');
+                    break;
+                case 'success':
+                    statusDot.style.background = 'var(--success)';
+                    break;
+                case 'error':
+                    statusDot.classList.add('error');
+                    break;
+                default:
+                    statusDot.style.background = 'var(--success)';
+            }
+        }
+        
+        function showError(message) {
+            emailError.textContent = message;
+            emailError.style.display = 'block';
+            emailSuccess.style.display = 'none';
+            setTimeout(() => {
+                emailError.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showSuccess(message) {
+            emailSuccess.textContent = message;
+            emailSuccess.style.display = 'block';
+            emailError.style.display = 'none';
+            setTimeout(() => {
+                emailSuccess.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showLoader(show) {
+            if (show) {
+                emailDisplay.classList.add('loading');
+                updateStatus('正在生成邮箱...', 'loading');
+            } else {
+                emailDisplay.classList.remove('loading');
+            }
+        }
+        
+        async function generateRandomEmail() {
+            showLoader(true);
+            emailError.style.display = 'none';
+            emailSuccess.style.display = 'none';
+            try {
+                const domainsResponse = await fetch(`${API_BASE_URL}/domains`);
+                if (!domainsResponse.ok) {
+                    throw new Error('获取域名失败');
+                }
+                const domainsData = await domainsResponse.json();
+                if (!domainsData || !domainsData['hydra:member'] || domainsData['hydra:member'].length === 0) {
+                    throw new Error('没有可用的邮箱域名');
+                }
+                const domain = domainsData['hydra:member'][0].domain;
+                const randomUsername = `user${Math.floor(Math.random() * 1000000)}`;
+                const randomPassword = `pass${Math.floor(Math.random() * 1000000)}`;
+                const email = `${randomUsername}@${domain}`;
+                const createAccountResponse = await fetch(`${API_BASE_URL}/accounts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        address: email,
+                        password: randomPassword
+                    })
+                });
+                if (!createAccountResponse.ok) {
+                    throw new Error('创建邮箱账户失败');
+                }
+                const accountData = await createAccountResponse.json();
+                accountId = accountData.id;
+                const tokenResponse = await fetch(`${API_BASE_URL}/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        address: email,
+                        password: randomPassword
+                    })
+                });
+                if (!tokenResponse.ok) {
+                    throw new Error('获取访问令牌失败');
+                }
+                const tokenData = await tokenResponse.json();
+                token = tokenData.token;
+                currentEmail = email;
+                emailDisplay.textContent = currentEmail;
+                startEmailCheck();
+                updateStatus('邮箱已生成', 'success');
+                showSuccess('邮箱生成成功！');
+            } catch (error) {
+                updateStatus('生成邮箱失败', 'error');
+                showError(`错误: ${error.message}`);
+                console.error('生成邮箱失败:', error);
+            } finally {
+                showLoader(false);
+            }
+        }
+        
+        function startEmailCheck() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            checkEmails();
+            refreshInterval = setInterval(checkEmails, 5000);
+        }
+        
+        async function checkEmails() {
+            if (!currentEmail || !token) return;
+            updateStatus('正在检查邮件...', 'loading');
+            try {
+                const response = await fetch(`${API_BASE_URL}/messages`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error('授权已过期，请重新生成邮箱');
+                    }
+                    throw new Error('获取邮件失败');
+                }
+                const emailsData = await response.json();
+                const emails = emailsData['hydra:member'] || [];
+                if (emails.length > 0) {
+                    emailCount.textContent = emails.length;
+                    renderEmailList(emails);
+                    updateStatus(`已加载 ${emails.length} 封邮件`, 'success');
+                } else {
+                    showEmptyInbox();
+                    updateStatus('没有新邮件', 'success');
+                }
+            } catch (error) {
+                updateStatus('获取邮件失败', 'error');
+                console.error('检查邮件失败:', error);
+            }
+        }
+        
+        function showEmptyInbox() {
+            emailList.innerHTML = `
+                <div class="empty-inbox">
+                    <i class="fas fa-inbox"></i>
+                    <p>收件箱为空</p>
+                    <p>发送到该地址的邮件将显示在这里</p>
+                </div>
+            `;
+            emailCount.textContent = '0';
+        }
+        
+        function renderEmailList(emails) {
+            emails.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            emailList.innerHTML = emails.map(email => {
+                const sender = email.from ? email.from.name || email.from.address : '未知发件人';
+                const subject = email.subject || '无主题';
+                const date = email.createdAt;
+                const id = email.id;
+                const read = false;
+                return `
+                    <div class="email-item ${!read ? 'unread' : ''}" data-id="${id}">
+                        <div class="email-icon">
+                            <i class="fas fa-envelope${read ? '-open' : ''}"></i>
+                        </div>
+                        <div class="email-content">
+                            <div class="email-sender">${sender}</div>
+                            <div class="email-subject">${subject}</div>
+                        </div>
+                        <div class="email-time">${formatTime(date)}</div>
+                    </div>
+                `;
+            }).join('');
+            document.querySelectorAll('.email-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const emailId = item.getAttribute('data-id');
+                    viewEmailDetails(emailId);
+                });
+            });
+        }
+        
+        async function viewEmailDetails(emailId) {
+            if (!currentEmail || !token) return;
+            updateStatus('正在加载邮件...', 'loading');
+            try {
+                const response = await fetch(`${API_BASE_URL}/messages/${emailId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('加载邮件失败');
+                }
+                const email = await response.json();
+                if (email) {
+                    document.getElementById('detail-subject').textContent = email.subject || '无主题';
+                    let senderName = '未知发件人';
+                    let senderAddress = '';
+                    if (email.from) {
+                        senderName = email.from.name || email.from.address || '未知发件人';
+                        senderAddress = email.from.address || '';
+                    }
+                    document.getElementById('sender-name').textContent = senderName;
+                    document.getElementById('sender-email').textContent = senderAddress;
+                    document.getElementById('email-received').textContent = formatTime(email.createdAt);
+                    const senderAvatar = document.getElementById('sender-avatar');
+                    if (senderName) {
+                        senderAvatar.textContent = senderName.charAt(0).toUpperCase();
+                    }
+                    let body = email.text || email.html || '无内容';
+                    if (email.html) {
+                        document.getElementById('email-body').innerHTML = email.html;
+                    } else {
+                        document.getElementById('email-body').textContent = body;
+                    }
+                    emailDetail.style.display = 'block';
+                    updateStatus('邮件已加载', 'success');
+                } else {
+                    throw new Error('无法加载邮件');
+                }
+            } catch (error) {
+                updateStatus('加载邮件失败', 'error');
+                console.error('查看邮件详情失败:', error);
+            }
+        }
+        
+        function copyEmailToClipboard() {
+            if (!currentEmail) {
+                updateStatus('请先生成邮箱', 'error');
+                showError('请先生成邮箱地址');
+                return;
+            }
+            navigator.clipboard.writeText(currentEmail)
+                .then(() => {
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                    }, 2000);
+                    updateStatus('邮箱已复制', 'success');
+                    showSuccess('邮箱地址已复制到剪贴板');
+                })
+                .catch(err => {
+                    updateStatus('复制失败', 'error');
+                    showError('无法复制到剪贴板，请手动复制');
+                });
+        }
+        
+        function formatTime(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMinutes = Math.floor((now - date) / (1000 * 60));
+            if (diffMinutes < 1) return '刚刚';
+            if (diffMinutes < 60) return `${diffMinutes}分钟前`;
+            const diffHours = Math.floor(diffMinutes / 60);
+            if (diffHours < 24) return `${diffHours}小时前`;
+            const diffDays = Math.floor(diffHours / 24);
+            return `${diffDays}天前`;
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            generateBtn.addEventListener('click', generateRandomEmail);
+            copyBtn.addEventListener('click', copyEmailToClipboard);
+            closeDetailBtn.addEventListener('click', () => {
+                emailDetail.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
